@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T9. Firmes (II)</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .principle-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .principle-pill { background-color: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list, .even-deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li, .even-deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        .even-deeper-nested-list > li::before {
+             content: '▫️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before,
+        .even-deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-road"></i> MEB1T9. Firmes (II) <i class="fas fa-layer-group"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-search"></i></div>
+                <h2>1. Características superficiales y estructurales de los firmes</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-eye icon"></i>Características superficiales</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Las <span class="definition-pill"><strong>características superficiales</strong></span> de los pavimentos son las relacionadas con la <strong>capa de rodadura</strong>, sin que tengan relación directa con la <u>resistencia estructural</u> del firme.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-cogs icon text-purple-600"></i>Su <strong>importancia</strong> deriva de la <strong>influencia</strong> que tienen en la <strong><u>funcionalidad de la carretera</u></strong>, ya que de ellas dependen:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>la <u>seguridad y comodidad</u> de circulación,</li>
+                                            <li>los <u>gastos de explotación</u></li>
+                                            <li>y la <u>contaminación ambiental</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-list-ul icon text-orange-600"></i>Se pueden citar las siguientes:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><strong>resistencia al deslizamiento</strong>,</li>
+                                            <li><strong>regularidad superficial</strong>,</li>
+                                            <li><strong>propiedades reflexivas</strong>,</li>
+                                            <li><strong>ruido de contacto</strong> neumático-pavimento,</li>
+                                            <li><strong>proyecciones de agua</strong> al paso de los vehículos,</li>
+                                            <li><strong>consumos</strong> debidos al contacto neumático-pavimento,</li>
+                                            <li><strong>permeabilidad y drenabilidad</strong>,</li>
+                                            <li><strong>limpieza</strong>,</li>
+                                            <li>y <strong>resistencia al ataque</strong> de aceites y combustibles.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-cogs icon"></i>Características estructurales</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-truck-monster icon text-blue-600"></i>Son <strong>fundamentales</strong> para <strong>resistir las cargas</strong> de los <u>vehículos pesados</u> que producen una <u>pérdida lenta y progresiva</u> de la capacidad inicial.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-ruler-vertical icon text-purple-600"></i>La forma <strong>más frecuente</strong> de establecer la <strong>capacidad estructural</strong> del firme es determinando la <span class="definition-pill"><strong>deflexión</strong></span> o <u>desplazamiento vertical bajo una carga normalizada</u> de referencia.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>La <strong>deflexión</strong> es un <strong>valor evolutivo</strong> que representa el <u>estado estructural del firme</u>, respecto a un valor inicial de deflexión mínima.</li>
+                                            <li>Las <strong>técnicas de interpretación</strong> de los valores de la deflexión permiten <u>cuantificar las actuaciones necesarias</u> de <strong>refuerzo o rehabilitación</strong> del firme.</li>
+                                            <li>Una <strong>deflexión elevada no es buena o mala por sí misma</strong>, sino que su valor se tiene que <strong>interpretar</strong> en función del <u>tipo de firme</u> y de los <u>espesores de las capas</u> que lo constituyen.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-cogs icon text-orange-600"></i>Finalmente, la otra <strong>variable básica</strong> que interviene en el estudio de la capacidad estructural del firme es la <strong><u>cuantificación adecuada de las solicitaciones</u></strong>, donde puede influir una <strong>mala regularidad superficial</strong> por los <u>efectos dinámicos</u> que puede inducir en las cargas de tráfico.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-wave-square"></i></div>
+                <h2>2. Auscultación de firmes</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>La <span class="definition-pill"><strong>auscultación de los firmes</strong></span> es el <strong>conjunto de las técnicas</strong> encaminadas a <strong>medir sus características</strong> por medio de los <u>equipos apropiados</u>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>se divide en <strong>auscultación de <u>características superficiales</u></strong> y de <strong><u>características estructurales</u></strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-eye icon"></i>Auscultación de características superficiales</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-hand-paper icon text-purple-600"></i><strong><u>Resistencia al deslizamiento</u></strong>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-grip-lines icon"></i>Para asegurar una <strong>buena adherencia neumático-pavimento</strong> se necesita siempre una cierta <span class="definition-pill"><strong>microtextura</strong></span> o <u>aspereza</u> de la superficie del firme,</li>
+                                            <li><i class="fas fa-cloud-showers-heavy icon"></i>pero además a <strong>velocidades altas y con pavimento mojado</strong>, debe tener una <span class="definition-pill"><strong>macrotextura</strong></span> suficientemente <u>gruesa</u>, para que se pueda <u>evacuar rápidamente el agua</u>.</li>
+                                            <li><i class="fas fa-ruler-combined icon"></i>Se establecen <strong>tres medidas fundamentales</strong>: <u>microtextura</u>, <u>macrotextura</u> y <u>coeficiente de resistencia al deslizamiento</u>.</li>
+                                            <li><i class="fas fa-balance-scale icon"></i>Para la medida de la <strong>microtextura</strong> se emplea el <span class="definition-pill"><strong>péndulo de fricción TRL</strong></span>.</li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-list-ol icon"></i>Para caracterizar la <strong>macrotextura</strong> de un pavimento, se utilizan fundamentalmente <strong>tres procedimientos</strong> distintos:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li><u>método del círculo de arena</u>,</li>
+                                                        <li>equipos basados en <u>sensores láser</u>,</li>
+                                                        <li>y medida del <u>drenaje superficial</u> (drenómetros).</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-truck-monster icon"></i>Para la <strong>medición del coeficiente de resistencia al deslizamiento</strong> se emplean <strong>equipos montados en vehículos</strong> provistos de depósitos de agua para conseguir una película de <span class="pill-blue">0,5 mm</span> de agua en la franja del pavimento donde se efectúan las mediciones. Cabe distinguir equipos:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>de <strong>rueda oblicua</strong> (respecto al sentido de la marcha), que determinan el <span class="definition-pill"><strong>coeficiente de rozamiento transversal (CRT)</strong></span> de un modo <u>continuo</u>, lo que les hace especialmente aptos para la auscultación de una red de carreteras), el equipo que se utiliza habitualmente en España es el <span class="definition-pill"><strong>SCRIM</strong></span>;</li>
+                                                        <li>y de <strong>rueda de medida longitudinal</strong>, que a su vez se dividen en equipos de <u>rueda bloqueada</u>, rueda <u>parcialmente bloqueada con grado de deslizamiento fijo</u>, o rueda <u>parcialmente bloqueada con grado de deslizamiento variable</u>, y que son equipos <strong>menos frecuentes</strong> en España.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-ruler-horizontal icon text-orange-600"></i><strong><u>Regularidad superficial</u></strong>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>Existen <strong>muchas técnicas</strong> para determinar la regularidad superficial: <u>regla de 3 m</u>, <u>perfilógrafos</u>, y <u>perfilómetros de alto rendimiento</u>.</li>
+                                            <li>Para poder <strong>comparar las mediciones</strong> de los distintos equipos de medida, fue necesario definir un <strong>patrón de referencia</strong>, el denominado <span class="definition-pill"><strong>IRI (Índice de regularidad internacional)</strong></span>, que mide las <u>oscilaciones verticales</u> que experimentaría un <u>vehículo patrón</u> al circular a <span class="pill-blue">80 km/h</span> por un perfil determinado y se divide por la <u>distancia recorrida</u>, obteniéndose el IRI del perfil.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-cogs icon"></i>Auscultación de características estructurales</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-search icon text-blue-600"></i>La <strong>inspección visual</strong> del firme proporciona una <strong>información valiosa</strong> para una <u>primera aproximación</u> a su estado estructural.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-ruler-vertical icon text-purple-600"></i>Para la <strong>medición de las deflexiones</strong> se pueden utilizar distintos equipos, los <strong>más usados en España</strong> son:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>el <span class="definition-pill"><strong>deflectómetro de impacto</strong></span>,</li>
+                                            <li>el <span class="definition-pill"><strong>deflectógrafo Lacroix</strong></span></li>
+                                            <li>y el <span class="definition-pill"><strong>curviámetro</strong></span>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-cogs"></i></div>
+                <h2>3. Estrategias de conservación de los firmes</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Debido al <strong>tráfico de vehículos</strong> y a las <strong>acciones climáticas</strong>, las <u>características iniciales</u> de una carretera se van <strong>degradando con el tiempo</strong>.</p></li>
+                    <li><p><i class="fas fa-wrench icon text-purple-600"></i>Todas las operaciones tendentes a <strong>restituir esas características</strong> son consideradas como <span class="definition-pill"><strong>conservación de la carretera</strong></span>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-chart-line icon text-orange-600"></i>La <strong>conservación</strong> tiene una <strong>incidencia directa</strong> sobre la <strong>explotación</strong>, de manera que al <u>disminuir la conservación</u> de una determinada vía <strong>aumentan</strong> en ella:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>los <u>accidentes</u>,</li>
+                                <li>los <u>consumos de combustible</u></li>
+                                <li>o los <u>tiempos de recorrido</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-bullseye icon text-indigo-600"></i><strong><u>Objetivos de la conservación de los firmes</u></strong>, mantenimiento de:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>una adecuada <strong>resistencia al deslizamiento</strong>,</li>
+                                <li>una <strong>regularidad superficial</strong> acorde con el trazado de la vía y las velocidades de recorrido,</li>
+                                <li>y una <strong>resistencia estructural suficiente</strong> para el tráfico que ha de soportar la carretera.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-exchange-alt icon text-teal-600"></i>Se puede distinguir entre una:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="definition-pill"><strong>conservación preventiva</strong></span> (para <u>evitar que aparezcan deterioros</u>),</li>
+                                <li>o <span class="definition-pill"><strong>curativa</strong></span> (para <u>corregir los deterioros</u> que hayan aparecido).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-sitemap icon text-green-600"></i><span class="definition-pill"><strong>Estrategias de conservación</strong></span>, son el <strong>conjunto de actuaciones</strong> a desarrollar durante la vida de la carretera para lograr la <strong><u>vida más larga del firme con el menor coste</u></strong>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Un <strong>primer grupo</strong> de estrategias está formado por aquéllas que prevén fundamentalmente <strong>grandes operaciones de conservación</strong> a realizar en <u>momentos concretos</u>, muy <u>separados en el tiempo</u>, para prácticamente <strong>restituir las condiciones iniciales</strong> del firme.</li>
+                                <li>El <strong>otro grupo</strong> comprende las estrategias en las que se prevén <strong>operaciones muy frecuentes</strong> de manera que las <u>características iniciales del firme se vayan perdiendo lentamente</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-hard-hat"></i></div>
+                <h2>4. Rehabilitación de firmes: norma 6.3-IC</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>Esta <strong>norma se aplica</strong> en los proyectos de <span class="definition-pill"><strong>rehabilitación superficial o estructural</strong></span> de los firmes de las <u>carreteras en servicio</u>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-cogs icon text-purple-600"></i>Cuando dichos proyectos incluyan <strong>tramos con firmes de nueva construcción</strong> o con <strong>reconstrucción total</strong> del existente, éstos se proyectarán de acuerdo con la <span class="law-pill"><strong>Norma 6.1-IC</strong></span>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-random icon text-orange-600"></i>En obras de <strong>acondicionamiento</strong>, <strong>mejora de trazado</strong>, <strong>ensanche</strong> y <strong>duplicación de calzada</strong>, con <u>aprovechamiento de la calzada existente</u>, se aplicarán <strong>conjuntamente</strong> esta norma y la <span class="law-pill"><strong>6.1-IC</strong></span>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-bullseye icon text-indigo-600"></i>El <strong>objeto</strong> de la <span class="law-pill"><strong>Norma 6.3-IC</strong></span> es establecer los <strong>criterios</strong> que permitan proyectar la <strong><u>solución idónea de rehabilitación</u></strong> de un firme de carretera.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tasks icon"></i>Para ello, se pone a disposición del proyectista:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>un <strong>procedimiento de evaluación</strong> del estado de un firme</li>
+                                <li>y una <strong>gama de soluciones de rehabilitación</strong>,</li>
+                            </ul>
+                        </div>
+                    </li>
+                     <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-check-circle icon text-green-600"></i>entre las que se deberá <strong>elegir la más adecuada</strong>, según consideraciones:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>técnicas</u>,</li>
+                                <li><u>económicas</u></li>
+                                <li>y <u>ambientales</u>,</li>
+                                <li>así como de <strong>mínima repercusión</strong> en la <u>seguridad del tráfico</u> durante las obras.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-recycle"></i></div>
+                <h2>5. Orden Circular 2/2023 sobre reutilización de capas de firme y pavimentos bituminosos</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>La <span class="definition-pill"><strong>reutilización de firmes</strong></span> comprende una serie de <strong>técnicas constructivas</strong> tendentes al <strong><u>máximo aprovechamiento</u></strong> de <u>materiales envejecidos</u> por el uso en la <u>rehabilitación estructural de firmes</u>.</p></li>
+                    <li><p><i class="fas fa-check-circle icon text-green-600"></i>Con unas <strong>técnicas eficientes</strong>, unos <strong>productos de alta calidad y homogeneidad</strong>, y a unos <strong>costes razonablemente competitivos</strong> frente a las soluciones tradicionales.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-list-ol icon text-purple-600"></i>Aunque las posibilidades técnicas actuales son muy amplias, la <span class="law-pill"><strong>Orden Circular 2/2023</strong></span> contempla <strong>únicamente</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-tint icon"></i>La <strong><u>reutilización in situ con emulsión</u></strong> de capas bituminosas, que es la <strong>mezcla homogénea</strong>, convenientemente <u>extendida y compactada</u>, del <u>material resultante del fresado</u> de una o más capas de mezcla bituminosa de un pavimento existente, una <u>emulsión bituminosa</u>, <u>agua</u> y, eventualmente, <u>aditivos</u>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>El proceso se realiza a <strong>temperatura ambiente</strong> y sobre la <strong>misma superficie a tratar</strong> en un espesor comprendido entre <span class="pill-blue">6 a 12 cm</span>.</li>
+                                            <li>A la hora de calcular los espesores exigidos en la rehabilitación, el espesor de las capas reutilizadas con esta técnica <strong>se minora multiplicándolo por <span class="pill-blue">0,75</span></strong>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-vial icon"></i>La <strong><u>reutilización in situ con cemento</u></strong> de capas de firme, que es la <strong>mezcla homogénea</strong>, convenientemente <u>extendida y compactada</u>, del <u>material granular</u> procedente del <u>fresado</u> de una o varias capas de un firme existente, con excepción de las de pavimento de hormigón, con <u>cemento</u>, <u>agua</u> y, eventualmente, <u>aditivos</u> y <u>material de aportación</u>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>Este proceso se realiza a <strong>temperatura ambiente</strong> y sobre la <strong>misma superficie a tratar</strong>, en una profundidad adecuada para que el espesor resultante tras la compactación esté comprendido entre <span class="pill-blue">20 y 35 cm</span>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-industry icon"></i>La <strong><u>reutilización en central en caliente</u></strong> (<span class="pill-blue">>140ºC</span>) o <strong><u>semicaliente</u></strong> (<span class="pill-blue">≤140ºC</span>) de capas bituminosas, que es la técnica de fabricación de mezclas bituminosas que utiliza el <span class="definition-pill"><strong>material bituminoso a reciclar (RA, Reclaimed Asphalt)</strong></span>, con la aportación de un <u>betún asfáltico</u>, <u>áridos</u>, <u>polvo mineral</u>, y eventualmente, <u>aditivos</u>, con los que se obtiene una <u>mezcla bituminosa caliente o semicaliente</u>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>El <span class="definition-pill"><strong>RA</strong></span> procede de la <u>disgregación de capas de mezclas bituminosas</u> mediante <u>fresado o demolición</u>, y debe estar compuesto por <u>áridos de buena calidad</u> y <u>granulometría continua</u>, cubiertos por <u>betún asfáltico envejecido</u>.</li>
+                                            <li>Siempre que se realice el <u>ensayo de determinación del módulo dinámico</u> de la mezcla y el <u>ensayo de fatiga</u> se considera que tienen las <strong>mismas características</strong> que una mezcla nueva convencional.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-layer-group"></i></div>
+                <h2>6. Transformación de firmes rígidos degradados en firmes mixtos</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>La <strong>rehabilitación de firmes de hormigón</strong> se puede hacer con:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>un <u>refuerzo de hormigón</u></li>
+                                <li>o con un <strong><u>refuerzo de mezcla bituminosa</u></strong>, que es el <strong>más habitual</strong> porque <u>mejora la calidad de rodadura</u> y permite <u>abrir al tráfico en un menor tiempo</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-exchange-alt icon text-purple-600"></i>El resultado es un <span class="definition-pill"><strong>firme mixto</strong></span>, cuyo funcionamiento se ve afectado por la aparición de <strong><u>grietas por reflexión</u></strong> en el refuerzo de mezcla que <u>reproducen el deterioro o las juntas</u> que existían en el pavimento de hormigón inferior antes de colocar el refuerzo.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-shield-alt icon text-orange-600"></i>Para <strong>prevenir este problema</strong> se pueden utilizar diversos <strong>métodos</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-tools icon"></i><strong><u>Reparación previa</u></strong> del firme de hormigón:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><u>reparaciones de losas</u>,</li>
+                                            <li><u>restitución de pasadores</u>,</li>
+                                            <li><u>relleno de huecos</u> en la base mediante inyección con lechada de cemento,</li>
+                                            <li><u>microfresado</u> de escalonamiento,</li>
+                                            <li>y <u>mejoras de drenaje</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-hammer icon"></i><strong><u>Rotura controlada</u></strong> del pavimento de hormigón existente mediante:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><strong>fracturación</strong> (<span class="definition-pill">crack and seat</span>)</li>
+                                            <li>o <strong>desintegración</strong> (<span class="definition-pill">rubblizing</span>).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-vial icon"></i><strong><u>Diseño especial</u></strong> de la mezcla bituminosa,</p></li>
+                                <li><p><i class="fas fa-layer-group icon"></i><strong><u>capas especiales</u></strong> de relajación de tensiones,</p></li>
+                                <li><p><i class="fas fa-border-all icon"></i><strong><u>mallas</u></strong>,</p></li>
+                                <li><p><i class="fas fa-wave-square icon"></i>o <strong><u>inducción de la reflexión</u></strong> de forma controlada.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-seedling"></i></div>
+                <h2>7. Consideraciones ambientales: carencia de materiales y huella energética</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Por <strong>consideraciones ambientales</strong> y de <strong>reutilización de los materiales existentes</strong> la <span class="law-pill"><strong>Norma 6.3-IC</strong></span> establece la <strong>obligatoriedad</strong>, en superficies de rehabilitación superiores a <span class="pill-blue">70.000 m²</span>, de <strong>estudiar los materiales reciclados</strong> de firmes y pavimentos, teniendo en cuenta las siguientes <strong>prescripciones</strong> (actualizadas por la <span class="law-pill"><strong>OC 2/2023</strong></span>):</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-cogs icon text-purple-600"></i>Técnicas contempladas:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><p><i class="fas fa-temperature-high icon"></i>La <strong>reutilización en central en caliente</strong> podrá emplearse en <u>cualquier categoría de tráfico</u> y en <u>cualquier capa del firme</u>.</p></li>
+                                <li><p><i class="fas fa-thermometer-half icon"></i>La <strong>reutilización en central en semicaliente</strong> podrá emplearse en las categorías <span class="pill-blue">T1</span> a <span class="pill-blue">T4</span>, en <u>cualquier capa del firme</u>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-tint icon"></i>La <strong>reutilización in situ con emulsión</strong> podrá emplearse en las categorías <span class="pill-blue">T1</span> a <span class="pill-blue">T4</span>, en <u>capas que no sean de rodadura</u>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p>Sobre la capa reciclada se proyectarán <strong>mezclas en caliente o semicaliente</strong>, reutilizadas o no, con <strong>espesor mínimo</strong> de:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="even-deeper-nested-list">
+                                                        <li>- <span class="pill-blue"><strong>8 cm</strong></span> en la categoría de tráfico pesado <span class="definition-pill">T1</span> en dos capas: <span class="pill-blue">2-3 cm</span> de rodadura y <span class="pill-blue">5-6 cm</span> de capa intermedia.</li>
+                                                        <li>- <span class="pill-blue"><strong>5 cm</strong></span> en las categorías de tráfico pesado <span class="definition-pill">T2</span> y <span class="definition-pill">T3</span>. Si fuera preceptivo el empleo de mezclas drenantes, discontinuas, SMA o AUTL en capa de rodadura, entre ésta y la reutilizada se dispondrá una capa intermedia de <span class="pill-blue">5 cm</span> de espesor.</li>
+                                                        <li>- Para la categoría de tráfico pesado <span class="definition-pill">T4</span>, sobre la mezcla reutilizada in situ con emulsión se dispondrá una capa de rodadura con un espesor mínimo <span class="pill-blue">3 cm</span> o, alternativamente, en dos capas de microaglomerado en frío.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-vial icon"></i>La <strong>reutilización in situ con cemento</strong> podrá ser empleada en las categorías de tráfico pesado <span class="pill-blue">T1</span> a <span class="pill-blue">T4</span>, en <u>capas de base y subbase</u>, y será <strong>equivalente a un suelocemento</strong>.</p></li>
+                                <li><p><i class="fas fa-road-circle-check icon"></i>En los <strong>arcenes</strong> podrán emplearse <strong>todas las técnicas</strong> de reutilización.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-shoe-prints icon text-green-600"></i>La <span class="actor-pill">DGC del MITMS</span> ha aprobado la <span class="law-pill"><strong>OC 3/2024</strong></span> sobre <strong>cálculo de la huella de carbono</strong> en la construcción y rehabilitación de firmes, con el fin de <strong>impulsar</strong> la utilización de <u>técnicas de construcción más sostenibles</u>.</p></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
