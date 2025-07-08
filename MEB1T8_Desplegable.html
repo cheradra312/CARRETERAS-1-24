@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T8. Firmes (I)</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-layer-group"></i> MEB1T8. Firmes (I) <i class="fas fa-road"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-info-circle"></i></div>
+                <h2>1. Firmes: conceptos generales</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tasks icon text-blue-600"></i>Los <span class="definition-pill"><strong>firmes</strong></span> deben:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>soportar las cargas de tráfico</strong></li>
+                                <li>y poseer unas <strong>características superficiales</strong> en su <u>capa de rodadura</u> que los hagan <strong>cómodos y seguros</strong> para los usuarios.
+                                    <ul class="deeper-nested-list">
+                                        <li>(<u>regularidad superficial</u>, <u>adherencia neumático-pavimento</u>, <u>ruido de rodadura</u>, <u>reflexión luminosa</u>)</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-sitemap icon text-purple-600"></i>Se <strong>clasifican</strong> en cuatro grupos:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="definition-pill"><strong>Firmes flexibles</strong></span>, están constituidos por <u>capas granulares no tratadas</u>, con <u>pavimento bituminoso</u> de espesor <strong>inferior a <span class="pill-blue">15 cm</span></strong>.</li>
+                                <li><span class="definition-pill"><strong>Firmes semiflexibles</strong></span>. Si el espesor de <u>pavimento bituminoso</u> sobre <u>capas granulares no tratadas</u> es <strong>mayor o igual de <span class="pill-blue">15 cm</span></strong>.</li>
+                                <li><span class="definition-pill"><strong>Firmes semirrígidos</strong></span> son los constituidos por un <u>pavimento bituminoso</u> de cualquier espesor sobre <u>una o más capas tratadas con conglomerantes hidráulicos</u> con espesor <strong>≥<span class="pill-blue">18 cm</span></strong> y una <u>contribución significativa</u> a la resistencia estructural del conjunto del firme.</li>
+                                <li><span class="definition-pill"><strong>Firmes rígidos</strong></span> tienen <u>pavimento de hormigón</u>, por su rigidez <strong>distribuyen las cargas</strong> sobre un área grande con <u>presiones muy reducidas</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-ruler-combined"></i></div>
+                <h2>2. La explanada: capacidad de soporte y materiales</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>La <span class="definition-pill"><strong>capacidad de soporte</strong></span> de una explanada es su <strong>resistencia a la deformación</strong> bajo las <u>cargas del tráfico</u>, que depende de la <u>resistencia al esfuerzo cortante</u> del suelo que la constituye.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-cogs icon text-purple-600"></i>Es <strong>función</strong> no sólo del <u>tipo de suelo</u> de la explanada, sino de su <u>densidad</u> y <u>humedad</u>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>La capacidad de soporte de la explanada será <strong>variable en el espacio y en el tiempo</strong> debido a la <u>natural variabilidad de los suelos</u>, de su <u>grado de compactación</u> y de su <u>contenido de humedad</u>, por lo que se adopta como representativo un <strong>valor que sea superado</strong> en la mayoría de los puntos y en las <u>épocas más desfavorables</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-truck-loading icon text-orange-600"></i>Por otra parte, las <strong>cargas del tráfico</strong> actúan sobre la explanada a través del <strong>firme</strong>, que se encarga de:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>la <u>distribución tensional</u></li>
+                                <li>y de su <u>acomodación a la capacidad de soporte</u>, que exigirá un <strong>firme más resistente</strong> cuanto <strong>menor</strong> sea la <strong>capacidad de soporte</strong> de la explanada.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-balance-scale icon text-indigo-600"></i>Aunque anteriormente se emplease el <span class="definition-pill"><strong>CBR</strong></span> como criterio de clasificación de explanadas, en la actualidad, tras la publicación de la <span class="law-pill"><strong>6.1-IC de secciones de firme</strong></span>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>se emplea simplemente como una <strong>prescripción adicional</strong> a exigir a los distintos tipos de suelos,</li>
+                                <li>realizándose la <strong>evaluación de la capacidad de soporte</strong> de las explanadas mediante el <u>ensayo de placa con carga</u> y la <u>deflexión patrón máxima</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-sitemap icon text-teal-600"></i>Según la <span class="law-pill"><strong>norma 6.1-IC</strong></span>, a los efectos de definir la estructura del firme en cada caso, se establecen <strong>tres categorías de explanada</strong> en función de su <strong>módulo de compresibilidad</strong> en el segundo ciclo de carga:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="pill-blue"><strong>E1</strong></span>: Ev2 (MPa) ≥ 60</li>
+                                <li><span class="pill-blue"><strong>E2</strong></span>: Ev2 (MPa) ≥ 120</li>
+                                <li><span class="pill-blue"><strong>E3</strong></span>: Ev2 (MPa) ≥ 300</li>
+                                <li>La <strong>configuración de la explanada</strong> depende de las <u>características de los materiales del fondo de desmonte o coronación de terraplén</u> y de los <u>materiales y espesores</u> con que esté constituida.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-cubes icon text-green-600"></i>Los <strong>materiales empleados</strong> en la formación de la explanada pueden ser:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-minus icon text-yellow-500"></i><u>suelos tolerables</u>,</li>
+                                <li><i class="fas fa-check icon text-blue-500"></i><u>adecuados</u>,</li>
+                                <li><i class="fas fa-check-double icon text-green-500"></i><u>seleccionados</u>,</li>
+                                <li><i class="fas fa-star icon text-yellow-400"></i><u>seleccionados con CBR ≥ 20</u>,</li>
+                                <li><i class="fas fa-vial icon text-purple-500"></i>o <u>estabilizados in situ con cemento o cal tipos 1, 2 y 3</u>;</li>
+                                <li><i class="fas fa-book-open icon"></i>y deben cumplir las prescripciones contenidas en el <span class="law-pill"><strong>PG-3</strong></span>, además de las complementarias recogidas en la <span class="law-pill"><strong>norma 6.1-IC</strong></span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-check-circle icon text-yellow-600"></i>Con <strong>carácter general</strong>, para la <strong>capa superior</strong> utilizada en la formación de las explanadas, por razones de <u>durabilidad</u> y <u>uniformidad de la capacidad estructural</u>, se recomienda la consideración <strong>preferente de los <u>suelos estabilizados in situ</u></strong>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tint-slash icon text-red-500"></i>En <strong>desmontes en roca</strong> se evitará la <strong>retención del agua</strong> en la explanada mediante:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>un <u>sistema de drenaje adecuado</u></li>
+                                <li>y el <strong>relleno con hormigón tipo <span class="definition-pill">HM-20</span></strong> de las depresiones que puedan retener el agua.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-cubes"></i></div>
+                <h2>3. Materiales de los firmes: zahorras, suelocemento, gravacemento y mezclas bituminosas</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <div class="collapsible-trigger">
+                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                    <h3 class="font-bold"><i class="fas fa-mountain icon"></i>Zahorras</h3>
+                </div>
+                <div class="collapsible-content hidden">
+                    <ul>
+                        <li><p><i class="fas fa-cogs icon text-blue-600"></i>Se utilizan como <strong>base o sub-base</strong> en <u>firmes flexibles o semiflexibles</u>, son <strong>materiales granulares de granulometría continua</strong>.</p></li>
+                        <li>
+                            <div class="collapsible-trigger">
+                                <i class="fas fa-chevron-right collapsible-icon"></i>
+                                <p><i class="fas fa-sitemap icon text-purple-600"></i>Se distinguen:</p>
+                            </div>
+                            <div class="collapsible-content hidden">
+                                <ul class="nested-list">
+                                    <li><span class="definition-pill"><strong>zahorras naturales</strong></span>,</li>
+                                    <li>y <span class="definition-pill"><strong>zahorras artificiales</strong></span> (que se obtienen por machaqueo) y son las <strong>indicadas</strong> para la construcción de nuevos firmes según la <span class="law-pill">instrucción 6.1-IC</span>, pues actualmente es <u>prácticamente imposible</u> disponer de zonas de préstamo que permitan la obtención de zahorras naturales.</li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="collapsible-trigger mt-4 pt-4 border-t border-gray-200">
+                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                    <h3 class="font-bold"><i class="fas fa-vial icon"></i>Suelocemento y gravacemento</h3>
+                </div>
+                <div class="collapsible-content hidden">
+                    <ul>
+                        <li><p><i class="fas fa-info-circle icon text-blue-600"></i>La <strong>estabilización</strong> de un suelo o una grava con cemento tiene por objeto <strong>mejorar su <u>resistencia y durabilidad</u></strong>, y se emplean como <strong>base o sub-base</strong> de <u>firmes semirrígidos</u>, siendo fabricados en <strong>central</strong>.</p></li>
+                    </ul>
+                </div>
+                <div class="collapsible-trigger mt-4 pt-4 border-t border-gray-200">
+                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                    <h3 class="font-bold"><i class="fas fa-fill-drip icon"></i>Mezclas bituminosas</h3>
+                </div>
+                <div class="collapsible-content hidden">
+                    <ul>
+                        <li><p><i class="fas fa-flask icon text-blue-600"></i>Están formadas por <strong>áridos</strong>, <strong>polvo mineral</strong> y un <strong>ligante</strong>, de manera que los <u>áridos queden cubiertos de manera homogénea</u> por éste.</p></li>
+                        <li>
+                            <div class="collapsible-trigger">
+                                <i class="fas fa-chevron-right collapsible-icon"></i>
+                                <p><i class="fas fa-search-plus icon text-purple-600"></i>El <span class="definition-pill"><strong>polvo mineral (o filler)</strong></span> es <strong>fundamental</strong> porque:</p>
+                            </div>
+                            <div class="collapsible-content hidden">
+                                <ul class="nested-list">
+                                     <li><u>condiciona</u> la proporción de ligante;</li>
+                                     <li><u>constituye</u> con el ligante el <strong>mástico</strong> que da cohesión al conjunto;</li>
+                                     <li>es el elemento más importante en la <strong>adhesividad</strong>;</li>
+                                     <li>e <u>influye</u> en el <strong>porcentaje de huecos</strong> y, por tanto, en la <strong>impermeabilidad</strong> y en <strong>resistencia</strong> de la mezcla.</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-trigger">
+                                <i class="fas fa-chevron-right collapsible-icon"></i>
+                                <p><i class="fas fa-tint icon"></i>Los <strong>ligantes</strong> intervienen en proporciones muy variables, pero pueden situarse <strong>entre el <span class="pill-blue">3%</span> y el <span class="pill-blue">10%</span></strong> sobre la masa de los áridos.</p>
+                            </div>
+                            <div class="collapsible-content hidden">
+                                <ul class="nested-list">
+                                    <li>los <strong>más usuales</strong> son los <span class="definition-pill">betunes de penetración</span> para las <u>mezclas en caliente</u> y las <span class="definition-pill">emulsiones bituminosas</span> para las <u>mezclas en frío</u>.</li>
+                                    <li>Para las mezclas en <strong>capas de rodadura</strong> (drenantes o discontinuas de pequeño espesor) se emplean habitualmente los <span class="definition-pill">betunes asfálticos modificados con polímeros</span>.</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li><p><i class="fas fa-industry icon"></i>Las mezclas se <strong>realizan en central</strong>, son después <strong>transportadas a obra</strong> y allí se <strong>extienden y compactan</strong>.</p></li>
+                        <li>
+                            <div class="collapsible-trigger">
+                                <i class="fas fa-chevron-right collapsible-icon"></i>
+                                <p><i class="fas fa-layer-group icon text-orange-600"></i>Según la <strong>fracción de árido</strong> empleada se distingue:</p>
+                            </div>
+                            <div class="collapsible-content hidden">
+                                <ul class="nested-list">
+                                    <li><span class="definition-pill"><strong>mástico</strong></span> (filler + ligante),</li>
+                                    <li><span class="definition-pill"><strong>mortero bituminoso</strong></span> (mástico + árido fino),</li>
+                                    <li>y <span class="definition-pill"><strong>hormigón bituminoso</strong></span> (mortero bituminoso + árido grueso).</li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-sitemap"></i></div>
+                <h2>4. Clasificaciones de las mezclas bituminosas</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>De acuerdo con el <span class="law-pill"><strong>PG-3</strong></span> y la <span class="law-pill"><strong>norma 6.1-IC</strong></span> en su última actualización, se distinguen:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-snowflake icon"></i><span class="definition-pill"><strong>Microaglomerados en frío</strong></span>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>se extienden a <u>temperatura ambiente</u> al estar fabricados con <u>emulsiones bituminosas</u>, con un espesor total <span class="pill-blue">≤3 cm</span>, y uno medio que no suele ser superior a <span class="pill-blue">1,5 cm</span> por capa, en <u>una o dos capas</u>,</li>
+                                            <li>se usan para <strong>mejorar la textura</strong> y la <strong>resistencia al deslizamiento</strong> de la superficie pavimentada.</li>
+                                            <li>La <strong>denominación</strong> incluye la palabra “<span class="definition-pill">MICROF</span>”, seguida de un <u>número</u> que expresa el tamaño máximo del árido, de las letras “<u>sup</u>” (capa única o segunda capa) o “<u>inf</u>” (primera capa) y la <u>denominación de la emulsión</u> a utilizar.</li>
+                                            <li>De acuerdo con el <span class="law-pill">PG-3</span>, existen microaglomerados en frío del tipo <span class="definition-pill">MICROF 11</span>, <span class="definition-pill">MICROF 8</span> y <span class="definition-pill">MICROF 5</span>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-temperature-high icon"></i><span class="definition-pill"><strong>Mezclas bituminosas en caliente o semicaliente tipo hormigón bituminoso</strong></span>, se denominan con:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>las letras “<span class="definition-pill">AC</span>” (asphalt concrete),</li>
+                                            <li>seguidas del <u>tamaño nominal de árido</u> (<span class="pill-blue">16, 22 y 32 mm</span>),</li>
+                                            <li>las letras “<u>surf</u>”, “<u>bin</u>” o “<u>base</u>” (capa de rodadura, intermedia o base),</li>
+                                            <li>el <u>tipo de ligante</u></li>
+                                            <li>y la <u>granulometría</u> con las letras “<strong>D</strong>” o “<strong>S</strong>” en función de si es densa o semidensa.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-road icon"></i><strong><u>Mezclas bituminosas en caliente o semicaliente para capas de rodadura</u></strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><span class="definition-pill"><strong>Drenantes</strong></span>, se caracterizan por un <u>contenido muy alto de huecos</u>, se emplean en espesor de <span class="pill-blue">4 cm</span>, se denominan con las letras “<span class="definition-pill">PA</span>” (porous asphalt), seguida del <u>tamaño nominal de árido</u> (<span class="pill-blue">11 mm</span>) y el <u>tipo de ligante</u>.</li>
+                                            <li><span class="definition-pill"><strong>Discontinuas</strong></span>, tienen una <u>discontinuidad muy acusada</u> en el huso granulométrico en los tamices inferiores al árido grueso, se emplean en espesores de <span class="pill-blue">2-3 cm</span>. Se denominan con las letras “<span class="definition-pill">BBTM</span>”, seguidas del <u>tamaño nominal de árido</u>, la <u>clase</u> (A y B) y el <u>tipo de ligante</u> (<span class="definition-pill">BBTM 8A</span>, <span class="definition-pill">BBTM 11A</span>, <span class="definition-pill">BBTM 8B</span> y <span class="definition-pill">BBTM 11B</span>).</li>
+                                            <li><span class="definition-pill"><strong>Ultrafinas</strong></span>, para espesores de mezcla entre <span class="pill-blue">1 y 2 cm</span>, donde el método de <u>adherencia</u> es una parte esencial, tamaño nominal de árido <span class="pill-blue">5, 8 u 11 mm</span>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-cubes icon"></i><span class="definition-pill"><strong>Mezclas bituminosas en caliente o semicaliente tipo SMA</strong></span>, tienen:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><u>baja proporción de árido fino</u>,</li>
+                                            <li><u>discontinuidad granulométrica</u> en tamaños intermedios</li>
+                                            <li>y <u>alto contenido en betún</u>.</li>
+                                            <li>Se pueden utilizar en <strong>capa de rodadura e intermedia</strong>, tamaño nominal de árido <span class="pill-blue">8, 11 o 16 mm</span>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-cogs icon"></i><span class="definition-pill"><strong>Mezclas bituminosas en caliente o semicaliente de alto módulo MAM</strong></span> (<span class="pill-blue">E ≥ 11.000 MPa</span>), que se pueden emplear en:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><strong>capa intermedia y base</strong> para <u>reducir espesores ≥ <span class="pill-blue">20 cm</span></u> con explanadas <span class="definition-pill">E3</span> o <span class="definition-pill">E2</span>,</li>
+                                            <li>tamaño nominal de árido <span class="pill-blue">22 mm</span>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-cubes"></i></div>
+                <h2>5. Pavimentos de hormigón</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>Se distinguen los siguientes <strong>tipos</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-cube icon"></i><span class="definition-pill"><strong>Pavimentos de hormigón en masa</strong></span>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>Se disponen en ellos <u>juntas transversales de contracción</u> y <u>juntas longitudinales de alabeo</u>, entre carriles o cuando la anchura de construcción es superior a <span class="pill-blue">5 m</span>.</li>
+                                            <li>En las juntas transversales para <strong>mejorar la transmisión de cargas</strong> entre losas contiguas se pueden disponen <span class="definition-pill"><strong>pasadores</strong></span>, que son <u>barras lisas de acero no adheridas al hormigón</u>, situados a mitad de espesor, que <strong>aseguran la continuidad</strong> de la rodadura a largo plazo bajo tráfico pesado, pues <u>imposibilitan el escalonamiento</u> del pavimento en las juntas.</li>
+                                            <li>Son los <strong>más empleados actualmente</strong> por su <u>adaptabilidad técnica y económica</u> a diferentes condiciones.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-link icon"></i>Los <span class="definition-pill"><strong>pavimentos de hormigón armado con juntas</strong></span> fueron concebidos en una época en que las <u>juntas constituían el punto más débil</u> y un <u>problema de conservación</u>, <strong>aumentando la longitud de las losas</strong> para reducir su número.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>La <strong>misión de las armaduras</strong> es <u>mantener cosidas las fisuras transversales</u> que inevitablemente aparecen en losas largas (normalmente de <span class="pill-blue">10-20 m</span>), de este modo se <u>asegura la transmisión de cargas</u> en las fisuras, se <u>impide la intrusión de agua</u> y se <u>evita la abertura de las grietas</u> bajo la acción del tráfico.</li>
+                                            <li>Este tipo de pavimentos, antes bastante empleado para tráfico pesado ha <strong>caído en desuso</strong>, debido a su <u>mayor coste no compensado por mayor calidad</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-infinity icon"></i>Los <span class="definition-pill"><strong>pavimentos continuos de hormigón armado</strong></span> <strong>suprimen las juntas transversales</strong>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>la <strong>cuantía geométrica de la armadura de acero</strong> será <span class="pill-blue">0,7%</span> para <span class="definition-pill">HF-4,5</span> y <span class="pill-blue">0,6%</span> para <span class="definition-pill">HF-4,0</span> según la <span class="law-pill">6.1-IC</span>.</li>
+                                            <li>Se forman muchas <strong>fisuras</strong> de abertura inferior a <span class="pill-blue">0,5 mm</span>, distanciadas <span class="pill-blue">1-3 m</span>, que son <u>imperceptibles para el usuario</u> y <u>no se deterioran bajo tráfico</u>.</li>
+                                            <li>Este tipo de pavimento se ha empleado en la <strong>Y asturiana</strong> entre Oviedo, Gijón y Avilés con unos <u>excelentes resultados</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-industry icon"></i>Los <span class="definition-pill"><strong>pavimentos de hormigón armado con fibras de acero</strong></span> se han empleado en los últimos años en aplicaciones en que su <u>elevado coste</u> es compensado por sus <strong>características</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><u>aumento de la resistencia a tracción, flexotracción y fatiga</u>,</li>
+                                            <li><u>fisuración controlada</u>,</li>
+                                            <li><u>resistencia al impacto</u> y <u>durabilidad</u>.</li>
+                                            <li>Una <strong>dosificación normal</strong> de fibras puede ser <span class="pill-blue">~40 kg/m³</span>, dispersas homogéneamente por todo el hormigón.</li>
+                                            <li>Con este material se puede <strong>reducir el espesor</strong> del pavimento y <strong>aumentar el espaciamiento</strong> de las juntas, por lo que puede resultar <strong>competitivo</strong> en: <u>refuerzos adheridos a pavimentos existentes</u>, <u>pavimentos de puentes</u>, o <u>pavimentos sometidos a cargas muy pesadas</u> (industriales, portuarios).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-book-open"></i></div>
+                <h2>6. Norma 6.1-IC de secciones de firme</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>La <strong>norma</strong> es de <strong>aplicación</strong> a los:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>proyectos de firmes de carreteras de nueva construcción</u></li>
+                                <li>y de <u>acondicionamiento de las existentes</u> si se trata de <strong>paquetes de firme nuevos</strong> o <strong>reconstrucción total</strong> de firmes existentes,</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-times-circle icon text-red-500"></i><strong>no será aplicable</strong> a los:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>pavimentos sobre puentes</u>,</li>
+                                <li>ni en <u>túneles</u>,</li>
+                                <li>ni en la <u>rehabilitación superficial o estructural</u> de los firmes de las carreteras en servicio, en los que se seguirá la <span class="law-pill"><strong>Norma 6.3-IC de Rehabilitación de firmes</strong></span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-shield-alt icon text-purple-600"></i>Para <strong>garantizar la capacidad estructural y la uniformidad</strong> a lo largo de toda la traza, la <span class="law-pill"><strong>Norma 6.1-IC</strong></span> presenta:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>un <strong>cuadro de soluciones</strong> para la <u>formación de la explanada</u></li>
+                                <li>y un <strong>catálogo de secciones de firme</strong>, función de la <u>categoría del tráfico pesado</u> y de la <u>explanada</u>, contrastadas por la <strong>experiencia</strong> y comprobadas mediante <strong>métodos analíticos</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tasks icon"></i>Entre las <strong>secciones estructurales especificadas</strong> se deberá <strong>seleccionar</strong> en cada caso la <strong>más adecuada</strong>, dependiendo de:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>los <u>materiales disponibles</u>,</li>
+                                <li>de los <u>aspectos funcionales y de seguridad vial</u>,</li>
+                                <li>de los <u>costes de construcción y de conservación</u>,</li>
+                                <li>y de los <u>aspectos ambientales</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
