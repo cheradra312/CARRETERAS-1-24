@@ -71,9 +71,14 @@
                     <button id="toggle-lector-button" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 flex items-center gap-2">
                         <i class="fas fa-book-open"></i><span class="hidden sm:inline">Lector</span>
                     </button>
-					<button id="toggle-video-button" class="bg-red-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-red-600 flex items-center gap-2">
-                       <i class="fas fa-video"></i><span class="hidden sm:inline">Ver Vídeo</span>
-                   </button>
+                    <div class="relative inline-block">
+                        <button id="toggle-video-button" class="bg-red-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-red-600 flex items-center gap-2">
+                           <i class="fas fa-video"></i><span class="hidden sm:inline">Ver Vídeo</span>
+                       </button>
+                       <div id="video-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 hidden">
+                           <!-- Video links will be inserted here -->
+                       </div>
+                    </div>
                    <button id="toggle-oral-button" class="bg-green-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-600 flex items-center gap-2">
                        <i class="fas fa-question-circle"></i><span class="hidden sm:inline">Preguntas Oral</span>
                    </button>
@@ -222,7 +227,7 @@
            </div>
        </div>
 
-		<audio id="topic-audio" src=""></audios>
+		<audio id="topic-audio" src=""></audio>
 	</div>
 
 	<!-- Firebase SDKs -->
@@ -324,7 +329,11 @@
             handleSession();
 			const topics = [
                 {
-                    file: 'MEB1T1_Desplegable.html', title: 'La legislación de Carreteras', color: 'blue', icon: 'fa-gavel', videoId: 'VIDEO_ID_T1',
+                    file: 'MEB1T1_Desplegable.html', title: 'La legislación de Carreteras', color: 'blue', icon: 'fa-gavel', 
+                    videos: [
+                        { name: 'Primera Parte', url: 'https://drive.google.com/file/d/1YqRBI00ilt5JubcZ54ldK1dLrCRuOg5s/view?usp=drive_link' },
+                        { name: 'Segunda Parte', url: 'https://drive.google.com/file/d/1MWgT_iCvnxumto1AhVrpt_eY_LLWgrrz/view?usp=drive_link' }
+                    ],
                     chapters: [
                         { "title": "La legislación de carreteras", "start": 0, "end": 0 },
                         { "title": "Ley 37/2015 de Carreteras", "start": 0, "end": 0 },
@@ -334,7 +343,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T2_Desplegable.html', title: 'La planificación estratégica de carreteras del Estado y los programas de carreteras', color: 'green', icon: 'fa-sitemap', videoId: 'VIDEO_ID_T2',
+                    file: 'MEB1T2_Desplegable.html', title: 'La planificación estratégica de carreteras del Estado y los programas de carreteras', color: 'green', icon: 'fa-sitemap', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1MWgT_iCvnxumto1AhVrpt_eY_LLWgrrz/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Planificación estratégica de carreteras del Estado y los programas de carreteras", "start": 0, "end": 0 },
                         { "title": "Evaluación coste-beneficio, análisis multicriterio y viabilidad financiera. Estudios informativos y anteproyectos", "start": 0, "end": 0 },
@@ -343,7 +353,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T3_Desplegable.html', title: 'Estudios de carreteras (I)', color: 'purple', icon: 'fa-drafting-compass', videoId: 'VIDEO_ID_T3',
+                    file: 'MEB1T3_Desplegable.html', title: 'Estudios de carreteras (I)', color: 'purple', icon: 'fa-drafting-compass', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1MdEidevfx996ZpS9vGaAKlnraVtsIfRb/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Cartografía y topografía", "start": 0, "end": 0 },
                         { "title": "Estudios geológicos, geotécnicos y de procedencia de materiales", "start": 0, "end": 0 },
@@ -352,7 +363,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T4_Desplegable.html', title: 'Estudios de carreteras (II)', color: 'orange', icon: 'fa-traffic-light', videoId: 'VIDEO_ID_T4',
+                    file: 'MEB1T4_Desplegable.html', title: 'Estudios de carreteras (II)', color: 'orange', icon: 'fa-traffic-light', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1MdEidevfx996ZpS9vGaAKlnraVtsIfRb/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Estudios de tráfico. Toma de datos: sistemas convencionales y nuevas tecnologías", "start": 0, "end": 0 },
                         { "title": "Modelación del tráfico. Prognosis de tráfico", "start": 0, "end": 0 },
@@ -360,7 +372,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T5_Desplegable.html', title: 'Trazado de carreteras', color: 'teal', icon: 'fa-road', videoId: 'VIDEO_ID_T5',
+                    file: 'MEB1T5_Desplegable.html', title: 'Trazado de carreteras', color: 'teal', icon: 'fa-road', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1_3zvX9AM0yLW_s451EWZOD1xBOZDqwfH/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Norma 3.1-IC de trazado", "start": 0, "end": 0 },
                         { "title": "Trazado en planta", "start": 0, "end": 0 },
@@ -371,14 +384,16 @@
                     ]
                 },
                 {
-                    file: 'MEB1T6_Desplegable.html', title: 'Drenaje superficial y subterráneo', color: 'red', icon: 'fa-water', videoId: 'VIDEO_ID_T6',
+                    file: 'MEB1T6_Desplegable.html', title: 'Drenaje superficial y subterráneo', color: 'red', icon: 'fa-water', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1TJ5qnAy1BdirvrZwVF0LMvVquTUrOJhL/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Norma 5.2-IC. Drenaje superficial", "start": 0, "end": 0 },
                         { "title": "Orden Circular 17/2003 Recomendaciones para el proyecto y construcción del drenaje subterráneo en obras de carretera", "start": 0, "end": 0 }
                     ]
                 },
                 {
-                    file: 'MEB1T7_Desplegable.html', title: 'Movimiento de tierras', color: 'amber', icon: 'fa-truck-monster', videoId: 'VIDEO_ID_T7',
+                    file: 'MEB1T7_Desplegable.html', title: 'Movimiento de tierras', color: 'amber', icon: 'fa-truck-monster', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1zfYYcXB--xtRA6eTktbjNB-QZ8eFD3DG/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Movimiento de tierras", "start": 0, "end": 0 },
                         { "title": "Clasificación y características de los suelos según el PG-3", "start": 0, "end": 0 },
@@ -391,7 +406,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T8_Desplegable.html', title: 'Firmes (I)', color: 'cyan', icon: 'fa-layer-group', videoId: 'VIDEO_ID_T8',
+                    file: 'MEB1T8_Desplegable.html', title: 'Firmes (I)', color: 'cyan', icon: 'fa-layer-group', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1zfYYcXB--xtRA6eTktbjNB-QZ8eFD3DG/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Firmes: conceptos generales", "start": 0, "end": 0 },
                         { "title": "La explanada: capacidad de soporte y materiales", "start": 0, "end": 0 },
@@ -402,7 +418,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T9_Desplegable.html', title: 'Firmes (II)', color: 'indigo', icon: 'fa-cogs', videoId: 'VIDEO_ID_T9',
+                    file: 'MEB1T9_Desplegable.html', title: 'Firmes (II)', color: 'indigo', icon: 'fa-cogs', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1zfYYcXB--xtRA6eTktbjNB-QZ8eFD3DG/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Características superficiales y estructurales de los firmes", "start": 0, "end": 0 },
                         { "title": "Auscultación de firmes", "start": 0, "end": 0 },
@@ -414,7 +431,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T10_Desplegable.html', title: 'Obras de paso', color: 'lime', icon: 'fa-archway', videoId: 'VIDEO_ID_T10',
+                    file: 'MEB1T10_Desplegable.html', title: 'Obras de paso', color: 'lime', icon: 'fa-archway', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1hfsH7mvbcrQBujF6N1Mv9fjAh19MLcbq/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Obras de paso: tipologías y materiales. Métodos constructivos y medios auxiliares", "start": 0, "end": 0 },
                         { "title": "Conservación e inspección de obras de paso", "start": 0, "end": 0 },
@@ -426,7 +444,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T11_Desplegable.html', title: 'Túneles en carreteras (I)', color: 'fuchsia', icon: 'fa-mountain', videoId: 'VIDEO_ID_T11',
+                    file: 'MEB1T11_Desplegable.html', title: 'Túneles en carreteras (I)', color: 'fuchsia', icon: 'fa-mountain', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1hfsH7mvbcrQBujF6N1Mv9fjAh19MLcbq/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Métodos constructivos. Maquinaria y medios auxiliares", "start": 0, "end": 0 },
                         { "title": "Sostenimiento", "start": 0, "end": 0 },
@@ -436,7 +455,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T12_Desplegable.html', title: 'Túneles en carreteras (II)', color: 'sky', icon: 'fa-server', videoId: 'VIDEO_ID_T12',
+                    file: 'MEB1T12_Desplegable.html', title: 'Túneles en carreteras (II)', color: 'sky', icon: 'fa-server', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1N_Q6nwPPs9htvFdliNBHPGu3V3ha_T2b/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Mantenimiento de túneles de carreteras", "start": 0, "end": 0 },
                         { "title": "Plan de adecuación de túneles al Real Decreto 635/2006", "start": 0, "end": 0 },
@@ -446,7 +466,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T13_Desplegable.html', title: 'Señalización, balizamiento y sistemas de contención', color: 'violet', icon: 'fa-sign-hanging', videoId: 'VIDEO_ID_T13',
+                    file: 'MEB1T13_Desplegable.html', title: 'Señalización, balizamiento y sistemas de contención', color: 'violet', icon: 'fa-sign-hanging', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1N_Q6nwPPs9htvFdliNBHPGu3V3ha_T2b/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Señalización: norma 8.1-IC de señalización vertical. Norma 8.2-IC de marcas viales. Sistema de señalización turística homologada en carreteras estatales (SISTHO)", "start": 0, "end": 0 },
                         { "title": "Balizamiento", "start": 0, "end": 0 },
@@ -454,7 +475,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T14_Desplegable.html', title: 'PG-3 y el Reglamento UE 305/2011 de productos de la construcción', color: 'emerald', icon: 'fa-book-open', videoId: 'VIDEO_ID_T14',
+                    file: 'MEB1T14_Desplegable.html', title: 'PG-3 y el Reglamento UE 305/2011 de productos de la construcción', color: 'emerald', icon: 'fa-book-open', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/10ZrPx6EW6NF093i9Fc7-5y8vfpw5A8IG/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Pliego de prescripciones técnicas generales para obras de carreteras y puentes (PG-3)", "start": 0, "end": 0 },
                         { "title": "El Reglamento UE 305/2011 de productos de construcción. El marcado CE", "start": 0, "end": 0 },
@@ -462,7 +484,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T15_Desplegable.html', title: 'Proyectos de trazado y de construcción', color: 'pink', icon: 'fa-file-signature', videoId: 'VIDEO_ID_T15',
+                    file: 'MEB1T15_Desplegable.html', title: 'Proyectos de trazado y de construcción', color: 'pink', icon: 'fa-file-signature', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/10ZrPx6EW6NF093i9Fc7-5y8vfpw5A8IG/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Proyecto de trazado. Trámite de información pública", "start": 0, "end": 0 },
                         { "title": "Proyecto de construcción", "start": 0, "end": 0 },
@@ -475,7 +498,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T16_Desplegable.html', title: 'Construcción de carreteras (I)', color: 'yellow', icon: 'fa-hard-hat', videoId: 'VIDEO_ID_T16',
+                    file: 'MEB1T16_Desplegable.html', title: 'Construcción de carreteras (I)', color: 'yellow', icon: 'fa-hard-hat', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/11m6WwmY7VjGLUUbL9wt51D5cVNhABdkr/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Dirección de obras de carreteras", "start": 0, "end": 0 },
                         { "title": "Plan de obra", "start": 0, "end": 0 },
@@ -487,7 +511,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T17_Desplegable.html', title: 'Construcción de carreteras (II)', color: 'slate', icon: 'fa-tools', videoId: 'VIDEO_ID_T17',
+                    file: 'MEB1T17_Desplegable.html', title: 'Construcción de carreteras (II)', color: 'slate', icon: 'fa-tools', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/11m6WwmY7VjGLUUbL9wt51D5cVNhABdkr/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Incidencias en las obras (en el marco de la LCSP)", "start": 0, "end": 0 },
                         { "title": "Prórrogas", "start": 0, "end": 0 },
@@ -496,7 +521,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T18_Desplegable.html', title: 'La gestión de la RCE: sistemas de gestión directos e indirectos', color: 'rose', icon: 'fa-handshake-angle', videoId: 'VIDEO_ID_T18',
+                    file: 'MEB1T18_Desplegable.html', title: 'La gestión de la RCE: sistemas de gestión directos e indirectos', color: 'rose', icon: 'fa-handshake-angle', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1KT9Q3WCu2eUwnEiUooyFOQrjUABM3Xd3/view?usp=drive_link' }],
                     chapters: [
                         { "title": "La gestión de la RCE: sistemas de gestión directos e indirectos", "start": 0, "end": 0 },
                         { "title": "Concesiones de carreteras del Estado: autopistas de peaje y autovías en régimen de concesión", "start": 0, "end": 0 },
@@ -507,7 +533,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T19_Desplegable.html', title: 'Conservación de carreteras (I)', color: 'blue', icon: 'fa-wrench', videoId: 'VIDEO_ID_T19',
+                    file: 'MEB1T19_Desplegable.html', title: 'Conservación de carreteras (I)', color: 'blue', icon: 'fa-wrench', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1Z1Ufvrc6ymTPYbio6PicbP1zrUGXzZSu/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Contratos de conservación y explotación empleados en la Red de Carreteras del Estado", "start": 0, "end": 0 },
                         { "title": "Vialidad invernal", "start": 0, "end": 0 },
@@ -517,7 +544,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T20_Desplegable.html', title: 'Conservación de carreteras (II)', color: 'green', icon: 'fa-screwdriver-wrench', videoId: 'VIDEO_ID_T20',
+                    file: 'MEB1T20_Desplegable.html', title: 'Conservación de carreteras (II)', color: 'green', icon: 'fa-screwdriver-wrench', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1Z1Ufvrc6ymTPYbio6PicbP1zrUGXzZSu/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Proyectos y obras de conservación extraordinaria. Normativa específica de conservación y particularidades de la normativa genérica aplicable", "start": 0, "end": 0 },
                         { "title": "Nota de Servicio 1/2019", "start": 0, "end": 0 },
@@ -526,7 +554,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T21_Desplegable.html', title: 'Explotación de carreteras (I)', color: 'purple', icon: 'fa-shield-halved', videoId: 'VIDEO_ID_T21',
+                    file: 'MEB1T21_Desplegable.html', title: 'Explotación de carreteras (I)', color: 'purple', icon: 'fa-shield-halved', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1Z1Ufvrc6ymTPYbio6PicbP1zrUGXzZSu/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Protección del dominio público y limitaciones a la propiedad.", "start": 0, "end": 0 },
                         { "title": "Zonas de dominio público, servidumbre y afección. Zona de limitación a la edificabilidad", "start": 0, "end": 0 },
@@ -538,7 +567,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T22_Desplegable.html', title: 'Explotación de carreteras (II)', color: 'orange', icon: 'fa-square-parking', videoId: 'VIDEO_ID_T22',
+                    file: 'MEB1T22_Desplegable.html', title: 'Explotación de carreteras (II)', color: 'orange', icon: 'fa-square-parking', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1Wf5_0X9mNf-jfRaauhQp5bEo617pDF8x/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Transportes especiales. Nota de Servicio 4/2023", "start": 0, "end": 0 },
                         { "title": "Áreas de servicio e instalaciones de servicio", "start": 0, "end": 0 },
@@ -551,7 +581,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T23_Desplegable.html', title: 'Innovación aplicada a la movilidad por carretera', color: 'teal', icon: 'fa-brain', videoId: 'VIDEO_ID_T23',
+                    file: 'MEB1T23_Desplegable.html', title: 'Innovación aplicada a la movilidad por carretera', color: 'teal', icon: 'fa-brain', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1Wf5_0X9mNf-jfRaauhQp5bEo617pDF8x/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Innovación aplicada a la movilidad por carretera, sistemas inteligentes de transporte cooperativos (C-ITS)", "start": 0, "end": 0 },
                         { "title": "Vehículo autónomo y conectado", "start": 0, "end": 0 },
@@ -561,7 +592,8 @@
                     ]
                 },
                 {
-                    file: 'MEB1T24_Desplegable.html', title: 'Seguridad vial', color: 'red', icon: 'fa-car-burst', videoId: 'VIDEO_ID_T24',
+                    file: 'MEB1T24_Desplegable.html', title: 'Seguridad vial', color: 'red', icon: 'fa-car-burst', 
+                    videos: [{ name: 'Ver Vídeo', url: 'https://drive.google.com/file/d/1Wf5_0X9mNf-jfRaauhQp5bEo617pDF8x/view?usp=drive_link' }],
                     chapters: [
                         { "title": "Indicadores de seguridad vial", "start": 0, "end": 0 },
                         { "title": "Últimas cifras y evolución de los principales indicadores", "start": 0, "end": 0 },
@@ -575,7 +607,7 @@
  			const gridContainer=document.getElementById("topics-grid"),mainMenuView=document.getElementById("main-menu-view"),mapViewerVIew=document.getElementById("map-viewer-view"),backButton=document.getElementById("back-button"),topControlBar=document.getElementById("top-control-bar"),chaptersMenuContainer=document.getElementById("chapters-menu-container"),chaptersButton=document.getElementById("chapters-button"),chaptersDropdown=document.getElementById("chapters-dropdown"),topicAudio=document.getElementById("topic-audio"),playPauseButton=document.getElementById("play-pause-button"),playPauseIcon=document.getElementById("play-pause-icon"),rewindButton=document.getElementById("rewind-button"),forwardButton=document.getElementById("forward-button"),timelineSlider=document.getElementById("timeline-slider"),currentTimeEl=document.getElementById("current-time"),totalDurationEl=document.getElementById("total-duration"),speedButton=document.getElementById("speed-button"),loopButton=document.getElementById("loop-button"),editorPanel=document.getElementById("editor-panel"),editorList=document.getElementById("editor-list"),editModeToggle=document.getElementById("edit-mode-toggle"),saveDataButton=document.getElementById("save-data-button"),saveIcon=document.getElementById("save-icon"),saveText=document.getElementById("save-text"),saveNotification=document.getElementById("save-notification"),addChapterButton = document.getElementById("add-chapter-button"),passwordModalOverlay=document.getElementById("password-modal-overlay"),passwordInput=document.getElementById("password-input"),confirmEditButton=document.getElementById("confirm-edit-button"),cancelEditButton=document.getElementById("cancel-edit-button"),passwordError=document.getElementById("password-error"),newChapterTitleInput=document.getElementById("new-chapter-title-input"),restoreDefaultsButton = document.getElementById("restore-defaults-button");
             const sideSelectModal = document.getElementById('side-select-modal'), openLeftBtn = document.getElementById('open-left-btn'), openRightBtn = document.getElementById('open-right-btn'), cancelSideSelectBtn = document.getElementById('cancel-side-select-btn');
  			const pdfViewerContainer = document.getElementById('pdf-viewer-container'), pdfCanvas = document.getElementById('pdf-canvas'), pageNumEl = document.getElementById('page-num'), pageCountEl = document.getElementById('page-count'), prevPageBtn = document.getElementById('prev-page'), nextPageBtn = document.getElementById('next-page'), pdfLoadingOverlay = document.getElementById('pdf-loading-overlay'), loadingText = document.getElementById('loading-text'), togglePdfButton = document.getElementById('toggle-pdf-button'), contentContainer = document.getElementById('content-container'), contentFrame = document.getElementById('content-frame'), mainViewerArea = document.getElementById('main-viewer-area');
-            const toggleVideoButton = document.getElementById('toggle-video-button'), changeSessionButton = document.getElementById('change-session-button'), sessionModalOverlay = document.getElementById('session-modal-overlay'), sessionIdInput = document.getElementById('session-id-input'), startSessionButton = document.getElementById('start-session-button');
+            const toggleVideoButton = document.getElementById('toggle-video-button'), videoDropdown = document.getElementById('video-dropdown'), changeSessionButton = document.getElementById('change-session-button'), sessionModalOverlay = document.getElementById('session-modal-overlay'), sessionIdInput = document.getElementById('session-id-input'), startSessionButton = document.getElementById('start-session-button');
             const toggleOralButton = document.getElementById('toggle-oral-button'), oralPdfViewerContainer = document.getElementById('oral-pdf-viewer-container'), flashcardsFrame = document.getElementById('flashcards-frame'), playSelectionButton = document.getElementById('play-selection-button'), playX3Button = document.getElementById('play-x3-button'), deleteConfirmModal = document.getElementById('delete-confirm-modal'), confirmDeleteBtn = document.getElementById('confirm-delete-btn'), cancelDeleteBtn = document.getElementById('cancel-delete-btn');
             const toggleLectorButton = document.getElementById('toggle-lector-button'), lectorPanel = document.getElementById('lector-panel'), lectorFrame = document.getElementById('lector-frame'), resizer = document.getElementById('resizer');
             const pdfViewerWrapper = document.getElementById('pdf-viewer-wrapper');
@@ -714,7 +746,7 @@
  				mapViewerVIew.classList.remove("hidden");
 
  				contentFrame.src = currentTopic.file;
-                const audioSrc = `audios/${currentTopic.file.replace(/_Desplegable\.html$/i, ".mp3")}`;
+                const audioSrc = `audio/${currentTopic.file.replace(/_Desplegable\.html$/i, ".mp3")}`;
                 console.log("Intentando cargar audio desde:", audioSrc);
  				topicAudio.src = audioSrc;
 
@@ -835,7 +867,12 @@
  			let currentSpeedIndex=0;
  			speedButton.addEventListener("click",()=>{currentSpeedIndex=(currentSpeedIndex+1)%speeds.length;const e=speeds[currentSpeedIndex];topicAudio.playbackRate=e,speedButton.textContent=`${e}x`});
  			loopButton.addEventListener("click",()=>{loopButton.classList.toggle("active")});
- 			document.addEventListener("click",e=>{chaptersMenuContainer.contains(e.target)||chaptersDropdown.classList.add("hidden")});
+ 			document.addEventListener("click",e=>{
+                chaptersMenuContainer.contains(e.target)||chaptersDropdown.classList.add("hidden");
+                if (!toggleVideoButton.contains(e.target) && !videoDropdown.contains(e.target)) {
+                    videoDropdown.classList.add('hidden');
+                }
+            });
 
  			editModeToggle.addEventListener("change",()=>{
  				if (editModeToggle.checked) {
@@ -1027,8 +1064,8 @@
                 resetLayout(viewerWrapper, side);
 
                 const url = (pdfToOpen === 'topic')
-                    ? 'https://raw.githubusercontent.com/cheradra312/CARRETERAS_1-24/main/Facilitador%20CICCPE%20Temario%20Condensado%20MEB1%20(versi%C3%B3n%202025-05).pdf'
-                    : 'https://raw.githubusercontent.com/cheradra312/CARRETERAS_1-24/main/Facilitador%20CICCPE%20Preguntas%20oral%20MEB1%20(versi%C3%B3n%202025-01).pdf';
+                    ? 'https://raw.githubusercontent.com/cheradra312/CARRETERAS-1-24/14b1c8c0656d784a0834665e7c26d27cc5855410/Facilitador%20CICCPE%20Temario%20Condensado%20MEB1%20(versi%C3%B3n%202025-05).pdf'
+                    : 'https://raw.githubusercontent.com/cheradra312/CARRETERAS-1-24/14b1c8c0656d784a0834665e7c26d27cc5855410/Facilitador%20CICCPE%20Preguntas%20oral%20MEB1%20(versi%C3%B3n%202025-01).pdf';
                 const topicId = currentTopic.file.replace(/_Desplegable\.html$/i, '');
 
                 if (pdfToOpen === 'topic') {
@@ -1098,22 +1135,35 @@
                  }
             });
 
-            toggleVideoButton.addEventListener('click', () => {
-                if (!currentTopic || !currentTopic.videoId) {
+            toggleVideoButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!currentTopic || !currentTopic.videos || currentTopic.videos.length === 0) {
                     alert('Este tema no tiene un vídeo asociado.');
+                    videoDropdown.classList.add('hidden');
                     return;
                 }
 
-                let videoUrl;
-                if (currentTopic.videoId.startsWith('http')) {
-                    videoUrl = currentTopic.videoId;
+                if (currentTopic.videos.length === 1) {
+                    window.open(currentTopic.videos[0].url, '_blank');
+                    topicAudio.pause();
                 } else {
-                    // Placeholder for potential future video IDs
-                    videoUrl = `https://www.youtube.com/watch?v=${currentTopic.videoId}`;
+                    videoDropdown.innerHTML = '';
+                    currentTopic.videos.forEach(video => {
+                        const link = document.createElement('a');
+                        link.href = video.url;
+                        link.target = '_blank';
+                        link.className = 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100';
+                        link.textContent = video.name;
+                        link.addEventListener('click', () => {
+                            topicAudio.pause();
+                            videoDropdown.classList.add('hidden');
+                        });
+                        videoDropdown.appendChild(link);
+                    });
+                    videoDropdown.classList.toggle('hidden');
                 }
-                window.open(videoUrl, '_blank');
-                topicAudio.pause();
             });
+
 
             playSelectionButton.addEventListener('click', () => {
                 if (selectedChapters.length > 0) {
