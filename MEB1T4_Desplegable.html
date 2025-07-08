@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T4. Estudios de carreteras (II)</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-traffic-light"></i> MEB1T4. Estudios de carreteras (II) <i class="fas fa-chart-bar"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-car-side"></i></div>
+                <h2>1. Estudios de tráfico. Toma de datos: sistemas convencionales y nuevas tecnologías</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>El <strong>conocimiento del tráfico</strong> y sus <strong>previsiones</strong> son una <strong><u>herramienta básica</u></strong> para la <u>planificación</u>, <u>proyecto</u>, <u>conservación</u> y <u>explotación</u> de la red de carreteras.</p></li>
+                    <li><p><i class="fas fa-ruler-combined icon text-purple-600"></i>En particular el <strong>dimensionamiento de una vía</strong> se hace a partir del <u>tráfico existente y previsible</u>, y el <strong>dimensionamiento de un firme</strong> tiene como variable específica el <u>volumen de vehículos pesados</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-clipboard-list icon"></i>Estudios de intensidades de circulación</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-search icon text-blue-600"></i>Para conocer la <strong>intensidad de tráfico</strong> en una carretera en servicio es necesario <strong>contar el número de vehículos</strong> que pasan por determinadas secciones.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-hand-paper icon text-purple-600"></i>Para ello se pueden realizar <strong><u>aforos manuales</u></strong>, donde un <strong>observador cuenta los vehículos</strong> que pasan por una sección en un periodo determinado.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-plus-circle icon text-green-600"></i>Tienen como <strong>ventaja</strong> que permiten <u>distinguir tipos de vehículo</u> y con personal bien entrenado son <u>más precisos</u>,</li>
+                                            <li><i class="fas fa-minus-circle icon text-red-600"></i>y como <strong>inconvenientes</strong>: su <u>coste</u> y <u>capacidad de conteo</u>, hasta <span class="pill-blue">800 veh/h</span> en un periodo largo y <span class="pill-blue">2.000 veh/h</span> en uno corto.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-robot icon text-orange-600"></i>Y <strong><u>aforos automáticos</u></strong> con aparatos que <strong>detectan, cuentan y registran</strong> los vehículos.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-road icon"></i>Unos emplean como detector de vehículos un <strong>tubo de goma</strong>.</li>
+                                            <li><i class="fas fa-wave-square icon"></i>en <strong>instalaciones permanentes</strong> pueden utilizarse otros tipos de detectores que no estén tan expuestos al paso de los vehículos, los más utilizados son los <strong><u>detectores de lazo</u></strong>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-check-circle icon text-green-600"></i>Estos estudios son <strong>fundamentales</strong> para obtener la <span class="definition-pill"><strong>IMD</strong></span> y la <strong>distribución de intensidad a lo largo del año</strong>, elemento sustancial para determinar el <u>nivel de servicio</u> en las carreteras y su <u>dimensionamiento</u>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-plus-circle icon"></i>Además, se realizan otro tipo de estudios:</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-tachometer-alt icon text-blue-600"></i><strong><u>Estudios de velocidades</u></strong>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                             <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p>Se pueden medir por:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li><strong>procedimientos manuales</strong> (en un punto o con coche flotante)</li>
+                                                        <li>o <strong>automáticos</strong>, empleando <u>detectores</u> o el <u>principio del radar</u>.</li>
+                                                    </ul>
+                                                </div>
+                                             </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-map-signs icon text-purple-600"></i><strong><u>Estudios de origen y destino</u></strong>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>Solo se pueden obtener <strong>preguntando a los viajeros</strong> mediante <strong><u>encuestas</u></strong>, que pueden ser de dos tipos: en la carretera (de pantalla o cordón) y domiciliarias.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-calculator"></i></div>
+                <h2>2. Modelación del tráfico. Prognosis de tráfico</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Como <strong>datos básicos</strong> para determinar cuál va a ser el <u>futuro comportamiento</u> de la red de carreteras, es necesario disponer de unas <strong>previsiones de la demanda de tráfico</strong>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-project-diagram icon text-purple-600"></i>Según el <u>número de variables y de relaciones entre ellas</u>, <strong>crece la complejidad</strong> de los métodos de previsión, y con ella el <strong>coste</strong> que supone tanto la <u>obtención de datos</u> para su aplicación, como la <u>realización de las previsiones</u>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Por consiguiente, la aplicación de los <strong>métodos más complicados</strong> estará justificada en los <u>proyectos de gran alcance</u> como en la <u>planificación de un eje de gran importancia</u>, o en el <u>conjunto de la red de una zona amplia</u>,</li>
+                                <li>mientras que para <strong>pequeñas actuaciones</strong> se emplearán <strong>métodos más sencillos</strong>, si no se pueden aprovechar los resultados conseguidos en otros estudios más costosos.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-users icon"></i>Métodos de previsión del transporte de viajeros</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-chart-line icon text-blue-600"></i>Se pueden basar en <strong><u>extrapolación de tendencias</u></strong> del <u>ritmo de crecimiento observado en años anteriores</u> suponiendo que se conservará en el futuro próximo.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>dado que el <strong>crecimiento del tráfico</strong> está directamente relacionado con el del <u>parque de vehículos automóviles</u>, pueden realizarse previsiones del primero basándose en la <u>evolución futura del segundo</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-sitemap icon text-purple-600"></i>O en <strong><u>modelos de previsión de la demanda</u></strong>, en los que se desarrolla un <strong>modelo matemático</strong> que permite determinar los <u>viajes que se harán</u> por una determinada carretera en función de sus <u>características</u>, <u>perfil socioeconómico de los viajeros</u> o <u>modos de transporte alternativos</u> con una serie de <strong>ecuaciones</strong> entre estas variables, que se <strong>ajustan</strong> a partir de los datos obtenidos en las <u>encuestas</u>, y que luego con los <u>valores previsibles</u> para esas variables permiten obtener el <strong>número de viajes en el futuro</strong>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p>se distingue entre:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li><i class="fas fa-city icon"></i><strong><u>modelos agregados</u></strong> (se obtiene el número de viajes que salen de un <u>núcleo de población</u> o <u>zona de una ciudad</u> en función de <u>valores medios</u> de ciertas características)</li>
+                                                        <li><i class="fas fa-user-friends icon"></i>y <strong><u>desagregados</u></strong> (las ecuaciones del modelo tratan de determinar el <u>comportamiento medio de una familia o persona</u> de unas determinadas características socioeconómicas),</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p>o entre:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li><i class="fas fa-route icon"></i><strong><u>modelos directos</u></strong> (suponen que un viajero elige de una sola vez el <u>destino</u>, <u>modo</u> y <u>ruta</u> del viaje bastando una sola ecuación para obtener el número de viajes que van por un tramo de carretera)</li>
+                                                        <li><i class="fas fa-shoe-prints icon"></i>y <strong><u>secuenciales</u></strong> (suponen que el conductor decide en <u>primer lugar si hace o no el viaje</u>, luego cuál será su <u>destino</u>, después qué <u>modo de transporte</u> usará y finalmente qué <u>ruta</u> elegirá, siendo éstos los más empleados siguiendo por tanto las etapas de <u>generación y atracción</u> de viajes en cada zona, <u>distribución</u> de viajes entre zonas, <u>distribución modal</u>, y <u>asignación a la red</u>).</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-truck icon"></i>Métodos de previsión del transporte de mercancías</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-puzzle-piece icon text-blue-600"></i>Los métodos de previsión en este campo están <strong>bastante menos desarrollados</strong> que los de viajeros, debido a que éstos se han aplicado sobre todo en <u>zonas urbanas</u> donde el transporte de mercancías tiene <u>menor importancia relativa</u>.</p></li>
+                                <li><p><i class="fas fa-exclamation-triangle icon text-red-500"></i>Además las previsiones son <strong>mucho más difíciles</strong> debido a la <u>gran diversidad de tipos de mercancías</u>, si se pretendiera alcanzar un grado de precisión semejante al conseguido en el transporte de personas, sería preciso desarrollar modelos para <strong>más de cincuenta grupos de mercancías distintas</strong>, lo que pocas veces estará justificado.</p></li>
+                                <li><p><i class="fas fa-cogs icon text-purple-600"></i>Los <strong>modelos más sencillos</strong> se basan en la <u>extrapolación de las últimas tendencias registradas</u>, o <u>vinculando las previsiones al crecimiento del volumen del transporte de mercancías</u> y éste a la <u>variación del producto nacional bruto</u>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-industry icon text-orange-600"></i>Otros <strong>métodos más elaborados</strong> se basan en la utilización de las <u>tablas input-output de la economía nacional</u>, teniendo en cuenta la <u>localización actual y previsible</u> de los distintos <strong>centros de producción y consumo</strong>, se pueden determinar los <strong>volúmenes de transporte</strong> entre las distintas zonas en función de la previsible <u>variación del PNB</u>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>Su <strong>distribución</strong> será función de los <u>costes de transporte</u> y de las <u>instalaciones de carga y descarga</u> disponibles.</li>
+                                            <li>Después, una vez conocido el <strong>tonelaje</strong> que se transportará por carretera, es preciso determinar el <strong>número de camiones</strong> que será necesario para ello.</li>
+                                            <li>Conocido el número de vehículos necesarios, su <strong>asignación a las distintas rutas</strong> posibles se hace empleando <u>modelos de asignación similares</u> a los empleados para el tráfico de coches.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-chart-bar"></i></div>
+                <h2>3. Plan de aforos. Mapas de tráfico del Ministerio de Transportes y Movilidad Sostenible</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-gavel icon text-blue-600"></i>La <span class="law-pill"><strong>Ley 37/2015 de carreteras</strong></span> establece la <strong>obligación</strong> del <span class="actor-pill">MITMS</span> de <strong>facilitar información actualizada</strong> de los <u>datos de aforo</u> en las carreteras de su competencia.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-network-wired icon text-purple-600"></i>Para ello, la <strong>red de carreteras del Estado</strong> cuenta con unas <span class="pill-blue"><strong>3.400</strong></span> <strong>estaciones de aforo</strong>, de las cuales:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>un <span class="pill-blue"><strong>22%</strong></span> son <strong>permanentes</strong> (aforan todo el año),</li>
+                                <li><span class="pill-blue"><strong>2%</strong></span> <strong>semipermanentes</strong> (aforan <span class="pill-blue">84 días</span>, una semana por mes),</li>
+                                <li><span class="pill-blue"><strong>12%</strong></span> <strong>primarias</strong> (aforan una semana en meses alternos, incluyendo siempre agosto),</li>
+                                <li><span class="pill-blue"><strong>31%</strong></span> <strong>secundarias</strong> (aforan <span class="pill-blue">12 días</span> laborables, 2 por cada mes alterno)</li>
+                                <li>y <span class="pill-blue"><strong>33%</strong></span> de <strong>cobertura</strong> (aforan <span class="pill-blue">2 días</span> laborables al año).</li>
+                                <li>Además, hay cerca de <span class="pill-blue"><strong>300</strong></span> <strong>estaciones virtuales</strong> en las <u>autopistas de peaje</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-map-marked-alt icon text-orange-600"></i>Esta <strong>red de aforo</strong> permite elaborar anualmente el <span class="plan-pill"><strong>Mapa de Tráfico</strong></span> desde el año <span class="pill-blue">1960</span>, que contiene actualmente:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>mapas de tráfico</strong> con datos de <span class="definition-pill">IMD</span> generales y en los accesos a las principales ciudades, tanto de <u>vehículos ligeros</u> como <u>pesados</u> (diferenciando las mercancías peligrosas),</li>
+                                <li>y <strong>velocidades medias de circulación</strong> para los <u>vehículos ligeros</u> de cada tramo de la red e <strong>información puntual</strong> de las <u>velocidades temporales</u> de vehículos ligeros y pesados que pasa por cada sección de aforos;</li>
+                                <li>además recoge <strong>datos de la evolución</strong> en los últimos años, junto con un <strong>estudio de accidentes</strong> en la red de carreteras del Estado.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-info-circle icon text-indigo-600"></i>En el <span class="plan-pill">Mapa</span> se publica tanto la <strong>información oficial de tráfico</strong> que el <span class="actor-pill">MITMS</span> proporciona sobre la <span class="definition-pill">RCE</span>, como la correspondiente a la <strong>red prioritaria autonómica</strong> de carreteras, facilitada por las <span class="actor-pill">Comunidades Autónomas</span>, de forma que entre ambas se recoge el <span class="pill-blue"><strong>95%</strong></span> del <u>tráfico total</u> y el <span class="pill-blue"><strong>96%</strong></span> del <u>tráfico de vehículos pesados</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-car-side icon text-teal-600"></i>La <span class="definition-pill"><strong>IMD</strong></span> actual ronda los:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="pill-blue"><strong>25.000</strong></span> vehículos en <u>autovías</u>,</li>
+                                <li><span class="pill-blue"><strong>20.000</strong></span> en <u>autopistas de peaje</u></li>
+                                <li>y <span class="pill-blue"><strong>3.500</strong></span> en <u>carreteras convencionales</u>,</li>
+                                <li>con un <strong>valor medio</strong> para toda la red sobre los <span class="pill-blue"><strong>13.000</strong></span>, con un <span class="pill-blue"><strong>15%</strong></span> de <u>pesados</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-road-circle-exclamation icon text-red-500"></i>No obstante, en la red de carreteras del Estado conviven carreteras con <strong>niveles de tráfico muy dispar</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>Autovías de acceso a ciudades y circunvalaciones</strong> donde se alcanzan intensidades muy elevadas, superiores a <span class="pill-blue">100.000 vehículos/día</span>.</li>
+                                <li><strong>Autopistas de peaje y autovías de baja demanda</strong> (<span class="definition-pill">IMD</span> en torno a los <span class="pill-blue">5.000 vehículos/día</span> o inferiores).</li>
+                                <li><strong>Carreteras convencionales de elevada demanda</strong>, incluso alcanzando intensidades de <span class="pill-blue">20.000 vehículos/día</span>, lógicamente con un <u>mal nivel de servicio</u>, como algunos tramos del corredor Mediterráneo.</li>
+                                <li><strong>Carreteras convencionales de baja demanda</strong>, <span class="pill-blue">2.000 vehículos/día</span> o inferiores. Son normalmente carreteras de <u>trazado estricto</u> en entornos <u>montañosos</u> o <u>despoblados</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-chart-pie icon text-green-600"></i>También debe recalcarse que, aunque la <strong>red de carreteras del Estado</strong> supone tan solo el <span class="pill-blue"><strong>15%</strong></span> del conjunto de la red de carreteras española, <strong>concentra más del <span class="pill-blue">50%</span> del tráfico</strong>, elevándose el porcentaje al <span class="pill-blue"><strong>65%</strong></span> para el <u>tráfico de vehículos pesados</u>.</p></li>
+                    <li><p><i class="fas fa-exclamation-circle icon text-yellow-600"></i>Estas cifras, junto con la <strong>preponderancia del transporte por carretera</strong> tanto en el tránsito interior de personas como de mercancías, dan idea de la <strong><u>importancia de la red de carreteras del Estado</u></strong> en el sistema de transporte español.</p></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
