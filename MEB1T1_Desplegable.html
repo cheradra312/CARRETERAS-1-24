@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T1. La legislación de Carreteras</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list, .even-deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li, .even-deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        .even-deeper-nested-list > li::before {
+             content: '▫️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before,
+        .even-deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h2, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h2, .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-gavel"></i> MEB1T1. La legislación de Carreteras <i class="fas fa-road"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-book-reader"></i></div>
+                <h2>1. La legislación de carreteras</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-landmark icon text-purple-600"></i>Los <strong>artículos 148 y 149</strong> de la <span class="law-pill"><strong>Constitución española</strong></span> determinan el <strong><u>régimen competencial</u></strong> en materia de carreteras, estableciendo que:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>el <span class="actor-pill"><strong>Estado</strong></span> tiene <strong><u>competencia exclusiva</u></strong> sobre las <u>carreteras de interés general</u> o cuya realización <u>afecte a más de una Comunidad Autónoma</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-list-check icon text-blue-600"></i>En la <span class="law-pill"><strong>Ley de Carreteras</strong></span> se fijan los <strong>criterios</strong> para considerar un itinerario como de <strong><u>interés general</u></strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-globe-europe icon"></i><strong>formar parte</strong> de los principales <u>itinerarios de tráfico internacional</u>;</li>
+                                <li><i class="fas fa-plane-departure icon"></i><strong>constituir el acceso principal</strong> a un <u>puerto</u> o <u>aeropuerto</u> de interés general, a los <u>centros logísticos de la defensa</u>, o a los de <u>transporte y logística</u> que sean declarados de interés general por el <span class="actor-pill">Ministerio de Transportes y Movilidad Sostenible (MITMS)</span>;</li>
+                                <li><i class="fas fa-flag icon"></i><strong>servir de acceso</strong> a los principales <u>pasos fronterizos</u>,</li>
+                                <li><i class="fas fa-map-signs icon"></i>y <strong>enlazar</strong> las <u>Comunidades Autónomas</u>, conectando los principales <u>núcleos de población del Estado</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-book"></i></div>
+                <h2>2. Ley 37/2015 de Carreteras</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <p class="mb-4"><i class="fas fa-sitemap icon text-blue-600"></i>La ley se desarrolla en <strong>cuatro capítulos</strong>.</p>
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-bookmark icon"></i>Capítulo I: Disposiciones Generales</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-purple-600"></i>El capítulo I, contiene las <strong>disposiciones generales</strong>, determina el <u>objeto de la Ley</u>, <u>define</u> y <u>clasifica</u> las carreteras.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>Se consideran <span class="definition-pill"><strong>carreteras</strong></span> “las vías de <u>dominio y uso público</u> proyectadas, construidas y señalizadas fundamentalmente para la <u>circulación de vehículos automóviles</u>”.</li>
+                                            <li>Quedan <strong>fuera de este concepto</strong> los <u>caminos</u>, las <u>vías pecuarias</u>, y los <u>viales estatales del Viario Anexo a la RCE</u>, en los que no será de aplicación obligatoria la normativa técnica del Ministerio, pero sí estarán sujetos a esta ley, siendo su gestión competencia del <span class="actor-pill">MITMS</span>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-road icon text-orange-600"></i>Las <strong>carreteras se clasifican</strong> en:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><span class="definition-pill"><strong>Autopistas</strong></span> (especialmente proyectadas, construidas y señalizadas para la <u>exclusiva circulación de automóviles</u>, a las que <u>no tienen acceso las propiedades colindantes</u>, <u>no tienen cruces a nivel</u> con otras vías y disponen de <u>calzadas separadas</u> para cada sentido de circulación);</li>
+                                            <li><span class="definition-pill"><strong>Autovías</strong></span> (no reuniendo todos los requisitos de las autopistas, tienen <u>calzadas separadas</u>, <u>cruces a distinto nivel</u> y <u>limitación de accesos</u>);</li>
+                                            <li><span class="definition-pill"><strong>Carreteras multicarril</strong></span> (sin ser autopistas o autovías, tienen <u>al menos dos carriles</u> para cada sentido, con <u>separación o delimitación</u> de los mismos, pudiendo tener <u>accesos o cruces a nivel</u>);</li>
+                                            <li>y <span class="definition-pill"><strong>Carreteras convencionales</strong></span> (el resto).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                 <li>
+                                     <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-cogs icon"></i> Por otra parte, se considera <span class="definition-pill"><strong>elemento funcional</strong></span> de una carretera toda <strong>zona permanente afecta a la conservación</strong> de la misma o a la <strong>explotación del servicio público viario</strong>, tales como:</p>
+                                     </div>
+                                     <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-wrench icon"></i>centros de conservación y explotación,</li>
+                                            <li><i class="fas fa-utensils icon"></i>áreas de servicios,</li>
+                                            <li><i class="fas fa-road-circle-check icon"></i>vías de servicio,</li>
+                                            <li><i class="fas fa-bed icon"></i>zonas de descanso,</li>
+                                            <li><i class="fas fa-parking icon"></i>zonas de estacionamiento,</li>
+                                            <li><i class="fas fa-truck-monster icon"></i>lechos de frenado,</li>
+                                            <li><i class="fas fa-balance-scale icon"></i>estaciones de pesaje,</li>
+                                            <li><i class="fas fa-bus-alt icon"></i>paradas de autobuses, etc.</li>
+                                        </ul>
+                                     </div>
+                                 </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-network-wired icon text-indigo-600"></i>La <span class="definition-pill"><strong>Red de Carreteras del Estado (RCE)</strong></span> se clasificará funcionalmente en:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><span class="definition-pill"><strong>Red Básica</strong></span> (integrada por las carreteras que <u>facilitan la accesibilidad</u> a todo el territorio nacional y por las que circulan los <u>principales flujos de viajeros y mercancías</u>)</li>
+                                            <li>y <span class="definition-pill"><strong>Red Complementaria</strong></span> (integrada por el <u>resto de carreteras</u> de la RCE).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-bookmark icon"></i>Capítulo II: Planificación, proyecto, construcción y explotación de carreteras</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                             <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-map icon text-teal-600"></i>El capítulo II, titulado “<u>Planificación, proyecto, construcción y explotación de carreteras</u>”, se divide en <strong>5 secciones</strong>: Planificación; Programación, estudios y proyectos; Construcción; Financiación; y Explotación.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                             <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p>En él se <strong>definen y clasifican</strong> los <strong>estudios de carreteras</strong> en:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li><i class="fas fa-file-alt icon"></i><u>estudios previos</u> (a escala 1:10.000 o menores),</li>
+                                                        <li><i class="fas fa-search-location icon"></i><u>estudios informativos</u> (a escala 1:5.000, definen y comparan alternativas para elegir la más adecuada),</li>
+                                                        <li><i class="fas fa-ruler-combined icon"></i><u>anteproyectos</u>,</li>
+                                                        <li><i class="fas fa-drafting-compass icon"></i><u>proyectos básicos o de trazado</u> (a escala 1:1.000, definen completamente los aspectos geométricos, y los bienes, derechos y servicios afectados),</li>
+                                                        <li><i class="fas fa-hard-hat icon"></i><u>proyecto de construcción</u> (con detalle suficiente para hacer factible su construcción),</li>
+                                                        <li><i class="fas fa-check-circle icon"></i><u>documentos finales de obra</u>,</li>
+                                                        <li><i class="fas fa-city icon"></i>y <u>estudios de delimitación de tramos urbanos</u>.</li>
+                                                    </ul>
+                                                </div>
+                                             </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-coins icon text-green-600"></i>La <strong>financiación</strong> de las actuaciones en las carreteras del Estado se efectuará mediante:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-piggy-bank icon"></i>los <u>Presupuestos Generales del Estado</u>,</li>
+                                            <li><i class="fas fa-landmark icon"></i>los <u>recursos de otras administraciones públicas</u>, de <u>organismos nacionales e internacionales</u> y de <u>particulares</u>,</li>
+                                            <li><i class="fas fa-road-bridge icon"></i>así como mediante el establecimiento de <u>peajes</u> y <u>contribuciones especiales</u>, cuando de la ejecución de las obras resulte la obtención de un <strong>beneficio especial</strong> para personas físicas o jurídicas.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-hand-holding-usd icon text-yellow-600"></i>La <strong>explotación</strong> de las carreteras del Estado se realiza, como <strong>regla general</strong>, <strong><u>directamente por él</u></strong>, siendo su utilización <u>gratuita para el usuario</u> o podrá conllevar el pago de <u>peajes o tasas</u>, cuyas tarifas aprobará el <span class="actor-pill">Gobierno</span>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><strong>Excepcionalmente</strong>, las carreteras pueden ser explotadas mediante cualquiera de los sistemas de <strong><u>gestión indirecta</u></strong> previstos en la Ley.</li>
+                                            <li>La facultad de <strong>inspección</strong> de la explotación corresponde, cualquiera que sea la forma de gestión, al <span class="actor-pill">MITMS</span>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-bookmark icon"></i>Capítulo III: Uso y defensa de las carreteras</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-purple-600"></i>Comprende dos secciones: <u>Limitaciones de la propiedad</u>, e <u>Infracciones y sanciones</u>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-vector-square icon text-orange-600"></i>Se definen:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-landmark icon"></i><span class="definition-pill"><strong>Zona de dominio público</strong></span> (<u>terrenos ocupados</u> por las carreteras, sus <u>elementos funcionales</u> y una franja de <span class="pill-blue">8 m</span> en autopistas y autovías, y de <span class="pill-blue">3 m</span> en el resto de las carreteras, a cada lado de la vía, medida en horizontal desde la arista exterior de la explanación y perpendicularmente a ella, sólo podrán realizarse obras o instalaciones de un <u>servicio público de interés general</u> previa autorización del <span class="actor-pill">MITMS</span>, y será obligatorio su <u>deslinde</u>);</li>
+                                            <li><i class="fas fa-road-barrier icon"></i><span class="definition-pill"><strong>Zona de servidumbre</strong></span> (dos <u>franjas de terreno</u> a ambos lados, delimitadas interiormente por la zona de dominio público y exteriormente por dos líneas paralelas a las aristas exteriores de la explanación a <span class="pill-blue">25 m</span> en autopistas y autovías, y <span class="pill-blue">8 m</span> en el resto de las carreteras, <u>no podrán realizarse obras</u> ni se permitirán más usos que aquellos que sean <u>compatibles con la seguridad viaria</u> y la adecuada explotación de la vía, previa <u>autorización del Ministerio</u>);</li>
+                                            <li><i class="fas fa-draw-polygon icon"></i><span class="definition-pill"><strong>Zona de afección</strong></span> (dos <u>franjas de terreno</u> a ambos lados de la misma, delimitadas interiormente por la zona de servidumbre y exteriormente por dos líneas paralelas a las aristas exteriores de la explanación a <span class="pill-blue">100 m</span> en autopistas y autovías, y <span class="pill-blue">50 m</span> en el resto de las carreteras, para la realización de obras e instalaciones así como para el cambio de su uso se exige <u>autorización previa del Ministerio</u>);</li>
+                                            <li><i class="fas fa-ruler-horizontal icon"></i>y <span class="definition-pill"><strong>Zona de limitación a la edificabilidad</strong></span> (a <span class="pill-blue">50 m</span> en autopistas y autovías, y a <span class="pill-blue">25 m</span> en el resto, con respecto al borde de la calzada, en <u>variantes de población</u> siempre a <span class="pill-blue">50 m</span> para la defensa de la nueva carretera, si la explanación es muy grande se hace coincidir con el borde exterior de la zona de servidumbre, dentro de esta línea queda <u>prohibida cualquier obra</u> de construcción, reconstrucción o ampliación, salvo las que sea de <u>conservación y mantenimiento</u>).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-gavel icon text-red-600"></i>Se determina el <strong>régimen sancionador</strong> en materia de carreteras:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-list-ol icon"></i><strong>tipificación de infracciones</strong> (<u>leves</u>, <u>graves</u> y <u>muy graves</u>),</li>
+                                            <li><i class="fas fa-balance-scale icon"></i><strong>criterios de graduación</strong>,</li>
+                                            <li><i class="fas fa-user-tie icon"></i><strong>órganos competentes</strong> para la imposición de sanciones</li>
+                                            <li><i class="fas fa-calendar-times icon"></i>y <strong>plazos de prescripción</strong> (<span class="pill-blue">seis años</span> para las muy graves, <span class="pill-blue">cuatro años</span> para las graves, y <span class="pill-blue">un año</span> para las leves).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-book-open icon"></i>Capítulo IV: Travesías y tramos urbanos</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                             <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-city icon text-teal-600"></i>El capítulo IV se dedica a:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><span class="definition-pill"><strong>Travesías</strong></span> (partes de carretera en las que existen <u>edificaciones consolidadas</u> al menos en dos terceras partes de la longitud de ambas márgenes y un <u>entramado de calles</u> conectadas con aquélla en al menos una de sus márgenes)</li>
+                                            <li>y <span class="definition-pill"><strong>Tramos urbanos</strong></span> (tramos de carretera estatal que discurren por <u>suelo clasificado como urbano</u> en el correspondiente instrumento de planeamiento urbanístico y reconocidos por un <u>estudio de delimitación de tramos urbanos</u> aprobado por el Ministerio).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-check-circle icon text-green-600"></i>El <strong>otorgamiento de autorizaciones</strong> para realizar obras:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-road-circle-xmark icon"></i>En la <u>zona de dominio público y servidumbre</u> de los <strong>tramos urbanos que no sean travesía</strong> corresponde al <span class="actor-pill">Ministerio</span>, previo informe del <span class="actor-pill">Ayuntamiento</span> correspondiente.</li>
+                                            <li><i class="fas fa-house-chimney-window icon"></i>En las <strong>travesías que no sean tramo urbano</strong> el otorgamiento es igual, incluso en las restantes zonas de protección (<u>afección</u> y <u>limitación a la edificabilidad</u>) de la carretera.</li>
+                                            <li><i class="fas fa-building icon"></i>Y, por último, en las <strong>travesías que sí sean tramo urbano</strong>, el otorgamiento le corresponde al <span class="actor-pill">Ministerio</span>, previo informe del <span class="actor-pill">ayuntamiento</span>, pero solo en la <u>zona de dominio público</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-scroll"></i></div>
+                <h2>3. Reglamento General de Carreteras</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>El <span class="law-pill"><strong>Reglamento General de Carreteras de 1994</strong></span> está <strong>vigente</strong> en lo que no se oponga a la <span class="law-pill">Ley 37/2015</span>, consta de <strong>cinco Títulos</strong> que regulan:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>las <u>disposiciones generales</u>,</li>
+                                <li>los <u>Planes y Programas de Carreteras del Estado</u>,</li>
+                                <li>el <u>régimen jurídico</u> de las carreteras,</li>
+                                <li>el <u>uso y defensa</u> de las carreteras,</li>
+                                <li>y la materia correspondiente a <u>travesías y redes arteriales</u>, con contenido paralelo a la <span class="law-pill">Ley 25/1988</span> que desarrollan.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-calendar-check icon text-purple-600"></i>La <span class="law-pill"><strong>Ley 37/2015</strong></span> establece un <strong>plazo de un año</strong> desde su entrada en vigor (el <span class="pill-blue">1 de octubre de 2015</span>) para la <strong><u>aprobación</u></strong> del correspondiente <u>reglamento general de desarrollo</u>.</p></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-sitemap"></i></div>
+                <h2>4. Funciones y estructura de la Dirección General de Carreteras</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Según el <span class="law-pill"><strong>RD 253/2024</strong></span> que desarrolla la estructura orgánica básica del <span class="actor-pill">MITMS</span>, corresponde a la <span class="actor-pill">DG de Carreteras</span> el ejercicio de las siguientes <strong>funciones</strong>, entre otras, en el ámbito de las <u>carreteras del Estado</u>, en el contexto de la <u>adaptación al cambio climático</u>, la <u>descarbonización</u> y la <u>movilidad sostenible</u>, y sin perjuicio de las competencias del <span class="actor-pill">Ministerio del Interior</span> en control y gestión del tráfico:</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tasks icon text-purple-600"></i>Funciones:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-drafting-compass icon"></i>La <strong>elaboración y seguimiento</strong> de la <u>planificación de carreteras</u>, así como <u>estudios previos e informativos</u>, <u>anteproyectos</u>, <u>proyectos de trazado y de construcción</u>.</li>
+                                <li><i class="fas fa-car-crash icon"></i>Las <strong>evaluaciones de impacto</strong> de las carreteras en la <u>seguridad viaria</u>, la elaboración de <u>estudios de accidentalidad</u>, y la <strong>coordinación</strong> de los programas de <u>formación de los auditores</u> de seguridad viaria.</li>
+                                <li><i class="fas fa-file-invoice-dollar icon"></i>La <strong>elaboración y seguimiento</strong> de los <u>estudios de viabilidad de concesiones</u> de carreteras, así como la <strong>inspección</strong> de esas concesiones, en coordinación con la <span class="actor-pill">Subdelegación del Gobierno en las Sociedades Concesionarias de Autopistas Nacionales de Peaje</span>.</li>
+                                <li><i class="fas fa-hard-hat icon"></i>La <strong>gestión de la construcción</strong> de <u>nuevas carreteras</u>, <u>acondicionamientos</u>, <u>duplicaciones de calzada</u> y <u>carreteras 2+1</u>.</li>
+                                <li><i class="fas fa-tools icon"></i>La <strong>conservación</strong> de las carreteras y su <strong>explotación</strong> a través de las actividades de <u>ayuda a la vialidad</u> y <u>vigilancia</u>.</li>
+                                <li><i class="fas fa-exchange-alt icon"></i>La <strong>gestión de la cesión</strong> de los tramos de las carreteras del Estado que se transfieran a los <span class="actor-pill">Ayuntamientos</span> y <strong>cambios de titularidad</strong> de carreteras existentes en virtud de acuerdo mutuo con otras administraciones públicas, así como la <strong>actualización</strong> del <u>inventario y catálogo</u> de las carreteras del Estado.</li>
+                                <li><i class="fas fa-shield-alt icon"></i>La <strong>gestión del patrimonio vial</strong>, su <strong>defensa</strong> y su <strong>mejor uso</strong> en las <u>zonas de dominio público</u>, de <u>servidumbre</u> y de <u>afección</u>, así como en las <u>zonas de influencia</u> de las carreteras del Estado.</li>
+                                <li><i class="fas fa-utensils icon"></i>El <strong>proyecto y la coordinación, inspección y control</strong> de las <u>concesiones de áreas de servicio</u>.</li>
+                                <li><i class="fas fa-bicycle icon"></i>El <strong>impulso y desarrollo</strong> de iniciativas de <u>movilidad ciclista</u> con una <u>red continua y segura</u>.</li>
+                                <li><i class="fas fa-leaf icon"></i>La <strong>elaboración, implementación, seguimiento y control</strong> de la <u>estrategia de eficiencia energética</u>.</li>
+                                <li><i class="fas fa-lightbulb icon"></i>El <strong>impulso a la innovación</strong>, así como la <strong>implantación de nuevas tecnologías</strong> en la carretera, en especial la metodología <span class="definition-pill">BIM</span>, además de la <strong>elaboración y actualización</strong> de los <u>sistemas de gestión de la información</u> de la <span class="actor-pill">DG de Carreteras</span>.</li>
+                                <li><i class="fas fa-globe-europe icon"></i>La <strong>participación</strong> en la elaboración y seguimiento de las <u>políticas nacionales y europeas en I+D+i</u> en carreteras y la <strong>representación</strong> en <u>organizaciones nacionales, europeas e internacionales</u> en esta materia.</li>
+                                <li><i class="fas fa-coins icon"></i>La <strong>elaboración de la propuesta de anteproyecto de presupuestos</strong> y la <strong>gestión y tramitación</strong> de los <u>créditos y gastos</u> asignados, así como la <strong>gestión</strong> de los asuntos relativos a la <u>licitación</u>, <u>contratación</u>, <u>adquisiciones</u> y <u>expropiaciones</u>.</li>
+                                <li><i class="fas fa-book-open icon"></i>La <strong>elaboración y propuesta</strong> de la <u>normativa técnica</u> de aplicación en las carreteras.</li>
+                            </ul>
+                        </div>
+                    </li>
+                     <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-building icon text-indigo-600"></i>La <span class="actor-pill"><strong>Dirección General de Carreteras</strong></span> se estructura en las siguientes <strong>subdirecciones generales</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Planificación y Explotación,</li>
+                                <li>Proyectos y Obras,</li>
+                                <li>Conservación y Gestión de Activos,</li>
+                                <li>Sostenibilidad e Innovación,</li>
+                                <li>y Coordinación.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-map"></i></div>
+                <h2>5. Catálogo de la Red de Carreteras del Estado</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-book-open icon text-blue-600"></i>La <span class="law-pill"><strong>Ley 37/2015 de Carreteras</strong></span> <strong>actualiza el catálogo</strong> de las carreteras estatales de acuerdo con la <u>clasificación</u> que en ella se contiene y establece la <strong>obligación</strong> del <span class="actor-pill">MITMS</span> de <strong><u>mantener actualizado este catálogo</u></strong>.</p></li>
+                    <li><p><i class="fas fa-desktop icon text-purple-600"></i>Este catálogo se presenta en su <strong>web</strong> con datos del final de cada año. La información se desglosa en diferentes <u>listados generales y provinciales</u>, con <u>tramificación</u>, <u>longitudes por tipo de vía</u>, y <u>puntos kilométricos iniciales y finales</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tags icon text-orange-600"></i>El <strong>Catálogo</strong> es la <strong><u>referencia de nomenclatura</u></strong> a utilizar para la <span class="definition-pill">RCE</span>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>En el campo <span class="definition-pill"><strong>“Carretera”</strong></span> se incluye la <strong>denominación</strong>: <strong>N</strong> para <u>carreteras convencionales</u> (las antiguas «nacionales») y <strong>A</strong>, <strong>AP</strong> o <strong>código de la ciudad</strong> para <u>autopistas y autovías libres</u>, <u>autopistas de peaje</u> o <u>tramos urbanos y periurbanos de gran capacidad</u>.</li>
+                                <li>En el campo <span class="definition-pill"><strong>“Denominación”</strong></span> se incluye el <strong>nombre</strong> de cada carretera.</li>
+                                <li>y en el campo <span class="definition-pill"><strong>“Itinerario de referencia O/D”</strong></span> figuran, en general, las <strong>localidades</strong> que la definen.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-chart-pie icon text-green-600"></i>Los <strong>datos oficiales</strong> indican una <strong>red estatal</strong> compuesta por <span class="pill-blue"><strong>26.500 km</strong></span>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="pill-blue">1.400 km</span> de <u>autopistas de peaje</u>,</li>
+                                <li><span class="pill-blue">10.300 km</span> <u>autovías y autopistas libres</u>,</li>
+                                <li><span class="pill-blue">500 km</span> <u>carreteras multicarril</u></li>
+                                <li>y <span class="pill-blue">14.300 km</span> <u>carreteras convencionales</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
