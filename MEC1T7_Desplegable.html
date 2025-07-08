@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T7. Movimiento de tierras</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .formula-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .formula-pill { background-color: #ffedd5; color: #9a3412; border: 1px solid #fb923c; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-mountain"></i> MEB1T7. Movimiento de tierras <i class="fas fa-truck-monster"></i></h1>
+        </header>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-cogs"></i></div>
+                <h2>1. Movimiento de tierras</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Se denominan así las <strong>obras de remodelación del terreno natural</strong> que es preciso realizar para conseguir la <span class="definition-pill"><strong>explanación</strong></span> de la carretera.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-exchange-alt icon text-purple-600"></i>Según que la sección se desarrolle en <span class="definition-pill"><strong>desmonte</strong></span> o en <span class="definition-pill"><strong>terraplén</strong></span> será necesario proceder a:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>la <strong>excavación y retirada</strong> del terreno natural</li>
+                                <li>o a la <strong>aportación, extensión y compactación</strong> de materiales apropiados.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-exclamation-triangle icon text-orange-600"></i>El <strong>movimiento de tierras</strong> es <strong>muy importante</strong> cuando la carretera <u>discurre por terreno accidentado</u> y tiene una <u>velocidad de proyecto elevada</u>, pero aunque se trate de una carretera en una <u>zona llana</u> o que se <u>adapte mucho al terreno</u>, las obras de tierra tienen siempre un <strong>peso importante en el presupuesto</strong> de la obra.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-bullseye icon text-indigo-600"></i>por lo que es <strong>fundamental</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>optimizar el trazado</strong> para reducirlas,</li>
+                                <li><strong>compensándolas</strong> lo mejor posible,</li>
+                                <li><strong>analizando las necesidades</strong> de <u>préstamos</u> y <u>vertederos</u>,</li>
+                                <li>así como <strong>determinando la distancia media de transporte</strong> de los materiales excavados hasta su lugar de empleo a partir de un <span class="definition-pill"><strong>diagrama de masas</strong></span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-search-location icon text-teal-600"></i>Además, es necesario <strong>estudiar las características geotécnicas</strong> de los <u>suelos</u> y <u>rocas</u> afectados para <strong>asegurar la estabilidad</strong> de las explanaciones y <strong>elegir los métodos constructivos</strong> más adecuados.</p></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-layer-group"></i></div>
+                <h2>2. Clasificación y características de los suelos según el PG-3</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Los <strong>suelos</strong> están constituidos por una <strong>mezcla de <u>partículas sólidas inorgánicas</u></strong>, cuyos intersticios están ocupados por <u>aire</u> y <u>agua</u>.</p></li>
+                    <li><p><i class="fas fa-seedling icon text-green-600"></i>Puede contener también <strong>materia orgánica</strong>, desde <u>cantidades despreciables</u> hasta un <u>porcentaje muy elevado</u> (turbas y otros suelos orgánicos).</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-sitemap icon text-purple-600"></i>Según el <span class="law-pill"><strong>PG-3</strong></span> los <strong>suelos se clasifican</strong> en:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-check-double icon text-green-500"></i>suelos <strong>seleccionados</strong>,</li>
+                                <li><i class="fas fa-check icon text-blue-500"></i>suelos <strong>adecuados</strong>,</li>
+                                <li><i class="fas fa-minus icon text-yellow-500"></i>suelos <strong>tolerables</strong>,</li>
+                                <li><i class="fas fa-exclamation icon text-orange-500"></i>suelos <strong>marginales</strong></li>
+                                <li><i class="fas fa-times icon text-red-500"></i>y suelos <strong>inadecuados</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-clipboard-list icon"></i>Se determinarán en función de una serie de <strong>parámetros</strong>, los principales son:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-leaf icon"></i>su contenido en <strong>materia orgánica</strong>;</li>
+                                <li><i class="fas fa-gem icon"></i>su contenido en <strong>sales solubles</strong> como el yeso;</li>
+                                <li><i class="fas fa-filter icon"></i><strong>proporción de finos</strong> controlada mediante el <u>cernido por el tamiz <span class="formula-pill">0,080 UNE</span></u>, <u>límite líquido</u> e <u>índice de plasticidad</u>;</li>
+                                <li><i class="fas fa-expand-arrows-alt icon"></i>e <strong>hinchamiento</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-times-circle icon text-red-500"></i>Se considerarán <span class="definition-pill"><strong>suelos inadecuados</strong></span> los que <u>no se puedan incluir en las categorías anteriores</u>, o los que puedan resultar <u>insalubres</u> para las actividades que sobre los mismos se desarrollen.</p></li>
+                    <li><p><i class="fas fa-road icon text-orange-600"></i>Los <strong>suelos seleccionados y adecuados</strong> se utilizan fundamentalmente en <strong>coronación de terraplenes</strong> o <strong>fondos de desmonte</strong> que requieran una <u>mejora de la explanada natural</u>, mientras que los <strong>suelos tolerables</strong> son habituales en <strong>núcleo de terraplén</strong>.</p></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-layer-group"></i></div>
+                <h2>3. Construcción de terraplenes, pedraplenes y rellenos todo-uno</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <div class="collapsible-trigger">
+                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                    <h3 class="font-bold"><i class="fas fa-mountain icon"></i>Terraplenes</h3>
+                </div>
+                <div class="collapsible-content hidden">
+                    <ul>
+                        <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Si el terreno tiene <strong>gran inclinación</strong> se <strong><u>escalona la superficie</u></strong> para evitar el <u>desplazamiento del terraplén</u>, y después se realizan las siguientes <strong>fases</strong>:</p></li>
+                        <li>
+                            <div class="collapsible-trigger">
+                                <i class="fas fa-chevron-right collapsible-icon"></i>
+                                <p><i class="fas fa-truck-monster icon text-purple-600"></i><strong><u>Excavación, transporte y extensión del suelo.</u></strong></p>
+                            </div>
+                            <div class="collapsible-content hidden">
+                                <ul class="nested-list">
+                                    <li>La construcción se hace por <strong>tongadas</strong> con un <strong>espesor</strong> que depende de la <u>maquinaria de compactación</u>, el <u>tipo de suelo</u> y el <u>grado de compactación deseable</u>.</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-trigger">
+                                <i class="fas fa-chevron-right collapsible-icon"></i>
+                                <p><i class="fas fa-tint icon text-orange-600"></i><strong><u>Humectación o desecación del suelo.</u></strong></p>
+                            </div>
+                            <div class="collapsible-content hidden">
+                                <ul class="nested-list">
+                                    <li>Una vez extendida la tongada se procede, si es necesario, a su <strong>humectación</strong> para que el suelo alcance una <u>humedad próxima a la óptima</u> de compactación.</li>
+                                    <li>En ocasiones la humedad del suelo es <strong>excesiva</strong>, cuando se deba a precipitaciones puede ser suficiente esperar a su <strong>desecación natural</strong> o <strong>acelerada</strong> mediante <u>escarificación</u>.</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-trigger">
+                                <i class="fas fa-chevron-right collapsible-icon"></i>
+                                <p><i class="fas fa-compress-alt icon text-indigo-600"></i><strong><u>Compactación de las tongadas</u></strong>, mediante varias pasadas de <strong>compactadoras de diferente tipo</strong> (<u>rodillos vibratorios</u>, <u>compactadores de neumáticos</u>, o <u>rodillos de pata de cabra</u> en suelos cohesivos con cierta humedad).</p>
+                            </div>
+                            <div class="collapsible-content hidden">
+                                <ul class="nested-list">
+                                    <li>Se exige un porcentaje próximo al <span class="pill-blue"><strong>100%</strong></span> de la <strong>densidad óptima</strong> según el <span class="definition-pill">PN</span> o <span class="definition-pill">PM</span>, determinando el <u>espesor máximo de la tongada</u> y el <u>número mínimo de pasadas</u>.</li>
+                                     <li>El <span class="law-pill"><strong>PG-3</strong></span> fija un espesor de tongada de <span class="pill-blue"><strong>30 cm</strong></span>, salvo especificación en contra.</li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="collapsible-trigger mt-4 pt-4 border-t border-gray-200">
+                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                    <h3 class="font-bold"><i class="fas fa-cubes icon"></i>Pedraplenes</h3>
+                </div>
+                <div class="collapsible-content hidden">
+                     <ul>
+                        <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Cuando hay <strong>roca disponible</strong>, <u>estable frente al agua</u>, procedente de la excavación en la traza o de un túnel, su empleo en un pedraplén puede presentar ciertas <strong>ventajas</strong>, sobre todo en los de gran altura: <u>aprovechamiento de materiales</u>, <u>taludes más inclinados</u>, <u>velocidad de construcción mayor</u> y <u>deformabilidad más reducida</u> que en un terraplén.</p></li>
+                        <li><p><i class="fas fa-sitemap icon text-purple-600"></i>En los pedraplenes se distingue <strong>cimiento</strong>, <strong>núcleo</strong> y <strong>zona de transición</strong> (con un espesor del orden de <span class="pill-blue">1 m</span>) a <strong>coronación</strong>.</p></li>
+                         <li><p><i class="fas fa-compress-alt icon text-orange-600"></i>Se suelen compactar con <strong>rodillos vibrantes muy pesados</strong>. El <strong>control de la compactación</strong> es muy <u>complicado</u> por lo que se basa en la obtención del <strong>método de trabajo</strong> en un <u>tramo de prueba</u>.</p></li>
+                    </ul>
+                </div>
+                <div class="collapsible-trigger mt-4 pt-4 border-t border-gray-200">
+                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                    <h3 class="font-bold"><i class="fas fa-box-open icon"></i>Rellenos todo-uno</h3>
+                </div>
+                <div class="collapsible-content hidden">
+                    <ul>
+                        <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Los rellenos “todo-uno” se caracterizan por tener unas <strong>condiciones granulométricas intermedias</strong> entre las del <u>terraplén</u> y el <u>pedraplén</u>.</p></li>
+                        <li><p><i class="fas fa-ruler-combined icon text-purple-600"></i>El <strong>espesor de las tongadas</strong> del relleno todo-uno ronda los <span class="pill-blue"><strong>50 cm</strong></span>, y se suelen compactar con <strong>rodillos vibratorios pesados</strong>.</p></li>
+                        <li><p><i class="fas fa-sitemap icon text-teal-600"></i>Tiene las <strong>mismas zonas</strong> que los pedraplenes y también se hace un <strong>tramo de prueba</strong>.</p></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-compress-arrows-alt"></i></div>
+                <h2>4. Compactación</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>La <span class="definition-pill"><strong>compactación</strong></span> es un <strong>tratamiento eficaz y económico</strong> de <u>refuerzo de los suelos</u> para que resistan las solicitaciones con <u>deformaciones admisibles</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-exchange-alt icon text-purple-600"></i>Es necesario <strong>distinguir</strong> entre:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="definition-pill"><strong>Consolidación</strong></span> (proceso <u>lento</u> en que la densificación tiene lugar por la <u>expulsión de aire y eventualmente de agua</u> de los poros)</li>
+                                <li>y <span class="definition-pill"><strong>compactación</strong></span> (la densificación se obtiene <u>rápidamente sin pérdida de humedad</u>, solo <u>disminución de huecos de aire</u> y <u>acercamiento de partículas</u>).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-cogs icon text-orange-600"></i>Durante la compactación las <strong>partículas del suelo</strong> se mueven hacia una <strong><u>disposición más densa</u></strong>.</p></li>
+                    <li><p><i class="fas fa-ruler-vertical icon text-indigo-600"></i>La <strong>densidad seca del suelo</strong> es un buen <strong>índice</strong> para evaluar la <u>eficacia del proceso</u>, pero teniendo en cuenta el diferente comportamiento de los distintos suelos suele utilizarse el <strong><u>grado de compactación</u></strong> o porcentaje alcanzado respecto a una <strong>densidad de referencia</strong>, obtenida con cada suelo en un ensayo normalizado denominado <span class="definition-pill"><strong>Próctor</strong></span> (con dos modalidades <u>Normal</u> y <u>Modificado</u> con diferente energía de compactación).</p></li>
+                    <li><p><i class="fas fa-balance-scale icon text-teal-600"></i>En los <strong>suelos granulares</strong> basta con la obtención de una <u>alta densidad seca</u> para lograr <strong>resistencia e indeformabilidad</strong>, pero en <strong>suelos con finos</strong> es imprescindible también <strong>comprobar la humedad</strong>.</p></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-hard-hat"></i></div>
+                <h2>5. Ejecución de excavaciones: estabilidad de taludes</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-exclamation-triangle icon text-red-500"></i>Durante la <strong>ejecución de las excavaciones</strong> se tomarán las <strong><u>precauciones adecuadas</u></strong> para no <u>disminuir la estabilidad</u> del terreno no excavado.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>En especial, se atenderá a las <u>características tectónico-estructurales</u> del entorno y a las <u>alteraciones de su drenaje</u></li>
+                                <li>y se adoptarán las <strong>medidas necesarias</strong> para evitar los siguientes fenómenos: <u>inestabilidad de taludes en roca</u> o de bloques de la misma, debida a <u>voladuras inadecuadas</u>, <u>deslizamientos</u> ocasionados por el descalce del pie de la excavación, <u>encharcamientos</u> debidos a un drenaje defectuoso de las obras, <u>taludes provisionales excesivos</u>, etc.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-mountain icon"></i>Desmontes en tierras</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                             <ul>
+                                <li><p><i class="fas fa-calculator icon text-blue-600"></i>La <strong>estabilidad del talud</strong> se calcula con los <span class="definition-pill"><strong>métodos de superficies de deslizamiento</strong></span>, teniendo en cuenta la <u>cohesión</u>, <u>ángulo de rozamiento</u>, <u>densidad</u>, <u>humedad</u> y <u>presiones intersticiales</u> del terreno.</p></li>
+                                <li><p><i class="fas fa-cogs icon"></i>Las <strong>variables</strong> son la <u>altura</u>, la <u>inclinación</u>, el <u>drenaje</u>, la presencia de <u>bermas</u> y el <u>proceso constructivo</u>.</p></li>
+                                <li><p><i class="fas fa-tint icon text-purple-600"></i>El <strong>drenaje superficial y subterráneo</strong> del talud puede ser <strong>importante para su estabilidad</strong>, en especial en terrenos <u>expansivos</u>, <u>solubles</u> o <u>erosionables</u>.</p></li>
+                                <li><p><i class="fas fa-wind icon text-orange-600"></i>Se disponen <strong>cunetas revestidas</strong> tanto en la <u>coronación de desmonte</u>, en el <u>pie</u> y en las <u>bermas</u> para evitar la <strong>erosión por las escorrentías</strong> sobre el talud.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-gem icon"></i>Desmontes en roca</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                             <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Los desmontes en roca presentan el <strong>mismo tipo de problemas</strong> que los desmontes en tierra, pero los <strong>tratamientos son muy diferentes</strong>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-layer-group icon text-purple-600"></i>La <strong>estabilidad de los taludes en roca</strong> está relacionada con:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                             <li>el <u>rumbo y buzamiento</u> de estratos y diaclasas,</li>
+                                             <li>el <u>espesor</u> de los estratos,</li>
+                                             <li>la <u>alternancia</u> de materiales,</li>
+                                             <li>el <u>tipo de juntas</u> y los <u>materiales de relleno</u>,</li>
+                                             <li>el grado de <u>alterabilidad</u> de la roca</li>
+                                             <li>y la presencia de <u>agua subterránea</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-shield-alt icon text-orange-600"></i>Para <strong>evitar el deslizamiento de bloques o el vuelco de estratos</strong> se precisan <u>cálculos de estabilidad de bloques rocosos</u>, y <u>sistemas de protección</u> que se describen en el siguiente apartado.</p></li>
+                                <li><p><i class="fas fa-check-circle icon text-indigo-600"></i>Cuando el <strong>macizo rocoso</strong> se encuentra <strong>muy diaclasado</strong>, su comportamiento en cuanto a estabilidad global es <strong>más asimilable al de un suelo</strong>, por lo que pueden ser necesarios <u>métodos de cálculo de superficies de deslizamiento</u>.</p></li>
+                                 <li><p><i class="fas fa-water icon text-teal-600"></i>El <strong>desagüe superficial</strong> se centra en la <u>captación de manantiales</u>, en la <u>construcción de drenes subhorizontales</u> en la parte baja del talud, y en el <u>diseño de cunetas análogas</u> a los desmontes en suelos.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-hard-hat"></i></div>
+                <h2>6. Protección de la infraestructura frente a la caída de materiales</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>La <strong>protección de la carretera</strong> frente a la caída de materiales puede <strong>lograrse mediante</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-mountain icon"></i><strong>Modificación de la pendiente del talud</strong>, evitando <u>zonas inestables</u> o <u>vuelco de estratos</u>.</li>
+                                <li><i class="fas fa-wind icon"></i><strong>Diseño de cunetas</strong> junto al pie del talud, para <u>prevenir que suelos o fragmentos de rocas puedan llegar a la calzada</u>, para lo que se suelen complementar con <strong>pantallas</strong> que eviten los <u>rebotes de fragmentos</u>.</li>
+                                <li><i class="fas fa-fill-drip icon"></i><strong>Recubrimiento del talud</strong> con <span class="definition-pill"><strong>hormigones proyectados (gunita)</strong></span>, se <u>reduce la alteración de la roca</u> por meteorización, se <u>sellan las juntas</u> por donde pueda penetrar el agua y se <u>adiciona un soporte estructural</u> a los salientes de roca.</li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-anchor icon"></i><strong><u>Anclajes</u></strong>, normalmente <strong>barras o cables de acero</strong> que se introducen mediante <u>perforaciones en la roca</u>, pueden ser:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><strong>pasivos</strong> (se traccionan únicamente cuando la roca se deforma)</li>
+                                            <li>o <strong>activos</strong> (se pretensan durante su instalación).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><i class="fas fa-border-all icon"></i><strong>Instalación de mallas y redes metálicas</strong> para el <u>revestimiento del talud rocoso</u> con mallas.</li>
+                                <li><i class="fas fa-road-barrier icon"></i><strong>Pantallas o barreras</strong>: diseñadas para <u>soportar el impacto de rocas</u> y <u>contenerlas</u>.</li>
+                                <li><i class="fas fa-archway icon"></i><strong>Construcción de falsos túneles</strong> o <strong>semitúneles</strong> (abiertos en el lado contrario a la ladera).</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-check-circle"></i></div>
+                <h2>7. Técnicas de mejora del terreno</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Los <strong>rellenos</strong> cimentan superficialmente, cuando la <u>capacidad de soporte no es suficiente</u> o los <u>asientos no son admisibles</u> (suelos blandos) se utilizan <strong>técnicas de mejora del terreno de cimentación</strong>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-cogs icon text-purple-600"></i>Las más <strong>habituales</strong> son:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-weight-hanging icon"></i><span class="definition-pill"><strong>Precarga</strong></span>: consiste en <strong>someter al suelo blando a cargas importantes</strong>, normalmente con <u>tierras</u>.</li>
+                                <li><i class="fas fa-tint icon"></i><span class="definition-pill"><strong>Mechas drenantes</strong></span>: que se <strong>hincan en el terreno</strong>, normalmente <u>al tresbolillo</u> y separadas de <span class="pill-blue">1 a 2 m</span>, y sirven para <strong>acortar el camino del agua</strong> que debe expulsarse en el proceso de consolidación, <u>agilizándolo</u>.</li>
+                                <li><i class="fas fa-layer-group icon"></i><span class="definition-pill"><strong>Columnas de grava</strong></span>: consiste en la <strong>hinca de tubos metálicos</strong> en el terreno, que posteriormente se <strong>rellenan de grava</strong>, para posteriormente <strong>retirar el tubo</strong>. De esta manera se <u>densifica el terreno</u> y se <u>acelera la consolidación</u> del terreno.</li>
+                                <li><i class="fas fa-compress-arrows-alt icon"></i><span class="definition-pill"><strong>Compactación dinámica</strong></span>: consiste en la <strong>caída de pesas</strong> elevadas a gran altura, en una <u>malla de puntos</u> establecida en la superficie del terreno a tratar. De esta manera se <strong>densifica el terreno</strong> hasta cierta profundidad.</li>
+                                <li><i class="fas fa-syringe icon"></i><span class="definition-pill"><strong>Inyecciones de alta presión (Jet-grouting)</strong></span>: consiste en la <strong>mezcla íntima del terreno con cemento</strong>, introduciendo al nivel requerido una <u>tubería provista de toberas</u> que proyectan <u>lechada de cemento a elevada presión</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-archway"></i></div>
+                <h2>8. Cimentaciones de estructuras: tipologías y métodos constructivos</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-ruler-combined icon text-blue-600"></i><span class="definition-pill"><strong>Cimentaciones superficiales</strong></span>. En las estructuras, las cimentaciones superficiales están formadas por <strong>zapatas aisladas y corridas</strong>, o <strong>losas</strong> construidas de <u>hormigón armado</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-arrow-down icon text-purple-600"></i><span class="definition-pill"><strong>Cimentaciones profundas</strong></span>. Vienen motivadas por:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>la presencia de <u>espesores grandes de suelos blandos</u>,</li>
+                                <li><u>riesgo de socavación</u>,</li>
+                                <li>o existencia de <u>heterogeneidades importantes</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-cogs icon"></i>En estos casos se construyen cimentaciones mediante <span class="definition-pill"><strong>pilotes</strong></span>, tanto <u>aislados</u> como en <u>grupo con encepado</u>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Los pilotes pueden trabajar por <strong>fuste</strong>, o por <strong>punta</strong>;</li>
+                                <li>y se construyen <strong>prefabricados hincados</strong>, o <strong>perforados de hormigón “in situ”</strong> (<u>excavación y sostenimiento del terreno</u> con <u>camisas de acero</u> o <u>lodos bentoníticos</u> y posterior <u>hormigonado</u>).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-sort-amount-down icon text-orange-600"></i><span class="definition-pill"><strong>Cimentaciones semiprofundas</strong></span>. Son <strong>situaciones intermedias</strong>, en las que a <u>escasa profundidad</u> existe un <strong>apoyo adecuado</strong>, pero no lo suficientemente somero para establecer una cimentación superficial.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Se recurre entonces a <strong>cimentaciones “en pozo”</strong> en las que se <strong>excava el terreno</strong> mediante diversas técnicas para alcanzar el <u>estrato competente</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
