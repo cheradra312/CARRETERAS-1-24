@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T3. Estudios de carreteras (I)</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .formula-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .formula-pill { background-color: #ffedd5; color: #9a3412; border: 1px solid #fb923c; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h2, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h2, .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-drafting-compass"></i> MEB1T3. Estudios de carreteras (I) <i class="fas fa-map-marked-alt"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-map-marked-alt"></i></div>
+                <h2>1. Cartografía y topografía</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>La <strong>obtención de la cartografía</strong> y la <strong>realización de trabajos topográficos</strong> en <u>estudios informativos</u>, <u>anteproyectos</u> y <u>proyectos de trazado y construcción</u> de la <span class="actor-pill">Dirección General de Carreteras</span> se realiza de acuerdo con las <span class="law-pill"><strong>Notas de Servicio 3/2024</strong></span> y <span class="law-pill"><strong>1/2025</strong></span> que establecen las prescripciones que deben cumplir los trabajos necesarios para su realización.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-drafting-compass icon text-purple-600"></i>En lo que se refiere a los <strong>proyectos de trazado y construcción</strong> cabe mencionar los siguientes <strong>aspectos fundamentales</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-plane-departure icon"></i><strong><u>Vuelo fotogramétrico</u></strong></p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><u>condiciones del avión</u> o del <u>vehículo aéreo no tripulado</u> y de la <u>cámara</u>,</li>
+                                            <li><u>características del vuelo</u>,</li>
+                                            <li><u>condiciones meteorológicas</u>,</li>
+                                            <li><u>tipos de cámaras</u> y sus especificaciones técnicas,</li>
+                                            <li>sistemas para <u>datos de orientación de la cámara</u>,</li>
+                                            <li><u>características de los fotogramas</u>,</li>
+                                            <li>sensores aerotransportados con tecnología <span class="definition-pill"><strong>LIDAR</strong></span> (Light Detection and Ranging) que son el resultado de la integración del <span class="definition-pill"><strong>GNSS</strong></span> (Global Navigation Satellite System) con <u>unidades de medición inercial</u> y <u>sensores láser</u> que se pueden utilizar en zonas donde la <u>densa vegetación oculte el terreno natural</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-network-wired icon"></i><strong><u>Implantación de redes básicas</u></strong></p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>una <strong>Red Básica Planimétrica</strong> con <u>lado máximo <span class="pill-blue">4 km</span></u> enlazada con la Red Geodésica Nacional,</li>
+                                            <li>y una <strong>Red Básica Altimétrica</strong> enlazada mediante <u>nivelación geométrica</u> con la Red de Nivelación de Alta Precisión,</li>
+                                            <li>las redes se <strong>materializan sobre el terreno</strong> por medios que garanticen su permanencia como <u>hitos prefabricados</u> o <u>clavos en hormigón</u>. A partir de estas bases se realizarán todos los trabajos de topografía de campo.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-camera-retro icon"></i><strong><u>Apoyo de campo</u></strong>: <strong>toma de datos</strong> para determinar los <u>puntos de apoyo</u> necesarios para la <u>restitución fotogramétrica</u> de los pares fotográficos del vuelo, para lo que se parte de la <u>Red Básica</u> realizada, con <strong>apoyo continuo</strong> de al menos <span class="pill-blue">5 puntos</span> por par estereoscópico o apoyo con <strong>aerotriangulación analítica</strong> para <u>reducir el número de los puntos de apoyo</u>.</p></li>
+                                <li><p><i class="fas fa-map icon"></i><strong><u>Restitución fotogramétrica</u></strong>: <strong>planos originales</strong> en formato <span class="formula-pill">A-1</span>, a escala <span class="formula-pill">1:1.000</span> y <u>curvas de nivel a <span class="pill-blue">1 m</span></u> de equidistancia, recogiendo la <u>toponimia local</u> y con todos los elementos <u>georreferenciados</u>. La <strong>franja</strong> a ambos lados de la futura carretera será lo suficientemente <strong>amplia</strong> para que dé una idea del terreno, edificios y lugares circundantes.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-image icon"></i><strong><u>Ortofotografía digital</u></strong>: se trata de una <strong>imagen proyectada ortogonalmente</strong>, por lo que permite la <u>superposición sobre ella del diseño de proyecto</u>, obteniendo unos planos que enriquecen la información.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>Así, en un <u>estudio informativo</u> se puede realizar un montaje del trazado a escala <span class="formula-pill">1:5.000</span> sobre las ortofotografías del <span class="plan-pill">Plan Nacional de Ortofotografía Aérea</span>.</li>
+                                            <li>Posteriormente, una vez realizada la cartografía a escala <span class="formula-pill">1:1.000</span> se realizará una <strong>ortofotografía digital</strong> de toda la zona incluida en la restitución fotogramétrica.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-cctv icon"></i><strong><u>Red de Bases de Replanteo</u></strong>: partiendo de los vértices de la Red Básica se obtiene la red de Bases de Replanteo, que son <strong>vértices próximos al trazado</strong> de la carretera y a una <u>distancia media</u> entre sí de unos <span class="pill-blue">200 m</span>, que permiten realizar <u>trabajos topográficos de detalle</u> en el entorno inmediato del proyecto.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>Las bases de replanteo deben quedar <strong>cerca de las obras</strong>, pero <strong>fuera de los terrenos afectados</strong> por ellas, y se deben <strong>materializar</strong> con medios que garanticen su <u>permanencia</u>.</li>
+                                            <li>No obstante, las bases se deben <strong>enlazar entre sí</strong> para facilitar su <u>reposición</u> en caso necesario.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-ruler-combined icon"></i><strong><u>Trabajos topográficos complementarios</u></strong>: realizados a partir de la Red de Replanteo, tales como:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><strong>Levantamientos parciales</strong> a escala <span class="formula-pill">1:1.000</span> en caso de que la cartografía ejecutada deje sin restituir zonas.</li>
+                                            <li><strong>Levantamientos taquimétricos</strong> a <span class="formula-pill">1:200</span> o <span class="formula-pill">1:500</span> en obras de drenaje, estructuras o emboquilles de túneles.</li>
+                                            <li><strong>Levantamiento de perfiles</strong> longitudinales y transversales de las vías donde se ubican intersecciones o enlaces.</li>
+                                            <li><strong>Replanteo</strong>, estaquillado del eje y perfiles transversales cada <span class="pill-blue">20 m</span>.</li>
+                                            <li><strong>Fijación</strong> sobre la cartografía de elementos singulares como servicios afectados, sondeos, etc.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-mountain"></i></div>
+                <h2>2. Estudios geológicos, geotécnicos y de procedencia de materiales</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <div class="collapsible-trigger">
+                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                    <h3 class="font-bold"><i class="fas fa-search-location mr-2 text-gray-700"></i>Estudio geológico</h3>
+                </div>
+                <div class="collapsible-content hidden">
+                    <ul>
+                        <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Debe definir <strong>sólo la parte del terreno afectada</strong> por las obras aportando <u>datos prácticos</u>.</p></li>
+                        <li><p><i class="fas fa-map-signs icon text-purple-600"></i>En un <span class="definition-pill"><strong>estudio informativo</strong></span> para <u>detectar terrenos con dificultades geotécnicas</u>, importante para <strong>seleccionar el trazado idóneo</strong> y <strong>valorar los costes</strong> de las alternativas.</p></li>
+                        <li><p><i class="fas fa-drafting-compass icon text-orange-600"></i>En la <span class="definition-pill"><strong>fase de proyecto</strong></span> para <u>facilitar el alcance del estudio geotécnico</u> y la <u>planificación de las prospecciones de campo</u>, trabajando en la <strong>información geológica previa</strong>, la <strong>fotointerpretación</strong> de la zona y el <strong>reconocimiento sobre el terreno</strong> de las unidades litológicas.</p></li>
+                    </ul>
+                </div>
+                <div class="collapsible-trigger mt-4 pt-4 border-t border-gray-200">
+                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                    <h3 class="font-bold"><i class="fas fa-cogs mr-2 text-gray-700"></i>Estudio geotécnico</h3>
+                </div>
+                <div class="collapsible-content hidden">
+                    <ul>
+                        <li>
+                            <div class="collapsible-trigger">
+                                <i class="fas fa-chevron-right collapsible-icon"></i>
+                                <p><i class="fas fa-bullseye icon text-blue-600"></i>Tiene como <strong>objetivos</strong>:</p>
+                            </div>
+                            <div class="collapsible-content hidden">
+                                <ul class="nested-list">
+                                    <li><i class="fas fa-compress-arrows-alt icon"></i><strong>Determinar las características</strong> de los <u>desmontes</u>, del <u>cimiento de las obras de explanación</u> y de las <u>estructuras</u>, en cuanto a <strong>resistencia y deformabilidad</strong>, para <u>calcular la inclinación de los taludes</u> de desmontes y rellenos, <u>proyectar las medidas de sostenimiento</u>, <u>recomendar la tipología de las cimentaciones</u> de estructuras y sus <u>parámetros de diseño</u>.</li>
+                                    <li><i class="fas fa-recycle icon"></i><strong>Determinar las características</strong> de los <u>materiales excavados</u> en los desmontes para <strong>valorar su empleo</strong> en los <u>terraplenes, explanadas o firmes</u>, o la necesidad de llevarlos a <u>vertedero</u>.</li>
+                                    <li><i class="fas fa-archway icon"></i>En su caso, <strong>determinar las técnicas de excavación</strong> de los <u>túneles</u>, garantizando su <strong>estabilidad</strong>, su <strong>geometría</strong> (necesidad de contrabóveda) y las <strong>necesidades de sostenimiento</strong> (cerchas, bulones, hormigón proyectado) y <strong>revestimiento</strong>.</li>
+                                    <li><i class="fas fa-warehouse icon"></i><strong>Caracterizar</strong> los <u>préstamos</u>, <u>yacimientos</u> y <u>vertederos</u>.</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-trigger">
+                                <i class="fas fa-chevron-right collapsible-icon"></i>
+                                <p><i class="fas fa-tools icon text-purple-600"></i>Para ello es <strong>necesario</strong>:</p>
+                            </div>
+                             <div class="collapsible-content hidden">
+                                <ul class="nested-list">
+                                    <li>La realización de una <strong>campaña de reconocimientos geotécnicos</strong>: <u>calicatas</u>, <u>sondeos</u>, <u>penetrómetros</u>, <u>prospecciones geofísicas</u> y <u>estaciones geomecánicas</u> (en macizos rocosos).</li>
+                                    <li>La <strong>toma de muestras</strong> y la realización de <strong>ensayos</strong> en <u>campo o laboratorio</u>.</li>
+                                    <li>La <strong>interpretación en gabinete</strong> de los resultados, realizando los <u>cálculos necesarios</u>.</li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="collapsible-trigger mt-4 pt-4 border-t border-gray-200">
+                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                    <h3 class="font-bold"><i class="fas fa-truck-loading mr-2 text-gray-700"></i>Estudio de procedencia de materiales</h3>
+                </div>
+                <div class="collapsible-content hidden">
+                    <ul>
+                        <li><p><i class="fas fa-info-circle icon text-blue-600"></i>De acuerdo con la <span class="law-pill"><strong>Orden Circular 22/2007</strong></span>, las <strong>canteras y préstamos</strong> que se estudien en el proyecto tendrán en general <strong><u>carácter informativo</u></strong>.</p></li>
+                        <li><p><i class="fas fa-hard-hat icon text-purple-600"></i>Debiendo el <span class="actor-pill"><strong>Contratista</strong></span> <strong>gestionar la búsqueda y adquisición</strong> de los materiales necesarios que cumplan con las condiciones del <u>Pliego de Prescripciones Técnicas del Contrato</u>.</p></li>
+                        <li><p><i class="fas fa-leaf icon text-orange-600"></i>También corresponderá al <span class="actor-pill">contratista</span> <strong>gestionar</strong>, en caso necesario, los <u>permisos ambientales</u> y <strong>legalizar</strong> su <u>explotación</u>.</p></li>
+                        <li>
+                            <div class="collapsible-trigger">
+                                <i class="fas fa-chevron-right collapsible-icon"></i>
+                                <p><i class="fas fa-drafting-compass icon"></i>No obstante, en cada proyecto es necesario realizar un <strong>estudio de procedencia de materiales</strong> que <strong>garantice la viabilidad</strong> del diseño y <strong>acote su precio</strong>:</p>
+                            </div>
+                            <div class="collapsible-content hidden">
+                                <ul class="nested-list">
+                                    <li><u>materiales del entorno</u> utilizables,</li>
+                                    <li><u>distancias a la obra</u>,</li>
+                                    <li><u>costes de extracción</u>, etc.</li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li><p><i class="fas fa-map-marker-alt icon text-indigo-600"></i>Para ello se realiza un <strong>estudio de cada préstamo o cantera</strong> que pueda ser utilizado durante la obra, reflejando en el proyecto su <u>localización</u>, <u>accesos</u>, <u>características</u> y <u>volúmenes aprovechables</u>.</p></li>
+                        <li><p><i class="fas fa-industry icon text-teal-600"></i>También se deben estudiar las <strong>plantas de suministro</strong> (<u>hormigones</u> o <u>mezclas bituminosas</u>), en el caso en que se estime <strong>poco rentable</strong> instalar plantas en la propia obra.</p></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-cloud-sun-rain"></i></div>
+                <h2>3. Estudios climatológicos e hidrológicos</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <div class="collapsible-trigger">
+                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                    <h3 class="font-bold"><i class="fas fa-thermometer-half icon"></i>Estudio climatológico</h3>
+                </div>
+                <div class="collapsible-content hidden">
+                    <ul>
+                        <li>
+                            <div class="collapsible-trigger">
+                                <i class="fas fa-chevron-right collapsible-icon"></i>
+                                <p><i class="fas fa-info-circle icon text-blue-600"></i>Se orientará a la <strong>definición de los rasgos climáticos</strong> de la zona, para establecer:</p>
+                            </div>
+                            <div class="collapsible-content hidden">
+                                <ul class="nested-list">
+                                    <li><i class="fas fa-route icon"></i>El <strong>trazado</strong>, en la fase de <span class="definition-pill">estudio informativo</span> para <u>detectar trazados afectados por nieblas, heladas, nevadas, etc.</u>, fenómenos que tienen importantes repercusiones en la <u>explotación viaria</u>.</li>
+                                    <li><i class="fas fa-hard-hat icon"></i>En la <span class="definition-pill">fase de proyecto</span>, la <strong>incidencia del clima en la obra</strong>, determinando los <u>coeficientes medios de aprovechamiento de días laborables</u> para la realización de las principales unidades de obra, que permitirán, junto con el <u>coeficiente reductor por días festivos</u>, estimar los <strong>días trabajables</strong> en la obra para determinar el <strong>plazo de la obra</strong>.</li>
+                                    <li><i class="fas fa-seedling icon"></i><strong>Definición de los índices y clasificaciones agroclimáticas</strong> (<u>Martonne</u>, <u>Datin-Revenga</u>, <u>Papadakis</u>, <u>diagrama ombrotérmico</u>) que servirán de partida para el <strong>diseño de las plantaciones</strong> a realizar para la <u>integración ambiental</u> de la obra.</li>
+                                    <li><i class="fas fa-traffic-light icon"></i>Servir de <strong>apoyo al proyecto de señalización</strong> y a la definición del <strong>plan de mantenimiento</strong> de la carretera.</li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="collapsible-trigger mt-4 pt-4 border-t border-gray-200">
+                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                    <h3 class="font-bold"><i class="fas fa-water icon"></i>Estudio hidrológico</h3>
+                </div>
+                <div class="collapsible-content hidden">
+                    <ul>
+                        <li><p><i class="fas fa-bullseye icon text-blue-600"></i>Tiene por finalidad <strong>determinar los caudales</strong> generados en las <u>cuencas interceptadas</u> por la carretera para <strong>dimensionar las obras de drenaje</strong>, los <strong>puentes sobre cauces</strong> y para <strong>encajar correctamente el trazado</strong>.</p></li>
+                        <li><p><i class="fas fa-database icon text-purple-600"></i>Para ello es preciso <strong>obtener datos pluviométricos</strong> de las estaciones de <span class="actor-pill">AEMET</span>, y mantener contacto con las <span class="actor-pill">Confederaciones Hidrográficas</span> que pueden dar <u>datos de aforos</u>, además de corresponderles <u>autorizar las obras sobre dominio público hidráulico</u>, por lo que es necesario recabar información sobre los <u>condicionantes de diseño</u> que exigen.</p></li>
+                        <li><p><i class="fas fa-calculator icon text-orange-600"></i>Partiendo de los datos de precipitación de <span class="actor-pill">AEMET</span> es posible obtener la <strong>precipitación de cálculo</strong> para distintos <strong>periodos de retorno</strong> (probabilidad de presentarse en 1 año 1/T) mediante el uso de <u>distribuciones estadísticas</u> (Gumbel y SQRT-ETmáx). Finalmente, se elegirá justificadamente una determinada <u>precipitación de cálculo</u> para cada obra de drenaje y periodo de retorno considerados.</p></li>
+                        <li><p><i class="fas fa-book-open icon text-indigo-600"></i>La <span class="law-pill"><strong>norma 5.2 IC de Drenaje Superficial</strong></span> establece para las obras de drenaje transversal <span class="pill-blue">T=100 años</span> para el cálculo de caudales y <span class="pill-blue">T=500 años</span> en el caso de posibilidad de <u>daños catastróficos</u>, o para <u>puentes sobre cauces</u>.</p></li>
+                        <li><p><i class="fas fa-ruler-combined icon text-teal-600"></i>El <strong>método de estimación de los caudales</strong> depende del <u>tamaño y naturaleza de la cuenca</u> aportante. Para <strong>cuencas pequeñas</strong> son apropiados los <u>métodos hidrometeorológicos</u> de la <span class="law-pill">norma 5.2-IC</span>, basados en la aplicación de una <u>intensidad media de precipitación</u> a la superficie de la cuenca, a través de una estimación de su <u>escorrentía</u>.</p></li>
+                        <li><p><i class="fas fa-expand-arrows-alt icon text-green-600"></i>En las <strong>cuencas grandes</strong> estos métodos <u>pierden precisión</u>, pero en ellas suele disponerse de <u>información directa sobre caudales</u>. La frontera entre cuencas grandes y pequeñas corresponde a un área mayor o igual a <span class="pill-blue">50 km2</span>.</p></li>
+                        <li>
+                            <div class="collapsible-trigger">
+                                <i class="fas fa-chevron-right collapsible-icon"></i>
+                                <p><i class="fas fa-cogs icon"></i>En el caso de los <strong>métodos hidrometeorológicos</strong>, para calcular los caudales es preciso <strong>estudiar las cuencas</strong> a una escala adecuada para su <u>delimitación correcta</u>, obteniendo su <u>superficie</u>, <u>longitud del cauce</u>, <u>desnivel</u> y <u>umbral de escorrentía</u> en función de los usos del suelo.</p>
+                            </div>
+                            <div class="collapsible-content hidden">
+                                 <ul class="nested-list">
+                                     <li>Y con ellos estimar el <strong>tiempo de concentración</strong>, el <strong>coeficiente de uniformidad</strong> de la cuenca, así como para cada periodo de retorno obtener el <strong>coeficiente de escorrentía</strong> y la <strong>intensidad del aguacero</strong> de cálculo.</li>
+                                     <li>El proyecto debe dejar <strong>constancia</strong> de todo el proceso de <u>estimación de caudales</u>.</li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-house-damage"></i></div>
+                <h2>4. Normativa sísmica</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-book-open icon text-blue-600"></i>De acuerdo con lo dispuesto en las <span class="law-pill"><strong>Normas de Construcción Sismorresistente: Parte General y Edificación (NCSE-02)</strong></span> y <span class="law-pill"><strong>Puentes (NCSP-07)</strong></span>, en el caso de que la <u>ubicación y características</u> de las obras lo exijan, deberán considerarse las <strong>acciones sísmicas</strong> en los cálculos del proyecto.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-list-ol icon text-purple-600"></i>Las <strong>obras de ingeniería se clasifican</strong>, en función de la posibilidad de <u>producir víctimas</u>, de <u>interrumpir un servicio primario</u>, de los <u>daños económicos</u> o de la posibilidad de dar lugar a <u>daños catastróficos</u>, en:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>de <strong>importancia moderada</strong>,</li>
+                                <li><strong>normal</strong></li>
+                                <li>y <strong>especial</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-star icon text-orange-600"></i>Los <strong>puentes</strong> de las <u>autopistas y autovías</u> y de las <u>carreteras convencionales</u> con <span class="pill-blue">IMD>7.000</span> se consideran de <strong><u>importancia especial</u></strong>, pues son <strong>infraestructuras imprescindibles</strong> para que la ayuda pueda llegar a las víctimas.</p></li>
+                    <li><p><i class="fas fa-exclamation-triangle icon text-red-500"></i>Los proyectos de estructuras de importancia <strong>normal</strong> o <strong>especial</strong> deben contar con la consideración de la <strong>acción sísmica</strong> siempre que la <strong>aceleración básica</strong> (sismo <span class="pill-blue">T=500 años</span>) sea <strong>igual o superior a <span class="pill-blue">0,04g</span></strong>, para lo que se incluye en la <span class="law-pill">NCSP-07</span> un <u>listado de municipios</u> en los que sucede.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-bridge icon text-indigo-600"></i>Los <strong>puentes</strong> pueden soportar el sismo de cálculo:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>resistiéndolo elásticamente</strong> instalando <u>elementos de disipación sísmica</u>,</li>
+                                <li>o <strong>admitiendo daño</strong> en la estructura disipando energía mediante la <u>formación de rótulas plásticas</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-check-circle icon text-green-600"></i>La normativa exige que para un <span class="pill-blue">T=100 años</span> (probabilidad <span class="pill-blue">63 %</span> en los <span class="pill-blue">100 años</span> vida útil de la estructura) el comportamiento de la estructura sea <strong>esencialmente elástico</strong>.</p></li>
+                    <li><p><i class="fas fa-mountain icon text-teal-600"></i>En el caso de <strong>terraplenes y desmontes</strong>, existen <strong>pocas alternativas</strong> que no pasen por <strong><u>tender los taludes</u></strong> para aumentar su seguridad ante un sismo.</p></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
