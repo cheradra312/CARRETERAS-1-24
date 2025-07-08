@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T6. Drenaje superficial y subterráneo</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .formula-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .formula-pill { background-color: #ffedd5; color: #9a3412; border: 1px solid #fb923c; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-water"></i> MEB1T6. Drenaje superficial y subterráneo <i class="fas fa-tint"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-cloud-showers-heavy"></i></div>
+                <h2>1. Norma 5.2-IC. Drenaje superficial</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>La actual <span class="law-pill"><strong>norma 5.2-IC</strong></span> entró en vigor en <span class="pill-blue">marzo de 2016</span> y tiene por objeto establecer <strong>reglas</strong> para <u>proyectar, construir y conservar</u> adecuadamente las obras, elementos y sistemas de drenaje superficial de la <span class="definition-pill">RCE</span>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-water icon"></i>Drenaje superficial</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-blue-600"></i>El <strong>drenaje superficial</strong> comprende:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>el <span class="definition-pill"><strong>drenaje longitudinal</strong></span> (<u>recogida de aguas pluviales</u> procedentes de la plataforma de la carretera y sus márgenes, y su <u>evacuación</u> hacia los cauces naturales o al sistema de alcantarillado en zonas urbanas),</li>
+                                            <li>y el <span class="definition-pill"><strong>drenaje transversal</strong></span> (<u>continuidad de los cauces naturales</u> interceptados por la carretera).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-cogs icon"></i>Cualquier estudio de drenaje requiere <strong>determinar el caudal</strong> de agua a evacuar (<span class="definition-pill">estudios hidrológicos</span>), y <strong>dimensionar</strong> los elementos que lo han de desaguar (<span class="definition-pill">estudios hidráulicos</span>).</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-tint icon"></i>Estudios hidrológicos</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-calendar-alt icon text-purple-600"></i>En primer lugar, debe fijarse el <span class="definition-pill"><strong>periodo de retorno (T)</strong></span> del caudal de referencia, según la <span class="law-pill">norma 5.2-IC</span>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><span class="pill-blue"><strong>25 años</strong></span> para el <u>drenaje de plataforma y márgenes</u>, salvo en el caso excepcional de desagüe por bombeo que se debe adoptar <span class="pill-blue">50 años</span>;</li>
+                                            <li>para <u>obras de drenaje transversal</u> un valor superior o igual a <span class="pill-blue"><strong>100 años</strong></span> que resulte compatible con los criterios de la <span class="actor-pill">Administración Hidráulica</span> competente;</li>
+                                            <li>y <span class="pill-blue"><strong>500 años</strong></span> para estudiar la <u>socavación en cimientos de puentes</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-calculator icon text-orange-600"></i>El <strong>caudal máximo</strong> correspondiente a un determinado periodo de retorno se debe determinar a partir de la información que proporcione la <span class="actor-pill">Administración Hidráulica</span> competente. Si no se dispone de dicha información, se debe calcular según la metodología de la <span class="law-pill">5.2-IC</span> con los siguientes <strong>métodos de cálculo de caudales</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-brain icon"></i><strong><u>Racional</u></strong>: supone la generación de escorrentía en una determinada cuenca a partir de una <u>intensidad de precipitación uniforme</u> en el tiempo sobre toda su superficie. Se aplica a cuencas <u>menores de <span class="pill-blue">50 km²</span></u>, con ciertas particularidades para obras ubicadas en el Levante y Sureste peninsular.</li>
+                                            <li><i class="fas fa-chart-bar icon"></i><strong><u>Estadístico</u></strong>: se basa en el <u>análisis de series de datos de caudal medidos</u> en estaciones de aforo u otros puntos. Dichas series se pueden complementar con datos sobre <u>avenidas históricas</u>. Se aplica a cuencas <u>≥ <span class="pill-blue">50 km²</span></u>.</li>
+                                            <li><i class="fas fa-flask icon"></i><strong><u>Otros métodos hidrológicos</u></strong>: se usan cuando los anteriores no sean adecuados para las características de la cuenca.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-equals icon"></i>El <strong>método racional</strong> utiliza la fórmula: <span class="formula-pill">Q = I ∙ C ∙ A ∙ Kt / 3,6</span>, donde <strong>Q</strong> es caudal en m³/s, <strong>I</strong> es precipitación en mm/h, <strong>C</strong> es coeficiente de escorrentía, <strong>A</strong> es área en km², y <strong>Kt</strong> un coeficiente de uniformidad en la distribución temporal de la precipitación.</p></li>
+                                <li><p><i class="fas fa-water icon"></i>El <strong>coeficiente de escorrentía</strong> relaciona la proporción entre la <u>lluvia evacuada por escorrentía</u> y la <u>lluvia total caída</u> sobre la cuenca. En la <span class="law-pill">norma 5.2-IC</span> se propone una fórmula que depende de la <u>precipitación máxima diaria</u> para el periodo de retorno considerado y del <u>umbral de escorrentía</u>, que es la precipitación a partir de la cual se generan aguas de escorrentía. Se trata de un parámetro muy variable en función del <u>tipo de suelo</u> (desde arenoso a arcilloso), <u>pendiente</u>, <u>uso</u> (urbanizado, tierras de cultivo, bosques densos), y de su <u>humedad</u> en el momento del aguacero.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-ruler-combined icon"></i>Estudios hidráulicos</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-blue-600"></i>Conocido el caudal es necesario diseñar el elemento que lo evacúe, con varios <strong>condicionantes</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-tachometer-alt icon"></i><strong><u>Velocidad de la corriente</u></strong>: el caudal no debe causar daños por <u>erosión</u> (<span class="pill-blue">v < 6 m/s</span> en elementos de hormigón), ni por <u>aterramiento</u> (<span class="pill-blue">v > 1 m/s</span>, pero si no es posible deben disponerse areneros que faciliten la limpieza de sedimentos).</li>
+                                            <li><i class="fas fa-road-barrier icon"></i><strong><u>Sin interrupción de la carretera</u></strong>: con <strong>resguardo mínimo</strong> entre la lámina de agua y la plataforma de <span class="pill-blue">0,5 m</span> en obras de drenaje transversal y <span class="pill-blue">0,05 m</span> en obras de drenaje longitudinal respecto a la calzada sin que el agua alcance el arcén.</li>
+                                            <li><i class="fas fa-level-up-alt icon"></i>Debe <strong>limitarse la sobreelevación</strong> del nivel de la corriente, de acuerdo con la <span class="actor-pill">Administración Hidráulica</span> competente.</li>
+                                            <li><i class="fas fa-search icon"></i><strong>Identificando y controlando</strong> las posibles <u>zonas de deposición de sedimentos y arrastres</u>.</li>
+                                            <li><i class="fas fa-smog icon"></i><strong>Identificando y controlando</strong> los <u>impactos de los vertidos</u> de aguas recogidas por los elementos del drenaje superficial.</li>
+                                            <li><i class="fas fa-leaf icon"></i><strong>Minimizando el impacto ambiental</strong>, incluyendo el posible <u>efecto barrera sobre la fauna</u>.</li>
+                                            <li><i class="fas fa-network-wired icon"></i><strong>Independencia de las redes de drenaje</strong> de plataforma y márgenes, que deben dar servicio <u>únicamente a la carretera</u>, sin mezclar caudales con los provenientes de otras obras o terrenos.</li>
+                                            <li><i class="fas fa-link icon"></i><strong>Continuidad</strong>, tanto <u>geométrica como hidráulica</u> entre los elementos que constituyen la red de drenaje.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-ruler-combined icon"></i>Elementos de drenaje superficial de plataforma y márgenes (drenaje longitudinal)</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-road-circle-check icon text-blue-600"></i><span class="definition-pill"><strong>Caces</strong></span>: franja estrecha longitudinal en forma de <u>canal revestido</u> de muy poca profundidad, se sitúan normalmente al <strong>borde de la plataforma</strong>, junto a un <u>bordillo</u> o una <u>barrera rígida</u>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-wind icon text-purple-600"></i><span class="definition-pill"><strong>Cunetas</strong></span>: elemento superficial en forma de <strong>zanja continua</strong> en el terreno, cuya función es <strong>conducir el agua</strong> a modo de canal en <u>lámina libre</u>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>Su <strong>sección transversal</strong> normalmente es <u>triangular</u> o <u>trapecial</u>, o con forma de <u>hondonada</u>.</li>
+                                            <li>Salvo justificación, las cunetas se proyectarán <strong>revestidas</strong>, y en todo caso cuando la <u>velocidad supere la máxima admisible</u>, cuando <span class="pill-blue">i>3%</span>, <span class="pill-blue">i<1%</span>, y donde se desee <u>evitar infiltraciones</u>.</li>
+                                            <li>Para <span class="pill-blue">i>7%</span> medidas de <strong>escalonamiento</strong> o <strong>aumento de rugosidad</strong> con paramentos irregulares.</li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p>Por su <strong>situación</strong> pueden ser:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>de <u>desmonte</u> (situadas entre la plataforma y el pie de un desmonte, recogiendo agua de ambos),</li>
+                                                        <li>de <u>guarda</u> (situadas en la coronación de un desmonte, recogiendo aguas de las cuencas vertientes hacia el desmonte)</li>
+                                                        <li>o de <u>pie de terraplén</u> (recogen aguas de las bajantes de la plataforma, y de las cuencas vertientes hacia el terraplén).</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-arrow-down icon text-orange-600"></i><span class="definition-pill"><strong>Bajantes</strong></span>: elementos colocados en <strong>terraplenes</strong> para <u>evitar que el vertido de aguas de la plataforma cause cárcavas</u>, necesitan un <strong>bordillo</strong> junto al arcén que forme un caz que conduzca las aguas hacia ellas; y en los <strong>taludes de desmontes</strong> para <u>desaguar cunetas de guarda</u> que por la configuración del terreno no pueden tener otra salida.</p></li>
+                                <li><p><i class="fas fa-dungeon icon text-indigo-600"></i><span class="definition-pill"><strong>Colectores</strong></span>: <strong>tuberías</strong> para conducción de caudales por gravedad en <u>lámina libre</u> que se utilizan principalmente para <strong>transportar por debajo de la plataforma</strong> las aguas de escorrentía recogidas por los elementos de drenaje, bien porque la <u>capacidad hidráulica</u> de éstos resulte insuficiente o bien porque se tenga que <u>cruzar la calzada</u> para desaguar.</p></li>
+                                <li><p><i class="fas fa-igloo icon text-teal-600"></i><span class="definition-pill"><strong>Sumideros</strong></span>: elemento de drenaje cuya función es <strong>captar caudales</strong> de la plataforma o de un elemento de drenaje superficial, normalmente un <u>caz o cuneta</u>, y <strong>desaguar a un colector</strong> a través de una <u>arqueta</u> que le sirve de registro.</p></li>
+                                <li><p><i class="fas fa-archive icon text-gray-600"></i><span class="definition-pill"><strong>Arquetas y pozos</strong></span>: elementos de <strong>conexión y registro</strong> de colectores.</p></li>
+                                <li><p><i class="fas fa-filter icon text-red-500"></i><span class="definition-pill"><strong>Areneros</strong></span>: elementos que producen una <strong>disminución de velocidad</strong> que favorece la <u>sedimentación de partículas</u>, generalmente por <u>incremento de la sección</u> en la que se ubican o por <u>disminución de pendiente</u>.</p></li>
+                                <li><p><i class="fas fa-tint-slash icon text-yellow-600"></i><span class="definition-pill"><strong>Balsas de retención</strong></span>: elementos encargados de la <strong>retención de vertidos accidentales</strong> que además tienen cierta <u>capacidad de laminación</u> y de <u>captura de sustancias contaminantes</u> arrastradas por el agua de escorrentía.</p></li>
+                                <li><p><i class="fas fa-layer-group icon text-green-600"></i><span class="definition-pill"><strong>Elementos de laminación</strong></span>: destinados a <strong>reducir las puntas de caudal</strong>, normalmente por <u>almacenamiento</u>.</p></li>
+                                <li><p><i class="fas fa-faucet icon text-cyan-600"></i><span class="definition-pill"><strong>Sistemas de infiltración y filtros</strong></span>: ejercen cierta función de <strong>depuración</strong> mediante <u>filtrado a través de un medio poroso</u> que puede ser un <u>suelo natural</u> (sistemas de infiltración) o <u>artificial</u> (filtro).</p></li>
+                                <li><p><i class="fas fa-pump-soap icon text-pink-600"></i><span class="definition-pill"><strong>Bombeos</strong></span>: cuando no sea posible desaguar por gravedad, <strong>deben evitarse siempre que sea posible</strong>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-arrows-alt-h icon"></i>Drenaje transversal</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-blue-600"></i>Se resuelve con los siguientes <strong>tipos de obras</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-bridge icon"></i>Los <strong><u>puentes y viaductos</u></strong>, situados en <u>cauces importantes</u> y con caudales normalmente <u>permanentes</u>.</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>Además de desaguar los caudales, se deben estudiar: <u>sobreelevaciones</u>, <u>estribos fuera de la vía de intenso desagüe</u> (zona por la que pasaría la avenida de <span class="pill-blue">T=100 años</span> produciendo una sobreelevación < <span class="pill-blue">0,3 m</span>), o <u>socavación de cimientos</u>.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-vector-square icon"></i><strong><u>Obras de drenaje transversal (ODT)</u></strong>: obras de <strong>sección cerrada</strong>, es decir provistas de <u>solera con función estructural</u>.</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                         <li>Normalmente responde a las tipologías de <strong>tubo</strong> o <strong>marco</strong> y sus dimensiones son <u>inferiores a las de los puentes</u>.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-cogs icon text-purple-600"></i>En cuanto a las <span class="definition-pill"><strong>obras de drenaje transversal</strong></span> se pueden dar una serie de <strong>recomendaciones</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-ruler-horizontal icon"></i>Las obras de drenaje suelen <strong>cruzar la carretera en una sola alineación recta</strong>, con independencia de la geometría del cauce.</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>siendo la <strong>implantación mejor</strong> la que <u>coincidente con el cauce natural</u>,</li>
+                                                        <li>pero si es muy <strong>esviado</strong> se puede recurrir a una obra de drenaje <u>más corta mediante la modificación del cauce</u>,</li>
+                                                        <li>evitando <u>quiebros bruscos</u> de alineación y previendo <u>protecciones contra la erosión</u> en los codos.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-ruler-vertical icon"></i>El <strong>perfil</strong> también se suele <strong>ajustar al del cauce</strong>.</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>solamente con <strong>fuertes pendientes</strong> se recurre a soluciones de <u>entradas en pozo</u> o <u>salidas escalonadas</u>, siempre con los tramos enterrados con <u>pendiente uniforme</u>.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-expand-arrows-alt icon"></i>La <strong>sección</strong> debe procurar <strong>respetar las dimensiones del cauce natural</strong>, evitando <u>fuertes estrechamientos</u>.</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>La <span class="law-pill">5.2-IC</span> asocia la <strong>longitud</strong> de la obra con un <strong>mínimo de sección</strong> (<span class="pill-blue">L>15 m → Ø>1,8 m</span>).</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-layer-group"></i></div>
+                <h2>2. Orden Circular 17/2003 Recomendaciones para el proyecto y construcción del drenaje subterráneo en obras de carretera</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>El <span class="definition-pill"><strong>drenaje subterráneo</strong></span> consiste en la <strong>evacuación del flujo de agua subterránea</strong> para que no afecte a la <u>explanada</u> y por consiguiente al <u>firme</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-water icon text-purple-600"></i>La <strong>filtración</strong> se puede producir:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>a través de las <u>grietas en el firme</u>,</li>
+                                <li>desde <u>cunetas</u>, <u>bermas</u>, <u>medianas</u>, <u>desmontes</u>,</li>
+                                <li>o por <strong>elevación de la capa freática</strong> (la <span class="law-pill">6.1-IC</span> establece que la cota de la explanada debe quedar por encima del nivel freático <span class="pill-blue">60 cm</span> en suelos seleccionados, <span class="pill-blue">80 cm</span> en adecuados, <span class="pill-blue">1 m</span> en tolerables y <span class="pill-blue">1,2 m</span> en marginales).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-cogs icon text-orange-600"></i>Para <strong>reducir estas situaciones</strong> se puede:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>mejorar la impermeabilidad</strong> del <u>firme</u> y de las <u>zonas no afirmadas</u> de la plataforma, pero la aparición de fisuras y grietas en el firme es <u>inevitable</u> con el paso del tiempo;</li>
+                                <li><strong>instalar sistemas de drenaje subterráneo</strong> para <u>facilitar la evacuación de agua</u> que se haya podido infiltrar o para <u>rebajar el nivel freático</u> si está alto.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-sitemap icon"></i>En cuanto a la <strong>evacuación de las aguas infiltradas</strong> desde la plataforma de la carretera, las <span class="law-pill"><strong>Recomendaciones para el proyecto y construcción del drenaje subterráneo en obras de carretera (OC 17/2003)</strong></span> prevén <strong>tres casos</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="definition-pill"><strong>F</strong></span> o de <strong>explanada de baja permeabilidad</strong>, el agua infiltrada circulará por la <u>superficie de contacto</u> entre la explanada y el firme, caso de las explanadas tratadas con <u>cemento</u> o <u>cal</u>;</li>
+                                <li><span class="definition-pill"><strong>E</strong></span> o de <strong>explanada permeable y suelo de explanación de baja permeabilidad</strong>, el agua infiltrada circulará por la <u>superficie de contacto de la explanada con el fondo del desmonte o la coronación del relleno</u>;</li>
+                                <li>caso <span class="definition-pill"><strong>S</strong></span> o de <strong>explanada permeable y suelo de explanación también permeable</strong>, el agua infiltrada circulará <u>verticalmente</u> atravesando la explanada y suelos subyacentes hasta encontrar un <u>material impermeable</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                     <li><p><i class="fas fa-directions icon"></i>En los casos <strong>F y E</strong>, el <strong>vertido de las aguas infiltradas</strong> se producirá hacia los <u>espaldones de los rellenos</u>, hacia los <u>drenes proyectados</u> en zonas de mediana o secciones en desmonte, o por <u>vertido directo hacia la cuneta</u>. En estos casos, es conveniente que las capas de baja permeabilidad tengan una <strong>pendiente mínima del <span class="pill-blue">2 %</span></strong> que favorezca el flujo sub-horizontal.</p></li>
+                     <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-stream icon"></i>Además del flujo de agua según las secciones transversales, es preciso analizar el <strong>flujo de agua longitudinal</strong>, que es especialmente importante en las <u>transiciones entre un desmonte y un relleno</u>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p>estableciendo la necesidad de proyectar <strong>zanjas drenantes transversales</strong> en esta transición cuando el desmonte tiene:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>una pendiente <u>mayor o igual al <span class="pill-blue">3 %</span></u></li>
+                                            <li>y su longitud es superior a los <span class="pill-blue">150 m</span>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                     </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-layer-group icon"></i>Elementos del drenaje subterráneo más habituales</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-wind icon"></i><span class="definition-pill"><strong>Zanjas drenantes</strong></span>: se diseñan para:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><strong>proteger el firme y la explanada</strong> de la infiltración procedente del <u>firme</u>, <u>bermas</u>, <u>medianas</u>, <u>cunetas</u> y <u>desmontes</u>,</li>
+                                            <li>así como para <strong>rebajar el nivel freático</strong> si está alto.</li>
+                                            <li>Normalmente están constituidas por una <u>zanja rellena con material granular</u>, protegida de la colmatación por un <u>geotextil</u>, y suele alojar en el fondo una <u>tubería drenante</u>.</li>
+                                            <li>Cada <span class="pill-blue">50 m</span> como máximo, o en los cambios de dirección o pendiente, se interrumpen en <strong>arquetas de registro</strong> para tareas de conservación.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-ruler-vertical icon"></i><span class="definition-pill"><strong>Pantallas drenantes</strong></span>: son zanjas <strong>bastante más profundas que anchas</strong> (su anchura no suele superior a <span class="pill-blue">25 cm</span>).</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                             <li>se suelen disponer en el <u>borde de explanadas</u>,</li>
+                                             <li>constituidas por un <u>geotextil</u>, un <u>material granular drenante</u> y una <u>tubería</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-long-arrow-alt-right icon"></i><span class="definition-pill"><strong>Drenes californianos</strong></span>: son <strong>perforaciones de pequeño diámetro</strong> efectuadas en el interior del terreno natural dentro de las que se coloca un <u>tubo ranurado</u>, con pendientes reducidas, pero <span class="pill-blue">>3%</span>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>con el objetivo de <strong>reducir las presiones intersticiales</strong> para <u>mejorar la estabilidad del talud</u>, <u>agotar una bolsa de agua</u> o <u>rebajar el nivel freático</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-th-large icon"></i><span class="definition-pill"><strong>Mantos drenantes</strong></span>: son <strong>capas drenantes</strong> formadas por <u>material granular</u> o <u>geocompuestos</u> que se disponen entre el <u>cimiento de un relleno</u> y el <u>terreno natural</u>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>con el objeto de <strong>captar surgencias</strong> del terreno y <strong>aportes</strong> del propio relleno.</li>
+                                            <li>En ocasiones se pueden sustituir por <strong>drenes en espina de pez</strong> (red de zanjas con esta forma).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-clone icon"></i><span class="definition-pill"><strong>Contrafuertes drenantes</strong></span>: son un <strong>sistema mixto de drenaje y refuerzo</strong> del terreno empleado en <u>desmontes</u> o <u>rellenos</u>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                             <li>constituidos por <strong>zanjas rellenas de material drenante</strong> orientadas según la <u>línea de máxima pendiente</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
