@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T2. Planificación estratégica de carreteras del Estado</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list, .even-deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li, .even-deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        .even-deeper-nested-list > li::before {
+             content: '▫️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before,
+        .even-deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h2, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h2, .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-map-signs"></i> MEB1T2. Planificación estratégica de carreteras del Estado</h1>
+        </header>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-map-signs"></i></div>
+                <h2>1. Planificación estratégica de carreteras del Estado y los programas de carreteras</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>Según la <span class="law-pill"><strong>Ley 37/2015 de carreteras</strong></span>, el <span class="plan-pill"><strong>Plan estratégico de las carreteras del Estado</strong></span> es el <strong><u>instrumento técnico y jurídico</u></strong> de la <u>política sectorial de carreteras</u>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><strong>Contendrá</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><i class="fas fa-search icon"></i>la <u>descripción y diagnóstico</u> del conjunto de carreteras y elementos funcionales;</li>
+                                            <li><i class="fas fa-calendar-check icon"></i>el <u>período de tiempo</u> que abarca y los <u>objetivos</u> para dicho período;</li>
+                                            <li><i class="fas fa-network-wired icon"></i>los <u>criterios de coordinación</u> con otras redes de carreteras y con otros sistemas de comunicación y transporte;</li>
+                                            <li><i class="fas fa-cogs icon"></i>los <u>criterios generales de programación, conservación y explotación</u> del sistema;</li>
+                                            <li><i class="fas fa-leaf icon"></i>la <u>evaluación de impacto estratégico, ambiental, de sostenibilidad y territorial</u>;</li>
+                                            <li><i class="fas fa-users-cog icon"></i>la <u>previsión e identificación de los agentes responsables</u> de la ejecución de las actuaciones contempladas así como de los <u>medios disponibles</u> para ello;</li>
+                                            <li><i class="fas fa-tasks icon"></i>las <u>actuaciones previstas</u>;</li>
+                                            <li><i class="fas fa-satellite-dish icon"></i>la <u>implantación y despliegue de servicios avanzados</u> a las carreteras y <u>sistemas inteligentes de transportes</u>;</li>
+                                            <li><i class="fas fa-chart-bar icon"></i>el <u>procedimiento de evaluación y control</u> de su ejecución, así como <u>instrumentos para la difusión</u> de sus resultados;</li>
+                                            <li><i class="fas fa-coins icon"></i>los <u>criterios de inversión, evaluación de impacto ambiental y económico, alternativas de financiación y de priorización</u> en la programación de actuaciones en las carreteras;</li>
+                                            <li><i class="fas fa-sitemap icon"></i>la <u>clasificación, categorización y programación</u> que sean necesarias para el cumplimiento del Plan;</li>
+                                            <li><i class="fas fa-chart-line icon"></i>y la <u>previsión de desarrollo</u> del mismo.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-purple-600"></i>El <span class="plan-pill"><strong>Plan estratégico</strong></span> se <strong>aprobará y modificará</strong> por acuerdo del <span class="actor-pill">Consejo de Ministros</span>, a propuesta del <span class="actor-pill">MITMS</span>,</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>previo <strong>informe</strong> del <span class="actor-pill">Consejo Asesor de Transportes y Movilidad Sostenible</span>,</li>
+                                <li><strong>oídas</strong> las <span class="actor-pill">administraciones autonómicas y locales</span> y los <span class="actor-pill">sectores que puedan resultar afectados</span>, en la forma que reglamentariamente se determine.</li>
+                                <li>Asimismo, se garantizará la <strong>participación</strong> de los <span class="actor-pill">Ministerios</span> a los que concierna.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tasks icon text-orange-600"></i>Los <span class="plan-pill"><strong>programas de carreteras</strong></span> son el <strong>instrumento técnico y jurídico</strong> de la política viaria en <u>parte de una red de carreteras</u> y deben contener las <u>previsiones, objetivos y prioridades</u> en relación con aquellos tramos de carreteras y sus elementos funcionales a los que se refieran.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Corresponde al <span class="actor-pill">MITMS</span> <strong>promover y aprobar</strong> los programas de carreteras que afecten a las carreteras y elementos funcionales de las mismas de su titularidad, de acuerdo con la <u>programación presupuestaria general del Estado</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2: Evaluación -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-search-dollar"></i></div>
+                <h2>2. Evaluación coste-beneficio, análisis multicriterio y viabilidad financiera. Estudios informativos y anteproyectos. Nota de servicio 3/2014 sobre estudios de rentabilidad de los estudios informativos o anteproyectos</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-file-alt icon text-blue-600"></i>La <span class="law-pill"><strong>Ley 37/2015 de Carreteras</strong></span> define los <span class="definition-pill"><strong>estudios informativos</strong></span> como aquellos estudios de carreteras en los que se <strong>definen y comparan</strong>, en líneas generales, diferentes <u>alternativas de trazado, de conexión y de explotación</u> de la actuación objeto de estudio, a efectos de que pueda servir de base al expediente de <u>información pública</u> y, en su caso, al trámite de <u>evaluación de impacto ambiental</u>, con objeto de poder <strong>seleccionar la más adecuada</strong>.</p></li>
+                    <li><p><i class="fas fa-ruler-combined icon text-purple-600"></i>Sobre los <span class="definition-pill"><strong>anteproyectos</strong></span>, establece que consisten en el <strong>estudio a escala adecuada</strong> para <u>definir o comparar</u> con la precisión suficiente la <strong>mejor o mejores soluciones</strong> para satisfacer una determinada necesidad, de forma que pueda <u>concretarse la solución óptima</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-clipboard-check icon text-orange-600"></i>En los <strong>estudios informativos</strong>, para seleccionar la alternativa más adecuada, existirán <u>objetivos económicos, sociales, territoriales y ambientales</u>, que deberán analizarse con un <span class="definition-pill"><strong>análisis multicriterio</strong></span>, que obtiene la <strong>clasificación</strong> de las distintas alternativas según distintos criterios, a los que se asignan ciertas <strong>ponderaciones</strong> para obtener la puntuación total.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Para <strong>evitar la posible subjetividad</strong> en la asignación de los pesos, se puede recurrir a técnicas con <u>análisis de sensibilidad y robustez</u> complementarios, que analizan la <u>influencia de la variación de los pesos</u> en la alternativa seleccionada.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-coins icon text-indigo-600"></i>Respecto a la <strong>valoración de acciones y efectos</strong> podemos encontrar:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>Costes valorables en términos monetarios</u> o asimilables a ellos (las obras y su mantenimiento, la circulación de los vehículos, tiempo empleado por los viajeros),</li>
+                                <li>y <u>efectos no valorables económicamente</u> (ambientales, sociales, territoriales).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-chart-pie icon text-teal-600"></i>Por tanto, en la <strong>evaluación de las opciones</strong> se <strong>analizan separadamente</strong> aquellos <u>costes y efectos que pueden medirse en unidades monetarias</u>, empleando procedimientos de valoración económica, como el <span class="definition-pill"><strong>análisis coste-beneficio</strong></span>, y aquellos <u>efectos no valorables monetariamente</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-percentage icon text-red-500"></i>En general, se contará con los siguientes <strong><u>indicadores</u></strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><strong><u>Indicadores económicos:</u></strong></p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><span class="definition-pill"><strong>Valor Actualizado Neto (VAN)</strong></span>, es el sumatorio de los beneficios anuales actualizados;</li>
+                                            <li><span class="definition-pill"><strong>Relación Beneficio/Coste</strong></span>, que es el cociente entre los ingresos y los costes actualizados, su valor debe ser superior a uno para que el proyecto sea viable;</li>
+                                            <li><span class="definition-pill"><strong>Periodo de Recuperación de la Inversión</strong></span>, es el número de años necesario para que, a la tasa de actualización correspondiente, el valor actual de los ingresos se iguale con el de los costes;</li>
+                                            <li><span class="definition-pill"><strong>Tasa Interna de Retorno (TIR)</strong></span>, es la tasa de actualización que iguala el valor actual de los ingresos con el valor actual de todos los costes.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><strong><u>Indicadores socioeconómicos</u></strong>, pretenden reflejar la <strong>demanda potencial</strong> de un territorio a través de datos de:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><u>población</u>,</li>
+                                            <li><u>potencial turístico</u>,</li>
+                                            <li><u>renta media</u></li>
+                                            <li>y otras <u>infraestructuras</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><strong><u>Indicadores territoriales</u></strong>, pretender reflejar el territorio en los siguientes aspectos:</p>
+                                    </div>
+                                     <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><u>accesibilidad</u>,</li>
+                                            <li><u>equilibrio regional</u>,</li>
+                                            <li><u>pertenencia a grandes redes</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-file-contract icon text-gray-700"></i>La entonces <span class="actor-pill">Subdirección General de Proyectos</span> redactó la <span class="law-pill"><strong>Nota de Servicio 3/2014</strong></span> sobre prescripciones y recomendaciones técnicas relativas a los contenidos mínimos a incluir en los estudios de rentabilidad de los <span class="definition-pill"><strong>estudios informativos</strong></span> o anteproyectos, donde se establecen <strong>criterios homogéneos</strong> para realizar los estudios de rentabilidad, que deben analizar:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                 <li>además de la <strong>rentabilidad económica</strong> de la carretera, donde se estudia la <u>contribución del proyecto al bienestar social</u>,</li>
+                                 <li>la <strong>rentabilidad financiera</strong> que determina si dicho proyecto permitiría la <u>participación privada</u> y, por tanto, si la <u>generación de ingresos cubriría sus costes</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3: Criterios de la Orden de Eficiencia -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-cogs"></i></div>
+                <h2>3. Criterios aplicables a carreteras de la Orden FOM/3317/2010 por la que se aprueba la Instrucción de eficiencia</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-chart-line icon text-blue-600"></i>En la <strong>primera década de este siglo</strong> se produjo un <strong>aumento significativo</strong> del <u>coste medio del kilómetro de autovía</u>.</p></li>
+                    <li><p><i class="fas fa-balance-scale icon text-purple-600"></i>En la situación económica del año <span class="pill-blue">2010</span> se consideró necesario <strong><u>optimizar el uso de los recursos públicos</u></strong>, mejorando la <strong>eficiencia</strong> de las inversiones, de forma que se proyectaran las nuevas actuaciones en base a criterios de <u>seguridad</u> y <u>mínimo coste posible</u>, sin que ello supusiera una merma de la calidad.</p></li>
+                    <li><p><i class="fas fa-file-alt icon text-orange-600"></i>En este sentido, se redactó la <span class="law-pill"><strong>Orden FOM/3317/2010</strong></span>, por la que se aprueba la <strong>Instrucción sobre las medidas específicas para la mejora de la eficiencia</strong> en la ejecución de las obras públicas de infraestructuras ferroviarias, carreteras y aeropuertos del <span class="actor-pill">MITMS</span>; que establece una serie de <strong>criterios aplicables a las carreteras</strong>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-search icon text-indigo-600"></i>Los <span class="definition-pill"><strong>Estudios Informativos</strong></span> pondrán un <strong>especial interés</strong> en <strong><u>optimizar los trazados</u></strong> minimizando los costes de las alternativas que cumplan los <u>requisitos funcionales y medioambientales exigibles</u>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p>El trazado de la carretera se definirá según la <span class="law-pill"><strong>norma 3.1-IC</strong></span>, que permite <u>disminuir las características exigidas</u> justificándolo adecuadamente en proyectos de:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><u>carreteras de montaña</u>,</li>
+                                            <li>carreteras que discurren por <u>espacios naturales de elevado interés ambiental</u>,</li>
+                                            <li><u>duplicaciones de calzada</u>,</li>
+                                            <li><u>acondicionamientos de trazado</u>,</li>
+                                            <li>o <u>ensanches de plataforma</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-drafting-compass icon text-teal-600"></i>En los <span class="definition-pill"><strong>Proyectos de Construcción y de Trazado</strong></span>, el autor deberá elaborar e incluir en el proyecto un <strong>informe</strong> que:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>compruebe que el Estudio Informativo cumple lo anterior</u>,</li>
+                                <li>e <u>indique las modificaciones del trazado</u> que se hayan producido con respecto al Estudio Informativo, justificando sus motivos.</li>
+                                <li>Asimismo, el autor del proyecto deberá presentar a la <span class="actor-pill">Dirección General de Carreteras</span>, antes de su aprobación, una <strong>certificación</strong> en la que reconozca <u>cumplir las instrucciones y parámetros de eficiencia</u> que se recogen en la Orden Ministerial.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-handshake icon text-green-600"></i>Se permite <strong>incluir en los proyectos modificaciones</strong> solicitadas por <strong>otras administraciones</strong>, que contemplen <u>obras o mejoras adicionales</u>, no justificadas por la funcionalidad de la propia infraestructura proyectada.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Para ello, estas modificaciones deberán ser acordadas mediante un <span class="definition-pill"><strong>Convenio</strong></span>, que incluirá la <strong>aportación económica</strong>, por parte de la Administración territorial solicitante, que <u>cubra el incremento presupuestario</u> que resulte.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-times-circle icon text-red-500"></i><strong>No se incluirán</strong> en los proyectos actuaciones cuya justificación y necesidad se base en la <strong>promoción de <u>desarrollos urbanísticos</u> o <u>polígonos industriales</u></strong>, que <strong>nunca serán financiadas por el <span class="actor-pill">MITMS</span></strong>,</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>aunque podrá <strong>autorizarlas</strong> (si cumplen los requerimientos para ello), para que los <strong>promotores</strong> puedan <u>ejecutarlas y financiarlas</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold">Otros criterios a seguir en el proyecto de carreteras</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-mountain icon"></i>La <strong>rasante</strong> se proyectará <u>minimizando los costes</u> del conjunto formado por <u>movimiento de tierras</u>, <u>estructuras</u> y <u>túneles</u>, siempre respetando la DIA.</p></li>
+                                <li><p><i class="fas fa-bridge icon"></i>La <strong>longitud de estructuras</strong> debe ser la <u>mínima compatible</u> con la DIA y con el obstáculo a salvar. La <strong>tipología estructural</strong> elegida será la de <u>coste mínimo posible</u> (sumando construcción y conservación).</p></li>
+                                <li><p><i class="fas fa-archway icon"></i><strong>Sólo se proyectarán túneles</strong> si es <u>estrictamente necesario</u>, vinculando su longitud exclusivamente a los <u>aspectos técnicos</u>. En fase de proyecto, <strong>no se definirán nuevos túneles</strong> ni falsos túneles no previstos en el EI y en la DIA.</p></li>
+                                <li><p><i class="fas fa-road-circle-xmark icon"></i>Se <strong>minimizarán</strong> en lo posible, en los proyectos de nuevos trazados, la ejecución de <u>vías de servicio</u> y <u>vías colectoras</u>.</p></li>
+                                <li><p><i class="fas fa-layer-group icon"></i>La <strong>sección de firme</strong> seguirá definiéndose según <span class="law-pill">6.1-IC</span> y se dimensionará con la <u>categoría de tráfico</u> que resulte con las hipótesis de crecimiento definidas en la orden ministerial. De entre todas las secciones posibles se elegirá la de <strong>menor coste</strong> de ejecución y conservación.</p></li>
+                                <li><p><i class="fas fa-city icon"></i>En los proyectos de <strong>adecuación de travesías</strong> se incluirán <u>únicamente</u> las actuaciones de <u>firmes</u>, <u>señalización</u> y <u>balizamiento</u> necesarios para mantener la seguridad vial de la carretera.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                     <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold">Parámetros de eficiencia</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                             <ul>
+                                <li><p><i class="fas fa-euro-sign icon"></i>El <strong>Presupuesto</strong> de los proyectos de construcción será como <strong>máximo</strong> el previsto en la <u>orden de estudio del proyecto</u>. La orden define unas <strong>horquillas para acotar el coste</strong> de ejecución material de <u>autovías interurbanas de nuevo trazado</u> y de <u>variantes de población en carretera convencional</u> en función de las dificultades geotécnicas y la orografía. Así, por ejemplo, para autovía limita el <strong>coste máximo por km</strong> en el peor de los casos a <span class="pill-blue">8,5 M€</span>.</p></li>
+                                <li><p><i class="fas fa-money-bill-wave icon"></i>Los <strong>precios unitarios</strong> de las unidades de obra serán como <strong>máximo</strong> los recogidos en el <span class="definition-pill">Cuadro de Precios de Referencia</span> de la Dirección General de Carreteras, que será <u>actualizado anualmente</u>. La utilización de unidades de obra no recogidas en el Cuadro de Precios, deberá suponer, como máximo, el <span class="pill-blue">20%</span> del presupuesto (sin contar reposiciones de servicios afectados y arqueología).</p></li>
+                                <li><p><i class="fas fa-seedling icon"></i>De entre todas las posibilidades que existan para cumplir la <strong>DIA</strong>, se proyectará la de <strong>mínimo coste posible</strong>, dejando constancia en el proyecto de la <u>inversión motivada por cuestiones ambientales</u>, justificando valores superiores al <span class="pill-blue">15%</span> del presupuesto total.</p></li>
+                                <li><p><i class="fas fa-traffic-light icon"></i>A efectos de definir la necesidad de <u>carriles adicionales en rampa</u>, <u>terceros carriles por cuestión de capacidad</u>, <u>categoría del firme</u>, así como cualquier otra cuestión de la geometría. Los estudios de tráfico necesarios utilizarán <strong>incrementos de tráfico menores del <span class="pill-blue">1,5%</span></strong> (<span class="pill-blue">1,44%</span> anual).</p></li>
+                             </ul>
+                        </div>
+                    </li>
+                     <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold">Autovías de débil demanda</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                             <ul>
+                                <li><p><i class="fas fa-info-circle icon"></i>La orden ministerial define las <span class="definition-pill"><strong>Autovías de débil demanda</strong></span> como aquellas de <strong>IMD prevista < <span class="pill-blue">7.000 veh/d</span></strong> en el año de puesta en servicio. En ellas se debe:</p>
+                                    <ul class="nested-list">
+                                        <li>Ser <strong>especialmente estricto</strong> en las condiciones de trazado que supongan <u>aumentos importantes de coste</u>.</li>
+                                        <li><strong>Incluir un anejo</strong> en el proyecto que recoja la <u>viabilidad e idoneidad</u> de su posible <strong>ejecución progresiva</strong>, de forma que en una primera fase se ejecutara la <u>primera calzada de la autovía</u>.</li>
+                                        <li>En aquellos casos en que así lo establezca la <span class="actor-pill">Dirección General de Carreteras</span>, el proyecto se <strong>dividirá en dos fases</strong>, de manera que en la primera fase se ejecute la <u>primera calzada de autovía</u>.</li>
+                                    </ul>
+                                </li>
+                             </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
