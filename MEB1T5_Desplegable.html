@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T5. Trazado de carreteras</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .formula-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .formula-pill { background-color: #ffedd5; color: #9a3412; border: 1px solid #fb923c; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '�';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-road"></i> MEB1T5. Trazado de carreteras <i class="fas fa-ruler-horizontal"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-book-open"></i></div>
+                <h2>1. Norma 3.1-IC de trazado</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>La <span class="law-pill"><strong>norma 3.1-IC</strong></span> contempla las <strong>especificaciones del trazado</strong> de una carretera. Es <strong>aplicable</strong> en la <span class="definition-pill">RCE</span> a:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>proyectos de carreteras interurbanas</u>,</li>
+                                <li>y de <u>tramos urbanos y periurbanos</u> con sus peculiaridades.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-mountain icon text-purple-600"></i>Podrán <strong>disminuirse las condiciones exigidas</strong> en la Norma, justificándose adecuadamente, en:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>carreteras de montaña</u>,</li>
+                                <li>carreteras que discurran por <u>espacios naturales de interés ambiental</u> o <u>acusada fragilidad</u></li>
+                                <li>y <u>actuaciones en carreteras existentes</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-ruler-combined icon text-orange-600"></i>Son <strong>datos básicos</strong> para el estudio del trazado:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>la <strong><u>velocidad de proyecto</u></strong>, para definir las <u>características geométricas</u> en condiciones de <u>comodidad</u> y <u>seguridad</u>,</li>
+                                <li>y la <strong><u>visibilidad</u></strong> que debe ser mayor que las <u>distancias de parada, adelantamiento, decisión y cruce</u>, según los casos.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-sort-alpha-down icon text-indigo-600"></i>En la <span class="law-pill"><strong>norma 3.1-IC</strong></span> las carreteras se <strong>denominan</strong> con una <strong><u>letra seguida de un número</u></strong>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>La <strong>letra</strong> será <strong>A</strong> para las <u>autopistas y autovías</u>, y <strong>C</strong> para las <u>carreteras convencionales y las carreteras multicarril</u>.</li>
+                                <li>El <strong>valor numérico</strong> indica la <strong>velocidad de proyecto</strong> en <span class="pill-blue">km/h</span>, con independencia de la velocidad máxima permitida por la reglamentación.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-layer-group icon text-teal-600"></i>Se consideran los siguientes <strong>grupos y denominaciones</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong><u>Grupo 1</u></strong> (Autopistas y autovías <span class="pill-blue">A-140</span>, <span class="pill-blue">A-130</span>);</li>
+                                <li><strong><u>Grupo 2</u></strong> (Autopistas y autovías <span class="pill-blue">A-120</span>, <span class="pill-blue">A-110</span>, <span class="pill-blue">A-100</span>, <span class="pill-blue">A-90</span>, <span class="pill-blue">A-80</span>, y carreteras <span class="pill-blue">C-100</span>);</li>
+                                <li>y <strong><u>Grupo 3</u></strong> (Carreteras <span class="pill-blue">C-90</span>, <span class="pill-blue">C-80</span>, <span class="pill-blue">C-70</span>, <span class="pill-blue">C-60</span>, <span class="pill-blue">C-50</span> y <span class="pill-blue">C-40</span>).</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-vector-square"></i></div>
+                <h2>2. Trazado en planta</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>El <strong>trazado en planta</strong> se compone de <u>rectas</u>, <u>curvas circulares</u> y <u>curvas de transición</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-ruler-horizontal icon"></i>Alineaciones rectas</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-check-circle icon text-green-600"></i>Elemento de trazado <strong>indicado</strong> en <u>carreteras de dos carriles</u> para obtener <strong>oportunidades de adelantamiento</strong> y en cualquier tipo de carretera para <strong>adaptarse</strong> a <u>infraestructuras preexistentes</u>, <u>condiciones urbanísticas</u> o <u>terrenos llanos</u>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-exclamation-triangle icon text-red-500"></i>Para <strong>evitar problemas</strong> relacionados con el <u>cansancio</u>, <u>deslumbramientos</u> o <u>exceso de velocidad</u>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>se <strong>limita su longitud máxima</strong> a la recorrida en <span class="pill-blue">1 min</span> a la velocidad de proyecto (Vp),</li>
+                                            <li>y para que se produzca una adaptación a la conducción se establece una <strong>longitud mínima</strong> superior a la distancia recorrida en <span class="pill-blue">5 s</span> (curvas en “S”) o <span class="pill-blue">10 s</span> (curvas en “C”).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-circle-notch icon"></i>Curvas circulares</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-cogs icon"></i>En el <strong>diseño</strong> de las curvas circulares se consideran la <u>velocidad</u>, el <u>radio</u>, el <u>peralte</u>, el <u>coeficiente de rozamiento transversal</u>, la <u>visibilidad de parada</u> y la <u>coordinación planta-alzado</u>.</p></li>
+                                <li><p><i class="fas fa-shield-alt icon text-purple-600"></i>Para proporcionar <strong>seguridad</strong> se establece un <strong>radio mínimo</strong> en función de la <u>clase de carretera</u> y la <u>velocidad de proyecto</u> (p.e. <span class="pill-blue">1.050 m</span> en A-140, <span class="pill-blue">700 m</span> en A-120, <span class="pill-blue">450 m</span> en A-100 y C-100, y <span class="pill-blue">250 m</span> en A-80) y una determinada <strong>relación entre radios consecutivos</strong> para evitar <u>cambios bruscos de geometría y velocidad</u>.</p></li>
+                                <li><p><i class="fas fa-road icon"></i>Fijado el radio, éste lleva asociado un <strong>peralte</strong> y la necesidad o no de <strong>curvas de transición</strong>, mejorando ambos la <u>percepción visual</u> de una curva.</p></li>
+                                <li><p><i class="fas fa-balance-scale icon"></i>Además, el <strong>peralte compensa</strong> parte de la <u>fuerza centrífuga</u> y las <strong>curvas de transición</strong> permiten un <u>aumento progresivo</u> de ella.</p></li>
+                                <li><p><i class="fas fa-sort icon"></i>El <strong>peralte se limita</strong> superiormente al <span class="pill-blue">8%</span> (grupos 1 y 2), <span class="pill-blue">7%</span> (grupo 3) para <u>evitar el deslizamiento de vehículos lentos</u> hacia el interior de la curva en carreteras heladas, e inferiormente al <span class="pill-blue">2%</span> por <u>cuestiones de drenaje</u>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-bezier-curve icon"></i>Curvas de acuerdo o de transición</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Las curvas de transición tienen por objeto <strong>evitar discontinuidades</strong> en la <u>curvatura</u>.</p></li>
+                                <li><p><i class="fas fa-drafting-compass icon"></i>Se adoptará en todos los casos como curva de transición la <span class="definition-pill"><strong>clotoide</strong></span>, cuya ecuación intrínseca es <span class="formula-pill">R·L = A²</span>, donde <strong>A</strong> es su parámetro y <strong>L</strong> su longitud.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-ruler-combined icon text-orange-600"></i>La longitud deberá <strong>superar la necesaria</strong> para cumplir las <strong>limitaciones</strong> de:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>la <u>variación de la aceleración centrífuga</u> en el plano horizontal,</li>
+                                            <li>por <u>transición de peralte</u>,</li>
+                                            <li>y por <u>condiciones de percepción visual</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-equals icon"></i>Las clotoides contiguas a una curva serán <strong>simétricas</strong>, salvo justificación técnica en contrario.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-chart-area"></i></div>
+                <h2>3. Trazado en alzado</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Se procurará <strong>ceñir la rasante al terreno</strong> de forma que se <strong>minimice</strong> el <u>impacto ambiental</u>, así como el <u>coste de las explanaciones, viaductos y túneles</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-sort-amount-up-alt icon"></i>Inclinación de las rasantes</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-tachometer-alt icon text-purple-600"></i>Se establecen unos <strong>valores máximos de inclinación</strong> en función de la <u>velocidad de proyecto</u> por razones de <u>seguridad</u> y <u>costes de explotación</u>.</p></li>
+                                <li><p><i class="fas fa-truck-moving icon text-orange-600"></i>Se pretende <strong>evitar</strong> la existencia de <strong>tramos largos de acusada pendiente</strong> para evitar <u>dificultades de frenado</u> en los vehículos pesados, pero donde existan se diseñarán <strong>lechos de frenado</strong>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-percentage icon text-red-500"></i>Los <strong>valores máximos</strong> de inclinación de la rasante en rampas y pendientes serán:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><strong><u>Autopistas y autovías:</u></strong> rampa-pendiente <span class="pill-blue">4-5%</span> para A-140-130-120-110-100, y <span class="pill-blue">5-6%</span> para A-90-80, que podrán incrementarse un <span class="pill-blue">1%</span> en casos justificados;</li>
+                                            <li><strong><u>Carreteras convencionales y multicarril:</u></strong> máxima-excepcional <span class="pill-blue">4-5%</span> C-100, <span class="pill-blue">5-7%</span> C-90-80, <span class="pill-blue">6-8%</span> C-70-60 y <span class="pill-blue">7-10%</span> C-50-40.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-ruler-horizontal icon"></i>En general, <strong>no se dispondrán</strong> rampas ni pendientes con la inclinación máxima establecida cuya longitud supere los <span class="pill-blue">3.000 m</span>, independientemente del estudio de carriles adicionales, ni longitudes medidas entre vértices consecutivos cuyo recorrido sea inferior a <span class="pill-blue">10 s</span> a la Vp.</p></li>
+                                <li><p><i class="fas fa-angle-double-down icon"></i>En general, el <strong>valor mínimo</strong> de la inclinación de la rasante no debe ser inferior a <span class="pill-blue">0,5%</span>, aunque, excepcionalmente, la rasante podría alcanzar un valor menor, en ningún caso inferior a <span class="pill-blue">0,2%</span>.</p></li>
+                                <li><p><i class="fas fa-water icon"></i>La inclinación de la <strong>línea de máxima pendiente</strong> en cualquier punto de la plataforma no será menor que <span class="pill-blue">0,5%</span> por <u>evacuación de las aguas de la calzada</u>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-bezier-curve icon"></i>Acuerdos verticales</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-drafting-compass icon"></i>La curva de acuerdo será una <strong>parábola de eje vertical</strong> de ecuación <span class="formula-pill">y = x²/2Kv</span>, donde <strong>Kv</strong> es el parámetro.</p></li>
+                                <li><p><i class="fas fa-calculator icon"></i>Definiendo <strong>θ</strong> como el valor absoluto de la diferencia de las inclinaciones en los extremos del acuerdo en tanto por uno, se cumplirá que <span class="formula-pill">Kv = L/ θ</span>, siendo <strong>L</strong> la longitud de la curva de acuerdo.</p></li>
+                                <li><p><i class="fas fa-eye icon text-indigo-600"></i>La Norma exige unos <strong>valores mínimos del parámetro</strong> en función de la <u>velocidad de proyecto</u> para ofrecer al conductor suficiente <strong>visibilidad de parada</strong> y <strong>visibilidad de adelantamiento</strong>, según los casos.</p></li>
+                                <li><p><i class="fas fa-ruler-vertical icon"></i>También se establece que la <strong>longitud</strong> (en m) sea <strong>superior a la Vp</strong> (en km/h) por <u>consideraciones estéticas</u>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-road-bridge"></i></div>
+                <h2>4. Sección transversal</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>La <strong>sección transversal</strong> influye fundamentalmente en la <strong><u>capacidad de la vía</u></strong>.</p></li>
+                    <li><p><i class="fas fa-ruler-combined icon text-purple-600"></i>Se <strong>fijará</strong>, determinando el <u>número de carriles y sus dimensiones</u>, en función del <u>tipo de carretera</u> y del <u>tráfico previsible</u> en la <span class="definition-pill"><strong>hora de proyecto del año horizonte</strong></span>, situado <span class="pill-blue">20 años</span> después de la entrada en servicio.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-traffic-light icon text-orange-600"></i>Los <strong><u>niveles de servicio</u></strong> deben cumplir los siguientes <strong>mínimos</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="pill-blue">A-140-130-120</span>: <span class="definition-pill">nivel C</span>,</li>
+                                <li><span class="pill-blue">A-110-100-90-80</span> y <span class="pill-blue">C-100-90-80</span>: <span class="definition-pill">nivel D</span>,</li>
+                                <li>y <span class="pill-blue">C-70-60-50-40</span>: <span class="definition-pill">nivel E</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-road-circle-check icon text-indigo-600"></i>El elemento más importante de la sección transversal es la zona destinada al paso de los vehículos o <span class="definition-pill"><strong>calzada</strong></span>, que está formada por los <strong>carriles</strong>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Además de éstos, existen <strong>otras partes de la plataforma</strong> no destinadas a la circulación normal, como son los <span class="definition-pill"><strong>arcenes</strong></span>, zonas que permiten a los vehículos <u>apartarse momentáneamente</u> de la calzada en caso de avería o emergencia, o las <span class="definition-pill"><strong>aceras</strong></span> destinadas a los peatones.</li>
+                                <li>También los <strong>márgenes de la carretera</strong> tienen una gran influencia en el caso de accidentes causados por la salida de un vehículo fuera de la calzada, estas zonas se denominan <span class="definition-pill"><strong>bermas</strong></span>.</li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p>En carreteras con calzadas separadas juega un importante papel la <span class="definition-pill"><strong>mediana</strong></span> comprendida entre ambas plataformas, que tendrá una <strong>anchura mínima</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>de <span class="pill-blue">10 m</span> cuando se prevea <u>ampliación</u>,</li>
+                                            <li>y de <span class="pill-blue">2 m</span> o la <u>anchura de trabajo del sistema de contención de vehículos</u> en ambos sentidos, si fuese superior, cuando no se prevea.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-car-side icon"></i>Calzada</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-road icon text-blue-600"></i>En <strong>carreteras de calzadas separadas</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><strong>no se proyectarán más de <u>cuatro carriles</u></strong> por calzada ni <strong>menos de <u>dos</u></strong>, no computando los <u>carriles de cambio de velocidad</u>, los de <u>trenzado</u>, ni los incluidos en <u>confluencias de autovías o autopistas</u>;</li>
+                                            <li>donde se dispongan <strong>dos calzadas separadas</strong> para cada sentido de circulación, la <strong>calzada central se conectará sólo con la lateral</strong>, aunque, excepcionalmente, podrá conectarse directamente con otras vías.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-road-circle-exclamation icon text-purple-600"></i>En <strong>carreteras de calzada única</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>se proyectarán <strong>dos carriles por calzada</strong>, uno para cada sentido,</li>
+                                            <li>en <strong>ningún caso</strong> se proyectarán calzadas con <strong>dos carriles por sentido</strong>, no computando los <u>carriles adicionales</u> ni los de <u>cambio de velocidad</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-ruler-horizontal icon text-orange-600"></i>Para la <strong>anchura de los carriles</strong> la Norma establece casi con generalidad la anchura de los carriles en <span class="pill-blue"><strong>3,5 m</strong></span>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                         <ul class="nested-list">
+                                             <li>que se podrá <strong>reducir</strong>, si fuese necesario y de forma justificada, en <u>tramos periurbanos y urbanos</u> considerándose una <u>reducción de la velocidad</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-code-branch"></i></div>
+                <h2>5. Nudos, enlaces e intersecciones</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>La <span class="law-pill"><strong>Norma 3.1-IC</strong></span> denomina <span class="definition-pill"><strong>nudo</strong></span> a la zona en la que se cruzan dos o más vías y clasifican los nudos en:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="definition-pill"><strong>intersecciones</strong></span> (cuando todos los movimientos se realizan al <u>mismo nivel</u>)</li>
+                                <li>o <span class="definition-pill"><strong>enlaces</strong></span> (al menos un movimiento a <u>distinto nivel</u>).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-road icon text-purple-600"></i>En <strong>autopistas y autovías</strong> sólo se dispondrán <u>enlaces</u>, y en <strong>carreteras multicarril y convencionales</strong> se determinará con base en un <u>estudio específico</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-ruler-horizontal icon text-orange-600"></i>Salvo justificación en contrario o que se conecte con carreteras estatales o autonómicas de primer orden, la <strong>distancia entre enlaces consecutivos no será inferior a</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>En <strong>carreteras de calzadas separadas</strong>: <span class="pill-blue">6 km</span> en <u>carreteras interurbanas</u> y a <span class="pill-blue">2 km</span> en <u>carreteras urbanas y periurbanas</u>;</li>
+                                <li>y en <strong>carreteras de calzada única</strong>:
+                                    <ul class="deeper-nested-list">
+                                        <li>en las que esté <u>prevista la duplicación de calzada</u>, será de aplicación lo indicado para carreteras de calzadas separadas,</li>
+                                        <li>y en carreteras de calzada única <u>sin previsión de duplicación de calzada</u> no será inferior a <span class="pill-blue">2 km</span>.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-arrows-alt-h icon text-indigo-600"></i>Estas distancias lo son entre las <strong>secciones características</strong> de los <u>carriles de cambio de velocidad más próximos</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tachometer-alt icon text-teal-600"></i>En <strong>autopistas, autovías y carreteras</strong> con <u>velocidad de proyecto > <span class="pill-blue">80 km/h</span></u> e <u>IMD > <span class="pill-blue">5.000</span></u>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>la <strong>distancia entre una entrada y la salida posterior</strong> será como mínimo de <span class="pill-blue">1.200 m</span>;
+                                    <ul class="deeper-nested-list">
+                                        <li>si esto no fuese posible, se unirán entrada y salida, debiendo tener el <strong>carril de trenzado</strong> resultante una longitud mínima de <span class="pill-blue">1.000 m</span>;</li>
+                                    </ul>
+                                </li>
+                                <li>la <strong>distancia entre una salida y la salida posterior</strong> será como mínimo de <span class="pill-blue">1.000 m</span>;</li>
+                                <li>y la <strong>distancia entre una entrada y la entrada posterior</strong> será como mínimo de <span class="pill-blue">1.000 m</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-road-circle-check icon text-green-600"></i>Cuando las distancias anteriores no se puedan cumplir se proyectará una <strong>vía colectora-distribuidora</strong>.</p></li>
+                </ul>
+            </div>
+        </div>
+        <!-- Card 6 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-plus-square"></i></div>
+                <h2>6. OC 1/2021 sobre recomendaciones para el diseño de carreteras 2+1 y carriles adicionales de adelantamiento</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-traffic-light icon text-blue-600"></i>La <strong>demanda de tráfico</strong> en las vías interurbanas de la <span class="definition-pill">RCE</span> se ha venido resolviendo en los últimos <span class="pill-blue">30 años</span> mediante <u>carreteras convencionales</u> o <u>autovías</u> (hoy en día con plenas características de autopistas).</p></li>
+                    <li><p><i class="fas fa-lightbulb icon text-purple-600"></i>Sin embargo, existen <span class="definition-pill"><strong>alternativas técnicas</strong></span> suficientemente contrastadas que pueden constituir una <span class="definition-pill"><strong>respuesta intermedia</strong></span> que no conlleve necesariamente la construcción de una carretera de alta capacidad.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-road-circle-check icon text-orange-600"></i>Se trata de un nuevo tipo de vía que ha venido consolidando su denominación como <span class="definition-pill"><strong>Carretera 2+1</strong></span> y actualmente cuenta con una <strong>amplia experiencia internacional</strong>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-road icon"></i>Las <strong>Carreteras 2+1</strong> disponen de:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>una <strong>única plataforma</strong> donde se mantiene una <u>separación permanente entre sentidos de circulación</u>, no siempre a través de sistemas de contención de vehículos,</li>
+                                            <li>que incorpora un <strong>carril adicional</strong> reservado alternativamente a uno y otro sentido de circulación para permitir la <strong>maniobra de adelantamiento</strong>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-check-circle icon text-green-600"></i>Todo ello supone una <strong>franca mejora</strong> de las <span class="definition-pill"><u>condiciones de seguridad vial</u></span> y del <span class="definition-pill"><u>nivel de servicio</u></span> de la carretera.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-exchange-alt icon text-indigo-600"></i>En las <strong>carreteras convencionales</strong> la maniobra de adelantamiento implica la <u>invasión del sentido contrario</u>, situación no exenta de <strong>riesgo</strong> y cuya oportunidad debe ser personalmente <strong>gestionada por el conductor</strong>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><p><i class="fas fa-bullseye icon"></i>Por el contrario, el <strong>objetivo</strong> de un tramo de <span class="definition-pill">Carretera 2+1</span> es que sea la <strong>propia infraestructura</strong> la que proporcione directamente la <strong><u>gestión segura de la maniobra de adelantamiento</u></strong> a través de carriles adicionales diseñados específicamente para esa función.</p></li>
+                                <li><p><i class="fas fa-eye-slash icon"></i>De esta manera el conductor <strong>no tiene que evaluar la visibilidad</strong> disponible y <strong>arriesgarse a invadir</strong> el sentido contrario.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                     <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-chart-line icon text-green-600"></i>De cara a la <strong>calidad del servicio público viario</strong>, se consigue una <strong>mejora del nivel de servicio</strong> de la carretera y una <strong>mayor funcionalidad</strong> como parte integrante del sistema de transporte, al:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-tachometer-alt icon"></i><u>incrementar la velocidad media de recorrido</u></li>
+                                <li><i class="fas fa-clock icon"></i>y <u>reducir el tiempo de espera para adelantar</u> a otros vehículos.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+�
