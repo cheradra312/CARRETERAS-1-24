@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T16. Construcción de carreteras (I)</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .doc-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .doc-pill { background-color: #dcfce7; color: #166534; border: 1px solid #4ade80; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-hard-hat"></i> MEB1T16. Construcción de carreteras (I) <i class="fas fa-road"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-user-tie"></i></div>
+                <h2>1. Dirección de obras de carreteras</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>Según el <span class="law-pill"><strong>PG-3</strong></span>, las <strong>funciones del <span class="actor-pill">Director</span></strong>, en orden a la <u>dirección, control y vigilancia</u> de las obras, son las siguientes:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-clipboard-check icon"></i><strong>Exigir al <span class="actor-pill">Contratista</span></strong>, directamente o a través de su equipo, el <u>cumplimiento de las condiciones contractuales</u>.</li>
+                                <li><i class="fas fa-shield-alt icon"></i><strong>Garantizar la ejecución de las obras</strong> con estricta sujeción al <span class="doc-pill"><u>proyecto aprobado</u></span>, o <u>modificaciones debidamente autorizadas</u>, y el cumplimiento del <span class="doc-pill"><u>programa de trabajos</u></span>.</li>
+                                <li><i class="fas fa-cogs icon"></i><strong>Definir</strong> aquellas <strong>condiciones técnicas</strong> que los <span class="doc-pill"><u>Pliegos de Prescripciones</u></span> correspondientes dejan a su decisión.</li>
+                                <li><i class="fas fa-question-circle icon"></i><strong>Resolver todas las cuestiones técnicas</strong> que surjan en cuanto a <u>interpretación de <span class="doc-pill">planos</span></u>, <u>condiciones de materiales</u> y de <u>ejecución de unidades de obra</u>, siempre que no se modifiquen las condiciones del <span class="doc-pill">Contrato</span>.</li>
+                                <li><i class="fas fa-search icon"></i><strong>Estudiar las incidencias o problemas</strong> planteados en las obras que <u>impidan el normal cumplimiento del <span class="doc-pill">Contrato</span></u> o <u>aconsejen su modificación</u>, tramitando, en su caso, las <span class="doc-pill">propuestas</span> correspondientes.</li>
+                                <li><i class="fas fa-file-signature icon"></i><strong>Proponer las actuaciones procedentes</strong> para obtener, de los <u>organismos oficiales</u> y de los <u>particulares</u>, los <span class="doc-pill"><strong>permisos y autorizaciones</strong></span> necesarios para la ejecución de las obras y ocupación de los bienes afectados por ellas, y <strong>resolver los problemas</strong> planteados por los <u>servicios y servidumbres</u> relacionados con las mismas.</li>
+                                <li><i class="fas fa-exclamation-triangle icon"></i><strong>Asumir personalmente y bajo su responsabilidad</strong>, en <u>casos de urgencia</u>, la <strong>dirección inmediata</strong> de determinadas operaciones; para lo cual el <span class="actor-pill">Contratista</span> deberá poner a su disposición el <u>personal y material</u> de la obra.</li>
+                                <li><i class="fas fa-certificate icon"></i><strong>Acreditar al <span class="actor-pill">Contratista</span></strong> las <u>obras realizadas</u>, conforme a lo dispuesto en los <span class="doc-pill">documentos del Contrato</span>.</li>
+                                <li><i class="fas fa-tasks icon"></i><strong>Participar en la recepción</strong> y <strong>redactar la <span class="doc-pill">liquidación</span></strong> de las obras.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-handshake icon text-purple-600"></i>El <span class="actor-pill"><strong>Contratista</strong></span> estará <strong>obligado a prestar su colaboración</strong> al <span class="actor-pill">Director</span> para el normal cumplimiento de sus funciones.</p></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-calendar-alt"></i></div>
+                <h2>2. Plan de obra</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-gavel icon text-blue-600"></i>La <span class="law-pill"><strong>LCSP</strong></span> tiene en consideración el <span class="doc-pill"><strong>plan de obra</strong></span>, especificando que uno de los documentos del proyecto debe ser un <strong>plan de obra de carácter indicativo</strong>, con <u>previsión del tiempo y coste</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-lightbulb icon text-purple-600"></i>A pesar de que el <span class="doc-pill">plan de obra</span> que desarrolle el <span class="actor-pill">contratista</span> sea diferente al del proyecto, éste es <strong>importante</strong> pues:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>obliga al proyectista</strong> a <u>profundizar en los medios</u> a utilizar durante la obra y a <u>definir mejor el proyecto</u>.</li>
+                                <li>Además, es un <strong>paso necesario</strong> para definir el <u>estudio de seguridad y salud</u>, el <u>control de calidad</u> y el <u>plan de vigilancia ambiental</u>, pues éstos dependen de la <u>duración de actividades</u> y los <u>recursos empleados</u> en la obra.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-list-ol icon text-orange-600"></i>La <strong>planificación de la obra</strong> requiere:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-search icon"></i><strong>Analizar</strong> las <u>unidades de obra</u> para asignar los <u>medios adecuados</u>.</li>
+                                <li><i class="fas fa-clock icon"></i><strong>Establecer periodos de tiempo</strong> de realización de cada unidad o conjuntos de ellas.</li>
+                                <li><i class="fas fa-stream icon"></i><strong>Programar la realización de las actividades</strong>, algunas podrán realizarse de manera <u>independiente</u>, pero la mayoría deberá <u>preceder o seguir</u> necesariamente a otras unidades o desarrollarse <u>paralelamente</u>.</li>
+                                <li><i class="fas fa-project-diagram icon"></i><strong>Emplear un procedimiento lógico</strong> que encadene las actividades (<span class="definition-pill">Pert</span>, <span class="definition-pill">Gantt</span>) determinando el <strong>camino crítico</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-users-cog"></i></div>
+                <h2>3. Organización de las obras</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>Se pueden dar las siguientes <strong>organizaciones de la dirección de las obras</strong>, siendo los tipos <strong>más habituales</strong> en la <span class="actor-pill">Dirección General de Carreteras</span> el <strong>2º y el 3º</strong>, dándose también el <strong>1º</strong> en <u>obras de bajo presupuesto y escasa complejidad</u>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-user-tie icon"></i><strong>Dirección de obra constituida exclusivamente por <span class="actor-pill">funcionarios técnicos</span></strong> con <u>título suficiente</u>, y pertenecientes a la <u>plantilla del Centro de la Administración contratante</u>.</li>
+                                <li><i class="fas fa-users icon"></i><strong>Dirección de obra constituida por <span class="actor-pill">funcionarios</span></strong> con la asistencia de un <span class="actor-pill">consulting</span> que <u>ayude a los funcionarios</u> en las tareas de la Dirección de obra en general.</li>
+                                <li><i class="fas fa-user-friends icon"></i><strong>Dirección de obra constituida por <span class="actor-pill">funcionarios</span></strong> con el apoyo de un <span class="actor-pill">consulting</span> para <u>realizar trabajos concretos</u> de la Dirección de obra, como pueden ser el <u>Control de Calidad</u> de la obra.</li>
+                                <li><i class="fas fa-user-secret icon"></i><strong>Dirección de obra llevada a cabo directamente por el <span class="actor-pill">consultor</span></strong>, <u>responsabilizándose por completo</u> de la Dirección de obra. Tendrá una <u>supervisión por parte del Centro</u> del que depende la obra.</li>
+                                <li><i class="fas fa-building icon"></i><strong>Dirección de obra llevada por un <span class="actor-pill">Organismo o Ente Público</span></strong> creado exprofeso por la Administración para estos fines.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-user-check"></i></div>
+                <h2>4. Aseguramiento de la calidad</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>La <span class="law-pill"><strong>OC 4/2024</strong></span> sobre sistema de gestión de la calidad en obras de la <span class="actor-pill">DGC</span> contempla varios <strong>sistemas</strong> para asegurar el <strong><u>control de calidad</u></strong> de una obra:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><span class="definition-pill"><strong>Control interior</strong></span> (responsabilidad del propio <span class="actor-pill">contratista</span>), se divide en:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><strong>control interno</strong> realizado por él para <u>controlar su producción</u></li>
+                                            <li>y <strong>control externo</strong> realizado por una <u>organización independiente</u> de la unidad de producción.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><span class="definition-pill"><strong>Control exterior</strong></span> (responsabilidad de la <span class="actor-pill">Administración</span>).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-euro-sign icon text-purple-600"></i>El <strong>coste del control interior</strong> forma parte integrante del <u>precio de cada unidad de obra</u>, el del <strong>control exterior</strong> será de cuenta del <span class="actor-pill">contratista</span> hasta el <span class="pill-blue">1%</span> del presupuesto de la obra.</p></li>
+                    <li><p><i class="fas fa-file-signature icon text-orange-600"></i>La <span class="actor-pill">Dirección General de Carreteras</span> exige que el <span class="actor-pill">contratista</span> aplique un <span class="doc-pill"><strong>plan de aseguramiento de la calidad (PAC)</strong></span> que debe <u>redactar antes del comienzo de las obras</u>, siendo <u>aprobado por la dirección de obra</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tasks icon"></i>El <span class="doc-pill"><strong>PAC</strong></span> debe contener:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p>Los <strong><u>procedimientos de ejecución</u></strong>: definiendo:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>la <u>procedencia de materiales</u>,</li>
+                                            <li>los <u>equipos de personal</u>,</li>
+                                            <li>la <u>maquinaria y los medios auxiliares</u>,</li>
+                                            <li>y el <span class="doc-pill"><strong>plan de puntos de inspección</strong></span> (que debe indicar: el <u>control</u> (inspección o ensayo), las <u>normas de referencia</u>, la <u>frecuencia</u> y los <u>responsables</u>; los <u>procedimientos específicos</u>; los <u>puntos críticos y de parada</u>).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p>Los <strong><u>procedimientos funcionales</u></strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><u>organización de la obra</u> y de la <u>unidad de la calidad</u>,</li>
+                                            <li><u>compras y suministros</u>,</li>
+                                            <li><u>tratamiento de documentación</u>,</li>
+                                            <li><u>auditorías</u>,</li>
+                                            <li><u>calibración de equipos de medida</u>,</li>
+                                            <li>y <u>tratamiento de las no conformidades</u> y <u>acciones correctivas</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-users-cog icon"></i>Funciones de los distintos agentes en relación a la calidad</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-user-tie icon text-blue-600"></i>La <strong><u>dirección de obra</u></strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>debe <strong>definir la calidad exigida</strong>,</li>
+                                            <li><strong>obligar</strong> a que la obra se ajuste a la <u>calidad del proyecto</u> y la <u>oferta del contratista</u>,</li>
+                                            <li><strong>organizar el control exterior</strong></li>
+                                            <li>y <strong>coordinar las actuaciones</strong>.</li>
+                                            <li>Debe redactar un <span class="doc-pill"><strong>esquema director de la calidad</strong></span> con la metodología para <u>coordinar el PAC</u> de los distintos intervinientes y las <u>actividades de control exterior</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-hard-hat icon text-purple-600"></i>El <strong><u>contratista</u></strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>debe <strong>implantar un sistema de calidad</strong> en la obra,</li>
+                                            <li><strong>establecer los métodos</strong> de <u>ejecución</u> y <u>verificación</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-user-check icon text-orange-600"></i>La <strong><u>asistencia técnica de control exterior de la calidad</u></strong> (<span class="definition-pill">A.T. de control y vigilancia de obras</span>), debe redactar un <span class="doc-pill"><strong>plan de supervisión del aseguramiento de la calidad</strong></span> para seguir el PAC del contratista.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-file-shield"></i></div>
+                <h2>5. Plan de seguridad y salud</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-blue-600"></i>El <span class="law-pill"><strong>Real Decreto 1627/97</strong></span> por el que se establecen <strong>disposiciones mínimas de seguridad y salud en obras de construcción</strong> establece un <u>nivel mínimo de seguridad</u> en las obras, así como los <u>instrumentos y figuras responsables</u> que intervienen:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-users-cog icon text-purple-600"></i><strong>Figuras responsables</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-user-tie icon"></i>El <span class="actor-pill"><strong>director de obra</strong></span>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>le corresponde la <u>comprobación y vigilancia</u> del correcto desarrollo de la obra y <u>dirigir a sus colaboradores</u> que se integran en la dirección facultativa,</li>
+                                            <li>es el <strong>responsable último</strong> de la seguridad y salud en la obra.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-hard-hat icon"></i>El <span class="actor-pill"><strong>contratista</strong></span>: con la figura del <span class="actor-pill"><strong>responsable de seguridad y salud en la obra</strong></span>, que asume las <strong>obligaciones</strong> de la contrata y subcontratas en la materia:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><u>aplicación de los principios de acción preventiva</u>,</li>
+                                            <li><u>hacer cumplir el plan de seguridad y salud</u>,</li>
+                                            <li>y <u>atender las indicaciones de la Dirección Facultativa</u>,</li>
+                                            <li>siendo una figura de gran importancia, que requiere <u>experiencia previa en obra</u>, <u>formación técnica</u> y <u>formación especializada en prevención de riesgos laborales</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-user-shield icon"></i>El <span class="actor-pill"><strong>coordinador de seguridad y salud</strong></span>, integrado en la dirección facultativa. Debe:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><u>integrar la actividad</u> de las diferentes empresas que intervienen en la obra,</li>
+                                            <li><u>elaborar un informe de supervisión previo</u> a la aprobación del plan de seguridad y salud,</li>
+                                            <li><u>visitar regularmente la obra</u></li>
+                                            <li>y <u>adoptar las medidas necesarias</u> para asegurar el cumplimiento del plan de seguridad,</li>
+                                            <li>así como <u>elaborar un informe trimestral</u> de seguimiento de la obra.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-file-alt icon text-orange-600"></i>El <span class="doc-pill"><strong>plan de seguridad y salud</strong></span>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>tiene como antecedente el <span class="doc-pill">estudio de seguridad y salud</span> del proyecto, así como las <u>normas generales de prevención</u> y las <u>disposiciones mínimas reglamentarias</u>.</li>
+                                <li>Lo <strong>redacta</strong> el <span class="actor-pill">contratista</span> (responsable de seguridad y salud), lo <strong>supervisa</strong> el <span class="actor-pill">coordinador de seguridad y salud</span>, y lo <strong>aprueba</strong> la <span class="actor-pill">Administración</span> (en obras de la <span class="actor-pill">DGC</span>, los <span class="actor-pill">Jefes de Demarcación</span>).</li>
+                                <li>Debe <strong>definir</strong> las <u>actividades a realizar</u> en la obra, <strong>identificar</strong> los <u>riesgos que implican</u>, y <strong>establecer</strong> las <u>medidas preventivas de eliminación o disminución del riesgo</u>, teniendo la <strong>máxima difusión</strong> en la obra.</li>
+                                <li>El <span class="doc-pill">Plan</span> tiene una <strong>estructura similar</strong> a la de un proyecto: <u>memoria</u>, <u>pliego</u>, <u>planos</u> y <u>presupuesto</u>; su seguimiento se realiza por medio del <span class="doc-pill"><strong>libro de incidencias</strong></span>, que está en custodia del <span class="actor-pill">coordinador de seguridad y salud</span>, pero debe estar a disposición de todos los agentes de la obra.</li>
+                                <li>El <span class="actor-pill">coordinador</span> tiene el <strong>deber de comunicar</strong> las anotaciones al <span class="actor-pill">contratista</span>, a los <span class="actor-pill">representantes de los trabajadores</span>, y a la <span class="actor-pill">inspección de trabajo</span> en el caso de <u>reincidencia</u> o <u>paralización de la obra por riesgo grave o inminente</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-binoculars"></i></div>
+                <h2>6. Plan de vigilancia medioambiental</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>Normalmente, la <strong>evaluación de impacto ambiental</strong> se realiza durante la redacción del <span class="doc-pill">estudio informativo</span>, que incluye un <span class="doc-pill">estudio de impacto ambiental</span> que contiene un <span class="doc-pill"><strong>plan de vigilancia ambiental (PVA)</strong></span> preliminar.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>En esta fase se formula la <span class="doc-pill"><strong>declaración de impacto ambiental</strong></span>, con determinaciones sobre el <span class="doc-pill">PVA</span>.</li>
+                                <li>En el <span class="doc-pill">proyecto de construcción</span> se desarrolla completo el <span class="doc-pill">PVA</span>.</li>
+                                <li>Posteriormente, durante las fases de <strong>construcción y explotación</strong>, se deberá <strong>poner en práctica</strong>, determinando la <u>eficacia de las medidas preventivas, correctoras y compensatorias</u> y <u>vigilando el cumplimiento</u> de la <span class="doc-pill">declaración de impacto ambiental</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tasks icon"></i>El <span class="doc-pill"><strong>PVA</strong></span> suele <strong>controlar</strong> en obras de carreteras:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-smog icon"></i><strong>Calidad atmosférica</strong>: <u>emisión de polvo y partículas</u>, para cuya prevención se suelen usar <u>riegos</u>.</li>
+                                <li><i class="fas fa-volume-up icon"></i><strong>Niveles sonoros</strong>: durante la <u>fase de obra</u> y durante la <u>explotación</u> (restricciones en obra y pantallas acústicas).</li>
+                                <li><i class="fas fa-water icon"></i><strong>Calidad de las aguas</strong>: medidas para <u>evitar que arrastres de tierras o vertidos de la obra lleguen a los cauces</u> (barreras de retención de sedimentos o balsas de decantación).</li>
+                                <li><i class="fas fa-seedling icon"></i><strong>Suelos, flora y vegetación</strong>: <u>jalonamiento</u> de la obra, utilización de la <u>tierra vegetal</u>, <u>hidrosiembra</u> y <u>plantaciones</u>.</li>
+                                <li><i class="fas fa-paw icon"></i><strong>Fauna</strong>: <u>permeabilidad de la infraestructura</u> mediante <u>pasos de fauna</u> y en autovías atención al <u>vallado</u>.</li>
+                                <li><i class="fas fa-landmark icon"></i><strong>Patrimonio cultural</strong>: <u>seguimiento arqueológico</u> de los trabajos de movimiento de tierras.</li>
+                                <li><i class="fas fa-recycle icon"></i><strong>Gestión de residuos</strong> de la obra.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-users-cog icon"></i>Agentes que intervienen en la vigilancia ambiental</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-user-tie icon text-blue-600"></i>El <span class="actor-pill"><strong>director de la obra</strong></span>, que tiene como <strong>obligación</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>el <strong>seguimiento</strong> del cumplimiento de la <span class="doc-pill">DIA</span>,</li>
+                                            <li>así como <strong>remitir</strong> al órgano ambiental la <u>información solicitada</u>,</li>
+                                            <li>además de ser el <strong>responsable último</strong> del cumplimiento de la <span class="doc-pill">DIA</span>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-user-shield icon text-purple-600"></i>El <span class="actor-pill"><strong>coordinador ambiental</strong></span>, designado por la <span class="actor-pill">Admón.</span> que <strong>sigue el <span class="doc-pill">PVA</span></strong> integrado en la Dirección Facultativa.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-hard-hat icon text-orange-600"></i>El <span class="actor-pill"><strong>contratista</strong></span>, que debe:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><strong>acometer</strong> las <u>medidas de prevención, corrección y compensación</u> de impacto ambiental,</li>
+                                            <li><strong>documentar</strong> la <u>gestión medioambiental</u></li>
+                                            <li>y <strong>obtener</strong> los <u>permisos medioambientales necesarios</u> (préstamos).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-plug"></i></div>
+                <h2>7. Servicios afectados</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <li><p><i class="fas fa-file-alt icon text-blue-600"></i>Los <span class="doc-pill"><strong>proyectos de construcción</strong></span> deben incluir un <span class="doc-pill"><strong>anejo de reposición de servicios</strong></span> que contendrá una <strong>separata por cada servicio</strong>, para poder <u>tramitar separadamente la obtención de los permisos</u>.</p>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-file-signature icon text-purple-600"></i>Cada <strong>separata</strong> es un proyecto con:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="doc-pill">memoria</span>,</li>
+                                <li><span class="doc-pill">pliego</span>,</li>
+                                <li><span class="doc-pill">planos</span></li>
+                                <li>y <span class="doc-pill">presupuesto</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-check-circle icon text-green-600"></i>Debe estar <strong>firmada por técnico competente</strong> y contener la <strong>aprobación del titular del servicio</strong> que permita su posterior <u>legalización</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-exclamation-triangle icon text-red-500"></i>En la práctica, es <strong>difícil obtener esa aprobación</strong> durante la redacción proyecto.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Por el contrario, es habitual que durante las obras los <span class="actor-pill">titulares del servicio</span> <strong>exijan mejores características</strong>, lo que es <u>causa de modificados</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-hard-hat icon text-orange-600"></i>En ocasiones, se exige la <strong>realización del proyecto y las obras de reposición</strong> por <u>empresas habilitadas por los titulares</u>.</p></li>
+                    <li><p><i class="fas fa-map-pin icon text-indigo-600"></i>Se debe recoger en el <span class="doc-pill"><strong>anejo de expropiaciones</strong></span> las que sean necesarias para la <u>reposición de los servicios</u>.</p></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
