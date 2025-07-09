@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T19. Conservación de carreteras (I)</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .doc-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .doc-pill { background-color: #dcfce7; color: #166534; border: 1px solid #4ade80; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '�';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-tools"></i> MEB1T19. Conservación de carreteras (I) <i class="fas fa-road"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-file-contract"></i></div>
+                <h2>1. Contratos de conservación y explotación empleados en la Red de Carreteras del Estado</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>El <span class="actor-pill">MITMS</span>, a través de la <span class="actor-pill">DG de Carreteras</span>, planteó en <span class="pill-blue">2021</span> un <strong>nuevo modelo</strong> en los <span class="doc-pill">contratos de servicios de conservación y explotación</span> de los sectores de carreteras del Estado.</p></li>
+                    <li><p><i class="fas fa-bullseye icon text-purple-600"></i>Tiene como <strong>objetivo último</strong> garantizar una <strong><u>movilidad segura</u></strong> compatible con los <span class="plan-pill">Objetivos de Desarrollo Sostenible</span>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tasks icon text-orange-600"></i>Estos contratos incluyen las siguientes <strong>prestaciones</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-life-ring icon"></i><strong><u>Ayuda a la vialidad y conservación ordinaria</u></strong> de las carreteras, incluyendo actuaciones como:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>Aquellas que permitan que la <u>carretera y sus elementos funcionales</u> dispongan de las <strong>mejores condiciones</strong> para asegurar una circulación lo más <u>segura, cómoda y fluida posible</u> en cualquier situación.</li>
+                                            <li><u>Vigilancia y atención</u> de accidentes e incidentes.</li>
+                                            <li><u>Vialidad invernal</u>.</li>
+                                            <li><u>Servicio de control</u> de túneles y comunicaciones.</li>
+                                            <li><u>Mantenimiento</u> de instalaciones.</li>
+                                            <li>Establecimiento de <u>inventarios</u> y <u>reconocimiento del estado</u> de la vía.</li>
+                                            <li><u>Apoyo a la explotación</u> y <u>estudios de seguridad vial</u>.</li>
+                                            <li><u>Mantenimiento de los elementos de la carretera</u> con los <strong>niveles de calidad más próximos posibles a los deseables</strong>, en función de las <u>prioridades y recursos disponibles</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-hard-hat icon"></i><strong><u>Proyectos específicos de pequeñas obras</u></strong> necesarias para <strong>mejorar la funcionalidad</strong> de la vía (<u>menores de <span class="pill-blue">500.000 €</span></u>, IVA excluido, que <u>no requieren supervisión</u> de su proyecto según la <span class="law-pill">Ley 9/2017 de Contratos del Sector Público</span>).</p></li>
+                                <li><p><i class="fas fa-store icon"></i><strong><u>Explotación de los elementos funcionales</u></strong> de las carreteras: <u>áreas de servicio existentes</u>, <u>aparcamientos seguros</u>, etc.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-exchange-alt icon text-indigo-600"></i>Se <strong>separan</strong>, de forma expresa, los <strong>gastos e ingresos</strong> del contrato, estableciendo:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>de un lado, el <strong>presupuesto de gastos</strong> (<u>costes de conservación y explotación</u> y <u>pequeñas obras</u>)</li>
+                                <li>y, de otro, el <strong>presupuesto de ingresos</strong> (<u>canon a abonar</u> como contraprestación por el derecho de explotación de las áreas de servicio y otros servicios públicos).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-bullseye icon"></i>Objetivos fundamentales de este nuevo planteamiento</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-concierge-bell icon text-blue-600"></i><strong><u>Servicio integral</u></strong>: ofrecer al <span class="actor-pill">usuario</span> un <strong>servicio integral</strong> que garantice la <u>movilidad</u> en unas condiciones adecuadas de <u>calidad</u>, <u>vialidad</u> y <u>seguridad</u>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>lo que supone no sólo el <u>mantenimiento de las vías de circulación</u>,</li>
+                                            <li>sino también ofrecer <u>servicios complementarios</u> para el descanso y el repostaje (áreas de servicio).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-chart-pie icon text-purple-600"></i><strong><u>Optimización de recursos</u></strong>: permite <strong>aprovechar las sinergias</strong> que se obtienen al <u>gestionar de manera conjunta</u> cada tramo de carretera.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-road-circle-check icon text-orange-600"></i><strong><u>Mejora del estado de la carretera</u></strong>: a través de un <strong>incremento de la dotación</strong> destinada a la realización de las <u>operaciones de conservación</u> de los elementos constitutivos de la carretera, tales como:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><u>limpiezas y siegas</u>,</li>
+                                            <li><u>reparaciones de firmes</u>,</li>
+                                            <li><u>actuaciones en los sistemas de drenaje</u>,</li>
+                                            <li><u>mejora de los sistemas de contención</u>, etc.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-tools icon text-indigo-600"></i><strong><u>Mejora de elementos de la carretera</u></strong>: la inclusión de <strong>pequeñas obras de conservación preventiva</strong> tiene por finalidad la <u>rehabilitación</u>, <u>reposición</u> y <u>mejora</u> de los elementos de la carretera mediante <strong>inversiones</strong> que <u>superan el alcance previsto</u> en los contratos anteriores.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-icicles"></i></div>
+                <h2>2. Vialidad invernal</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-map-marker-alt icon text-blue-600"></i>En <span class="actor-pill">España</span>, la <strong>formación de placas de hielo y las nevadas</strong> afectan de forma regular a <span class="pill-blue"><strong>20</strong></span> <strong>provincias</strong>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-road icon text-purple-600"></i>lo que se traduce en la <strong>necesidad de actuar</strong> más o menos regularmente a lo largo de más de:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="pill-blue"><strong>2.000 km</strong></span> de <u>autovías y autopistas</u></li>
+                                <li>y <span class="pill-blue"><strong>8.000 km</strong></span> de <u>carreteras convencionales</u> de la <span class="definition-pill">RCE</span>,</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-calendar-alt icon text-orange-600"></i>en general entre los meses de <strong>noviembre y abril</strong>, siendo particularmente intensa en <strong>diciembre y enero</strong>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-bullseye icon text-indigo-600"></i>Los <strong>objetivos</strong> de la vialidad invernal son:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-icicles icon"></i><strong>Evitar la formación de placas de hielo</strong>, mediante la <u>extensión de fundentes</u> sobre la calzada antes de que se produzca la helada (<span class="definition-pill">tratamientos preventivos</span>). El fundente más empleado es el <strong>cloruro sódico</strong> en forma de <u>sal</u> o <u>salmuera</u>.</li>
+                                <li><i class="fas fa-snowflake icon"></i><strong>Minimizar las perturbaciones al tráfico</strong> como consecuencia de las nevadas, mediante el empleo de <u>maquinaria quitanieves</u> y la <u>extensión de fundentes</u> que eviten la persistencia de hielo (<span class="definition-pill">tratamientos curativos</span>). Para combatir hielo ya formado además de <strong>cloruro sódico</strong> también se usa <strong>cloruro cálcico</strong>, que mejora su fusión.</li>
+                                <li><i class="fas fa-bullhorn icon"></i><strong>Informar al usuario</strong> con la <u>antelación suficiente</u>.</li>
+                                <li><i class="fas fa-first-aid icon"></i><strong>Asegurar la atención a los ocupantes</strong> de los vehículos cuando las circunstancias lo hagan necesario.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-users-cog icon text-teal-600"></i>Los <strong>dos primeros objetivos</strong> atañen a la <span class="actor-pill">DGC</span>, los <strong>dos últimos</strong>, fundamentalmente a las <u>autoridades de tráfico y protección civil</u>, siendo <strong>imprescindible</strong> para todos ellos contar con una <u>adecuada previsión meteorológica</u> y con la <u>necesaria coordinación</u> regulada en el <span class="doc-pill"><strong>Protocolo de “Coordinación de actuaciones de los órganos de la AGE ante nevadas y otras situaciones meteorológicas extremas que puedan afectar a la RCE”</strong></span>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-truck-snowplow icon text-green-600"></i>La <strong>maquinaria empleada</strong> está compuesta por:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>máquinas quitanieves</u> de empuje y dinámicas,</li>
+                                <li><u>esparcidores de fundentes</u>,</li>
+                                <li>y <u>máquinas auxiliares</u> como <strong>palas cargadoras</strong> para la carga de sal, <strong>cintas transportadoras</strong>, <strong>plantas de fabricación de salmuera</strong>, <strong>barredoras</strong>, etc.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-clipboard-list icon text-red-500"></i>Los <strong>medios principales</strong> del <span class="plan-pill"><strong>plan de vialidad invernal 2024/2025</strong></span> en la <span class="definition-pill">RCE</span> están constituidos por:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="pill-blue"><strong>3.600</strong></span> trabajadores,</li>
+                                <li>más de <span class="pill-blue"><strong>1.400</strong></span> máquinas quitanieves,</li>
+                                <li>más de <span class="pill-blue"><strong>250.000 t</strong></span> de fundentes</li>
+                                <li>y más de <span class="pill-blue"><strong>400</strong></span> depósitos de salmuera,</li>
+                                <li>todo ello con un <strong>coste anual estimado</strong> de casi <span class="pill-blue"><strong>70 millones de €</strong></span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-clipboard-check"></i></div>
+                <h2>3. Inspecciones de elementos y sistemas de gestión</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>La <span class="actor-pill"><strong>Dirección General de Carreteras del MITMS</strong></span> tiene implantados los siguientes <strong>sistemas de gestión</strong> de ayuda a la conservación y explotación de la <span class="definition-pill">Red de Carreteras del Estado</span>:</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-layer-group icon"></i>Gestión de firmes</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-bullseye icon text-purple-600"></i>Los <strong>objetivos</strong> del sistema de gestión de firmes de la <span class="actor-pill">DGC</span> pueden resumirse en:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-database icon"></i><strong>Poseer información</strong> sobre las <u>características de los firmes</u> (<span class="doc-pill">inventario</span>) y su <u>estado de conservación</u> (<span class="definition-pill">auscultación</span>).</li>
+                                            <li><i class="fas fa-chart-line icon"></i><strong>Evaluar</strong> su <u>evolución</u>.</li>
+                                            <li><i class="fas fa-tools icon"></i><strong>Proponer y valorar el coste</strong> de las <u>operaciones de conservación</u> necesarias.</li>
+                                            <li><i class="fas fa-coins icon"></i><strong>Optimizar la utilización de los presupuestos</strong>, proporcionando <u>estrategias de conservación</u> (preventiva o correctiva) en base a una <u>ordenación prioritaria</u> de las actuaciones, en función de <u>criterios técnicos y económicos</u>.</li>
+                                            <li><i class="fas fa-exchange-alt icon"></i><strong>Facilitar el flujo de datos e información</strong> entre todos los implicados.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-file-alt icon text-orange-600"></i>El <span class="doc-pill"><strong>inventario de firmes</strong></span> tiene información de las <u>características superficiales</u>, <u>estructurales</u> y <u>geométricas</u>, y recoge dos fichas, la del <u>firme inicial</u>, y la de <u>rehabilitación y mejora</u>.</p></li>
+                                <li><p><i class="fas fa-road icon text-indigo-600"></i>Según el inventario de la <span class="definition-pill">RCE</span>, en las <strong>capas de rodadura</strong> el <span class="pill-blue">46%</span> son <u>mezclas bituminosas tipo hormigón bituminoso</u>, el <span class="pill-blue">30%</span> <u>mezclas bituminosas discontinuas</u>, el <span class="pill-blue">12%</span> <u>mezclas porosas</u>, el <span class="pill-blue">10%</span> <u>microaglomerados en frío</u> y el <span class="pill-blue">2%</span> <u>hormigón</u>; en cuanto a la <strong>tipología</strong> el <span class="pill-blue">82%</span> son <u>firmes semiflexibles y semirrígidos</u>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-archway icon"></i>Gestión de túneles</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-desktop icon text-blue-600"></i>La <span class="actor-pill">DGC</span> ha desarrollado una aplicación denominada <span class="definition-pill"><strong>BIT</strong></span> que incluye un <u>inventario de cada uno de los túneles</u>, <u>datos de todas las incidencias significativas</u>, <u>informes de las inspecciones periódicas</u>, <span class="doc-pill">manual de explotación</span> y <span class="doc-pill">plan de emergencia interior</span>.</p></li>
+                                <li><p><i class="fas fa-list-alt icon text-purple-600"></i>El <strong>inventario</strong> contiene las <u>características geométricas y funcionales</u>, <u>datos de tráfico</u>, <u>equipamientos e instalaciones de seguridad</u>.</p></li>
+                                <li><p><i class="fas fa-ruler-horizontal icon text-orange-600"></i>De acuerdo con el inventario, en la <span class="definition-pill">RCE</span> existen unos <span class="pill-blue"><strong>500</strong></span> <strong>tubos</strong> que suman una longitud de unos <span class="pill-blue"><strong>280 km</strong></span>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-bridge icon"></i>Gestión de obras de paso</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Este sistema de gestión ayuda al <strong>óptimo mantenimiento</strong> de las <u>estructuras de la red</u>.</p></li>
+                                <li><p><i class="fas fa-chart-pie icon text-purple-600"></i>En la <span class="definition-pill">RCE</span> existen <span class="pill-blue"><strong>25.000</strong></span> <strong>obras de paso</strong>, de las cuales <span class="pill-blue">2/3</span> se consideran “<u>puentes</u>” por tener luces superiores a <span class="pill-blue">10 m</span>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-cogs icon text-orange-600"></i>El <strong>sistema de gestión de puentes</strong> de la <span class="actor-pill">Dirección General de Carreteras</span> se articula por medio de:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><strong>Inventario</strong> de las estructuras de la red, con datos referentes a la <u>localización</u>, <u>características geométricas, funcionales y estructurales</u> de las obras de paso con longitud superior a <span class="pill-blue">3 m</span>.</li>
+                                            <li>Realización de <strong>inspecciones</strong>: <u>Básicas</u>, <u>Principales</u>, y <u>Especiales</u>.</li>
+                                            <li>Establecimiento de <strong>prioridades de reparación</strong>, ponderando los <u>índices de condición</u> mediante factores como la <u>seguridad</u>, la <u>funcionalidad</u>, la <u>importancia del itinerario</u>, la <u>posibilidad de desviar el tráfico</u>, o el <u>valor patrimonial</u>.</li>
+                                            <li><strong>Definición de alternativas</strong> de reparación con su <u>coste</u>, y la <strong>elaboración de los programas</strong> de actuación.</li>
+                                            <li>El <strong>control y seguimiento</strong> de los programas de actuación.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-traffic-sign icon"></i>Gestión de señalización</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-desktop icon text-blue-600"></i>La <span class="actor-pill">DGC</span> dispone de un <span class="definition-pill"><strong>Sistema de Gestión de la Señalización Vertical</strong></span> denominado <span class="definition-pill"><strong>InCa</strong></span>, basado en un <u>GIS</u> y en el <u>inventario de la señalización</u>, que es <strong>actualizado</strong> por las <u>empresas de conservación y explotación</u>.</p></li>
+                                <li><p><i class="fas fa-database icon"></i>De esta manera actualmente se encuentran <strong>inventariados más de <span class="pill-blue">115.000</span> carteles</strong> y de <span class="pill-blue"><strong>660.000</strong></span> <strong>señales</strong> en la <span class="definition-pill">RCE</span>.</p></li>
+                                <li><p><i class="fas fa-map-marker-alt icon text-purple-600"></i>Cada cartel o señal se encuentra <strong>localizado geográficamente</strong> con <u>coordenadas UTM</u>, y se dispone de <strong>información</strong> sobre su <u>año de fabricación</u>, <u>materiales</u>, <u>reflectancia</u>, <u>dimensiones</u>, <u>diseño</u>, <u>estado de conservación</u>, etc.</p></li>
+                                <li><p><i class="fas fa-check-circle icon text-orange-600"></i>De esta forma, el <span class="definition-pill"><strong>InCa</strong></span> permite <strong>estudiar las estrategias de conservación y mantenimiento</strong> de la señalización.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-file-alt"></i></div>
+                <h2>4. Nota de Servicio 2/2021: seguridad en las actividades de conservación</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-bullseye icon text-blue-600"></i>El <strong>objetivo</strong> de esta nota de servicio es <strong>proponer medidas</strong> que incidan en la <strong><u>mejora de la seguridad de los trabajadores</u></strong> que realizan tareas sobre la carretera, bien de manera <u>frecuente</u> o bien de manera <u>esporádica</u>, para tratar de <strong>disminuir los riesgos laborales</strong> asociados a esta actividad (y por ende a todos los usuarios de las carreteras).</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-clock icon"></i>Acciones a corto plazo</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-file-signature icon text-purple-600"></i><strong>Particularizar los <span class="doc-pill">documentos preventivos</span></strong> a las <u>características y trabajos concretos</u> de cada sector, incluyendo:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>un <strong>apartado específico de señalización</strong>,</li>
+                                            <li><strong>identificando los tramos de riesgo especial</strong>,</li>
+                                            <li>y <strong>proponiendo medidas específicas</strong> en estos tramos;</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-hard-hat icon text-orange-600"></i>En <strong>obras menores y de emergencia</strong>, los <span class="doc-pill">documentos preventivos</span> incluirán un <u>apartado específico de señalización</u>.</p></li>
+                                <li><p><i class="fas fa-check-circle icon text-indigo-600"></i>En <strong>autorizaciones de obras de terceros</strong> que afecten a la circulación se exigirá la <u>elaboración de los <span class="doc-pill">documentos preventivos</span> oportunos</u>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-hourglass-half icon"></i>A medio plazo</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-blue-600"></i>Incluye otras <strong>medidas para mejora de la seguridad</strong> de los trabajos:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-road icon"></i>ejecución de <strong>bandas fresadas longitudinales</strong>;</li>
+                                            <li><i class="fas fa-parking icon"></i>construcción de <strong>apartaderos</strong>;</li>
+                                            <li><i class="fas fa-tools icon"></i>posibilidad de <strong>adecuación de márgenes/cunetas seguras</strong> para mejorar el <u>estacionamiento puntual</u> de los <u>vehículos averiados</u> y de los <u>vehículos de vigilancia</u>;</li>
+                                            <li><i class="fas fa-traffic-light icon"></i><strong>mejorar los medios de señalización de obras</strong> incluidos en los <span class="doc-pill">pliegos de los contratos de conservación y explotación (COEX)</span>; etc.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-file-alt"></i></div>
+                <h2>5. Nota de Servicio 1/2022: recomendaciones para mejorar la sostenibilidad en los centros COEX</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>En la <span class="actor-pill"><strong>Dirección General de Carreteras</strong></span> la <strong>preocupación y el respeto</strong> por el <u>medioambiente</u> y la <u>sostenibilidad</u> ha sido una <strong>constante</strong>.</p></li>
+                    <li><p><i class="fas fa-recycle icon text-green-600"></i>Alineada con la <span class="plan-pill"><strong>estrategia de economía circular</strong></span> se pretende también <strong>impulsar una transformación</strong> en este sentido.</p></li>
+                    <li><p><i class="fas fa-bullseye icon text-purple-600"></i>Por ello, el <strong>objetivo</strong> de la <span class="law-pill"><strong>NS 1/2022</strong></span> es <strong>dar cumplimiento a estas cuestiones</strong> en el ámbito de los <u>contratos de servicios de conservación y explotación de carreteras</u> en lo que respecta a los <strong>centros operativos</strong> fundamentalmente.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tasks icon text-orange-600"></i>Algunas de las <strong>medidas que integra</strong> son:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-solar-panel icon"></i><strong>Promover el autoconsumo eléctrico</strong> de centros <span class="definition-pill">COEX</span>;</li>
+                                <li><i class="fas fa-fire-extinguisher icon"></i><strong>abandonar las calderas de gas o de gasoil</strong> sustituyéndolas por <u>calderas de biomasa</u>, <u>pellets</u>, o <u>sistemas de calefacción renovable</u>;</li>
+                                <li><i class="fas fa-building icon"></i>en el caso de que se construyan nuevos centros <span class="definition-pill">COEX</span>, <strong>diseñarlos de acuerdo con estándares de eficiencia energética</strong>;</li>
+                                <li><i class="fas fa-car-alt icon"></i>o <strong>dar preferencia al uso de vehículos <span class="definition-pill">«Cero Emisiones»</span></strong> o <span class="definition-pill"><strong>«ECO»</strong></span> (cuando no haya una alternativa «Cero emisiones»).</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
