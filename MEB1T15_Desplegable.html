@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T15. Proyectos de trazado y de construcción</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list, .even-deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li, .even-deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        .even-deeper-nested-list > li::before {
+             content: '▫️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before,
+        .even-deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-drafting-compass"></i> MEB1T15. Proyectos de trazado y de construcción <i class="fas fa-hard-hat"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-ruler-combined"></i></div>
+                <h2>1. Proyecto de trazado. Trámite de información pública</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-book-open icon text-blue-600"></i>El <span class="law-pill"><strong>Reglamento General de Carreteras</strong></span> define el <span class="definition-pill"><strong>proyecto de trazado</strong></span> como la parte del proyecto de construcción que contiene:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>los <strong>aspectos geométricos</strong> del mismo,</li>
+                                <li>así como la <strong>definición concreta</strong> de los <u>bienes y derechos afectados</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-bullhorn icon text-purple-600"></i>Se debe someter al <strong>trámite de información pública</strong> previsto en la <span class="law-pill"><strong>Ley de Expropiación Forzosa</strong></span>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-exchange-alt icon text-orange-600"></i>Y, además, cuando las funciones de un <span class="definition-pill">estudio informativo</span> sean asumidas por un <span class="definition-pill">proyecto de trazado</span>, respecto a:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>las <strong>circunstancias que justifiquen la declaración de interés general</strong> de la carretera</li>
+                                <li>y sobre la <strong>concepción global de su trazado</strong>, según la normativa de carreteras.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-hard-hat"></i></div>
+                <h2>2. Proyecto de construcción</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-book-open icon text-blue-600"></i>El <span class="law-pill"><strong>Reglamento General de Carreteras</strong></span> establece que el <span class="definition-pill"><strong>proyecto de construcción</strong></span> consiste en:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>el <strong>desarrollo completo de la solución óptima</strong>, con el <u>detalle necesario</u> para hacer factible su <u>construcción</u> y posterior <u>explotación</u>,</li>
+                                <li>y con los <strong>datos necesarios</strong> para que se puedan ejecutar las obras <u>sin intervención de los autores del proyecto</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-purple-600"></i>Por su parte, la <span class="law-pill"><strong>Ley de Contratos del Sector Público (LCSP)</strong></span> establece la necesidad de:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>redactar</strong>, <strong>supervisar</strong>, <strong>aprobar</strong> y <strong>replantear</strong> el proyecto que <u>defina con precisión los trabajos</u> objeto del contrato de obras,</li>
+                                <li><strong>salvo</strong> que se trate del supuesto de <u>obras de emergencia</u> o de <u>obras de mera conservación y mantenimiento</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-folder-open"></i></div>
+                <h2>3. Documentos del proyecto de construcción: memoria y anejos, planos, PPTP, mediciones y presupuestos</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-book-reader icon"></i>Memoria</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>En ella se <strong>describirá el objeto</strong> de las obras y se <strong>justificará la solución</strong> proyectada.</p></li>
+                                <li><p><i class="fas fa-file-signature icon text-purple-600"></i>Tendrá <strong>carácter contractual</strong> en todo lo referente a la <u>descripción de los materiales básicos o elementales</u> que forman parte de las unidades de obra, por tanto, debe estar <strong>firmada</strong>.</p></li>
+                                <li><p><i class="fas fa-eye icon text-orange-600"></i>En los demás aspectos, la memoria tendrá <strong>carácter informativo</strong>.</p></li>
+                                <li><p><i class="fas fa-check-circle icon text-green-600"></i>Debe incluir la <strong>manifestación expresa y justificada</strong> de que el proyecto comprende una <u>obra completa o fraccionada</u>, según el caso.</p></li>
+                                <li><p><i class="fas fa-paperclip icon text-indigo-600"></i>Los <strong>anejos a la memoria</strong> deben incluir los <u>datos y cálculos</u> utilizados en la redacción del proyecto.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-map-marked-alt icon"></i>Planos</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-file-signature icon text-blue-600"></i>Tienen <strong>carácter contractual</strong>, y, por tanto, deben estar <strong>firmados</strong>.</p></li>
+                                <li><p><i class="fas fa-drafting-compass icon text-purple-600"></i>Deben <strong>definir perfectamente la obra</strong> con la <u>precisión suficiente</u> para poderse ejecutar en su totalidad, describiendo <u>gráficamente todos y cada uno de sus elementos</u> y el <u>proceso constructivo</u>, así como <u>delimitar la ocupación de terrenos</u> y la <u>restitución de servidumbres y servicios afectados</u>.</p></li>
+                                <li><p><i class="fas fa-calculator icon text-orange-600"></i>A partir de los planos deberá ser posible <strong>deducir las mediciones</strong>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-file-contract icon"></i>Pliego de Prescripciones Técnicas Particulares (PPTP)</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Su contenido constituye unas <strong>cláusulas contractuales</strong> entre el constructor y la Administración, por lo que debe estar <strong>firmado</strong>.</p></li>
+                                <li><p><i class="fas fa-cogs icon text-purple-600"></i><strong>Describe las obras y regula su ejecución</strong>: <u>características de los materiales</u>, <u>normas para la elaboración</u> de las distintas unidades de obra, <u>instalaciones exigibles</u> y <u>precauciones a adoptar</u>.</p></li>
+                                <li><p><i class="fas fa-tasks icon text-orange-600"></i>Asimismo, <strong>detallará</strong> las <u>formas de medición y abono</u>, <strong>establecerá</strong> el <u>plazo de garantía</u>, <strong>especificará</strong> las <u>normas previstas para las recepciones</u>, <strong>determinará</strong> las <u>obligaciones del contratista</u>.</p></li>
+                                <li><p><i class="fas fa-edit icon text-indigo-600"></i>Se redactará de forma que <strong>concrete solamente</strong> aquellos puntos <u>no establecidos en el <span class="law-pill">PG-3</span></u>, que <u>seleccione las alternativas ofrecidas</u> por éste o que lo <u>modifique</u>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-coins icon"></i>Presupuesto</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-ruler icon text-blue-600"></i>Figurarán las <strong>mediciones</strong>.</p></li>
+                                <li><p><i class="fas fa-euro-sign icon text-purple-600"></i>El <strong>precio de las unidades de obra</strong> se basará en la determinación de los <u>costes directos</u> (mano de obra, materiales y maquinaria) e <u>indirectos</u> (oficinas a pie de obra, comunicaciones, almacenes, talleres, laboratorio, personal técnico y administrativo adscrito a la obra).</p></li>
+                                <li><p><i class="fas fa-table icon text-orange-600"></i>En el Presupuesto se incluirán los <span class="definition-pill"><strong>Cuadros de Precios nº 1 y nº 2</strong></span> que tienen <strong>carácter contractual</strong> por lo que deben estar <strong>firmados</strong>. En ellos figurará lo necesario para el <u>abono de unidades de obra completas</u> (cuadro nº 1) o <u>incompletas</u> (cuadro nº 2).</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-file-invoice-dollar icon text-indigo-600"></i>El <span class="definition-pill"><strong>presupuesto de ejecución material (PEM)</strong></span> se obtendrá como el <strong>sumatorio</strong> de las <u>mediciones por sus precios</u> más las <strong>partidas alzadas</strong>, entre las que cabe distinguir:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>Las <span class="definition-pill"><strong>partidas alzadas a justificar</strong></span>: se trata de <u>unidades susceptibles de medición</u>, pero cuya <u>medida exacta se desconoce a priori</u> en proyecto, por lo que su presupuesto se estima en una partida alzada. El <strong>abono en obra</strong> se realiza multiplicando la <u>medición real</u> de la unidad ejecutada por el <u>precio definido</u> en el proyecto.</li>
+                                            <li>Las <span class="definition-pill"><strong>partidas alzadas de abono íntegro</strong></span>: se trata de <u>trabajos no susceptibles de medición</u>, como la partida de “Limpieza y terminación de las obras”, que es <strong>obligatoria</strong> en obras fijas fuera de poblado con presupuesto <span class="pill-blue">>600.000 €</span>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-archive icon text-teal-600"></i>El <strong>presupuesto se organizará por capítulos</strong>: Explanaciones; Drenaje; Firmes; Estructuras; Túneles; Señalización, balizamientos y defensas; Integración ambiental; Sistemas de transporte inteligente; Obras complementarias; Reposición de servicios; Seguridad y salud.</p></li>
+                                 <li><p><i class="fas fa-calculator icon text-green-600"></i>El <span class="formula-pill"><strong>PBL</strong></span> = <span class="formula-pill">PEM</span> + <span class="formula-pill">GG</span> (<span class="pill-blue">13 %</span>) + <span class="formula-pill">BI</span> (<span class="pill-blue">6%</span>) + <span class="formula-pill">IVA</span> (<span class="pill-blue">21 %</span> de PEM+GG+BI), ambos presupuestos (PEM y PBL) deben ir <strong>firmados</strong>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-hard-hat icon"></i>Estudio de Seguridad y Salud</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-gavel icon text-blue-600"></i>El <span class="law-pill"><strong>Real Decreto 1627/1997</strong></span> implanta la <strong>obligatoriedad</strong> de la inclusión de un estudio de seguridad y salud en los proyectos de obras públicas en que:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>el <strong>presupuesto</strong> sea igual o superior a <span class="pill-blue">75 millones de pesetas</span>,</li>
+                                            <li>el <strong>plazo</strong> sea superior a <span class="pill-blue">30 días laborables</span> con <strong>más de <span class="pill-blue">20</span> trabajadores simultáneos</strong> en algún momento,</li>
+                                            <li>el <strong>volumen de mano de obra</strong> (suma de los días de trabajo del total de los trabajadores de la obra) sea superior a <span class="pill-blue">500</span></li>
+                                            <li>o se trate de obras de <u>túneles, galerías, conducciones subterráneas y presas</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-user-tie icon text-purple-600"></i>Este estudio deberá formar parte del proyecto de ejecución de obra y será elaborado por el <strong>técnico competente</strong> designado por el promotor (<strong>coordinador de seguridad y salud en fase de proyecto</strong>).</p></li>
+                                <li><p><i class="fas fa-folder icon text-orange-600"></i>Debe tener <strong>memoria</strong>, <strong>planos</strong>, <strong>PPTP</strong> y <strong>presupuesto</strong>, que se recogerá en el <span class="definition-pill">PEM</span> del proyecto.</p></li>
+                                <li><p><i class="fas fa-info-circle icon text-indigo-600"></i>Si <strong>no se alcanzan los límites</strong> indicados lo preceptivo es redactar un <span class="definition-pill"><strong>Estudio Básico de Seguridad y Salud</strong></span>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-leaf icon"></i>Estudio de impacto ambiental</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-check-circle icon text-blue-600"></i>En el caso de que sea necesario que el proyecto se someta a <strong>evaluación de impacto ambiental</strong>, incluirá un <span class="definition-pill"><strong>Estudio de Impacto Ambiental</strong></span>, realizado de acuerdo con la <span class="law-pill"><strong>Ley 21/2013 de evaluación ambiental</strong></span>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-list-ul icon text-purple-600"></i>El <strong>contenido</strong> será:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>Objeto y descripción del proyecto;</li>
+                                            <li>Examen de alternativas;</li>
+                                            <li>Inventario ambiental;</li>
+                                            <li>Identificación y valoración de impactos;</li>
+                                            <li>Evaluación de las repercusiones en la <span class="definition-pill">Red Natura 2000</span>;</li>
+                                            <li>Establecimiento de medidas preventivas, correctoras y compensatorias;</li>
+                                            <li>Programa de vigilancia y seguimiento ambiental;</li>
+                                            <li>y Documento de síntesis.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-clipboard-user"></i></div>
+                <h2>4. Dirección del proyecto</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-play-circle icon text-blue-600"></i>El proceso de elaboración de un proyecto se inicia con una <span class="definition-pill"><strong>Orden de Estudio</strong></span>, que establece:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>tipo de proyecto</u> a redactar;</li>
+                                <li><u>situación</u> de la actuación;</li>
+                                <li><u>clase de carretera</u>;</li>
+                                <li><u>obras</u> a proyectar;</li>
+                                <li><u>características</u>: velocidad de proyecto, secciones tipo;</li>
+                                <li><u>instrucciones particulares</u>;</li>
+                                <li>autorización de <u>Asistencia Técnica</u>;</li>
+                                <li><u>programación</u>;</li>
+                                <li><u>presupuesto aproximado</u> de las obras;</li>
+                                <li><u>instrucciones para la tramitación posterior</u> (supervisión).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-handshake icon text-purple-600"></i>En el caso de que se autorice una <strong>asistencia técnica</strong>, ésta se llevará a cabo mediante un <strong>contrato de servicios</strong> para la redacción del proyecto.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>En el <span class="definition-pill"><strong>PPTP</strong></span> del Concurso figurarán como <strong>condicionantes generales</strong> del proyecto los puntos establecidos en la <span class="definition-pill">Orden de Estudio</span>, asimismo fijará el <strong>plazo de ejecución</strong> de los trabajos, así como el <strong>presupuesto indicativo</strong> del contrato.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-user-tie icon text-orange-600"></i>La <span class="actor-pill"><strong>Dirección General de Carreteras</strong></span> designa en el Pliego quién será el <span class="definition-pill"><strong>Director del Contrato</strong></span>, cuyas <strong>funciones</strong> son:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-file-alt icon"></i><strong>Interpretar el PPTP</strong> y demás condiciones del Contrato, y <strong>proponer las oportunas modificaciones</strong> y su posible incidencia en el presupuesto y/o plazo para realizar el Proyecto, para su <u>aprobación por el órgano de contratación</u>.</li>
+                                <li><i class="fas fa-cogs icon"></i><strong>Establecer y concretar</strong> los <u>criterios de proyecto</u> al Consultor e <strong>inspeccionar</strong>, de una manera continuada y directa, la <u>correcta realización del estudio contratado</u>.</li>
+                                <li><i class="fas fa-certificate icon"></i><strong>Emitir las certificaciones</strong> para el <u>abono de los trabajos</u>, de acuerdo con lo establecido en el Pliego de Cláusulas Administrativas Particulares del Contrato.</li>
+                                <li><i class="fas fa-check-circle icon"></i><strong>Aprobar el plan de trabajo</strong> propuesto por el Consultor.</li>
+                                <li><i class="fas fa-id-card icon"></i><strong>Facilitar al Consultor credenciales</strong> y <strong>coordinarlo</strong> con otros organismos oficiales.</li>
+                                <li><i class="fas fa-tasks icon"></i><strong>Preparar la recepción única y definitiva</strong> del Proyecto y <strong>efectuar la liquidación</strong> del Contrato.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-clipboard-check"></i></div>
+                <h2>5. Supervisión y aprobación del proyecto</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-blue-600"></i>La <span class="law-pill"><strong>LCSP</strong></span> establece que antes de la aprobación del proyecto, cuando el <strong>presupuesto base de licitación</strong> del contrato de obras sea <strong>igual o superior a <span class="pill-blue">500.000 €</span></strong>, IVA excluido, los órganos de contratación deberán solicitar un <strong>informe</strong> de las correspondientes <u>oficinas o unidades de supervisión de proyectos</u>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-purple-600"></i>En los proyectos de <strong>cuantía inferior</strong> a la señalada, el informe tendrá <strong>carácter facultativo</strong>,</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>salvo que afecten a la <u>estabilidad</u>, <u>seguridad</u> o <u>estanqueidad</u> de la obra en cuyo caso el informe de supervisión será igualmente <strong>preceptivo</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-building icon text-orange-600"></i>Según el <span class="law-pill"><strong>Reglamento General de la Ley de Contratos</strong></span> es <strong>obligatorio</strong> que todos los <u>departamentos ministeriales</u> que tengan a su cargo la realización de obras dispongan de <strong>oficinas o unidades de supervisión de proyectos</strong>, con estas <strong>funciones</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-check icon"></i><strong>Verificar</strong> que se han tenido en cuenta las <u>disposiciones generales de carácter legal o reglamentario</u>, así como la <u>normativa técnica</u>, que resulten de aplicación para cada tipo de proyecto.</li>
+                                <li><i class="fas fa-search-dollar icon"></i><strong>Examinar</strong> que los <u>precios de los materiales</u> y de las <u>unidades de obra</u> son los <strong>adecuados</strong> para la ejecución del contrato.</li>
+                                <li><i class="fas fa-hard-hat icon"></i><strong>Verificar</strong> que el proyecto contiene el <u>estudio de seguridad y salud</u> o, en su caso, el <u>estudio básico de seguridad y salud</u>.</li>
+                                <li><i class="fas fa-lightbulb icon"></i><strong>Proponer</strong> al órgano de contratación <u>criterios y orientaciones de carácter técnico</u> para su inclusión, en su caso, en la norma o instrucción correspondiente.</li>
+                                <li><i class="fas fa-plus-circle icon"></i>Las <strong>demás funciones</strong> que les encomienden los titulares de los Departamentos ministeriales.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-tasks icon text-indigo-600"></i>Los <strong>estudios y proyectos de carreteras</strong> que deban someterse al trámite de <u>información pública</u>, serán objeto de <strong>aprobación provisional y definitiva</strong>, los que no hayan de someterse serán objeto únicamente de <strong>aprobación definitiva</strong>.</p></li>
+                    <li><p><i class="fas fa-stamp icon text-teal-600"></i>La <span class="definition-pill"><strong>aprobación provisional</strong></span>, que implicará la declaración de que el estudio o proyecto está <u>bien redactado</u> y cumple todos los <u>requisitos y prescripciones legales</u>, permitirá practicar, en su caso, la <u>información pública</u> y la <u>oficial correspondiente</u>, así como cuantos trámites sean preceptivos o convenientes para obtener la <u>aprobación definitiva</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-user-check icon text-green-600"></i>La <strong>aprobación provisional y definitiva</strong> de los estudios y proyectos de carreteras corresponde a la <span class="actor-pill"><strong>Dirección General de Carreteras</strong></span>,</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>excepto</strong> cuando el expediente haya sido sometido al trámite de <u>información pública</u>, en cuyo caso corresponde la <strong>aprobación definitiva</strong> al <span class="actor-pill"><strong>Ministro de Transportes y Movilidad Sostenible</strong></span> (delegada en el <span class="actor-pill">Secretario de Estado de TMS</span>).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-edit icon text-yellow-600"></i>La <strong>aprobación definitiva</strong> de un estudio o proyecto de carreteras podrá <strong>confirmar o modificar</strong> los términos de la aprobación provisional.</p></li>
+                    <li><p><i class="fas fa-map-pin icon text-red-500"></i>La <strong>aprobación definitiva</strong> de un proyecto implicará la <strong>declaración de utilidad pública</strong> y la <strong>necesidad de ocupación</strong> de los terrenos.</p></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-sitemap"></i></div>
+                <h2>6. Principios de la metodología BIM aplicados a los proyectos de carreteras</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i><span class="definition-pill"><strong>BIM (Building Information Modeling)</strong></span> es una <strong>metodología de trabajo colaborativa</strong> para la <u>gestión de proyectos</u> a través de una <strong>maqueta digital</strong>, que conforma una <strong>gran base de datos</strong> que permite <u>gestionar los elementos</u> que forman parte de la infraestructura durante todo su <strong>ciclo de vida</strong>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-rocket icon text-purple-600"></i>La metodología BIM está suponiendo una <strong>verdadera revolución tecnológica</strong> para la <u>cadena de producción y gestión de las infraestructuras</u>, permitiendo:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>construir</strong> de una manera <strong>más eficiente</strong>,</li>
+                                <li><strong>reduciendo costes</strong></li>
+                                <li>al tiempo que permite a <span class="actor-pill">proyectistas</span>, <span class="actor-pill">constructores</span> y demás <span class="actor-pill">agentes implicados</span> <strong>trabajar de forma colaborativa</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-landmark icon text-orange-600"></i>Desde el punto de vista <strong>institucional</strong>, el uso de la metodología BIM es un <strong>facilitador</strong> de:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>una política de <strong>construcción sostenible</strong>,</li>
+                                <li>de la <strong>eficiencia del gasto público</strong>,</li>
+                                <li>y de la <strong>competitividad nacional</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-user-tie icon text-indigo-600"></i>El <span class="actor-pill"><strong>MITMS</strong></span> ostenta la <strong>Presidencia y Secretaría</strong> de la <span class="actor-pill">Comisión Interministerial para la incorporación de la Metodología BIM en la licitación pública</span>, que contempla:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>la <u>gestión sostenible de los recursos</u> y la <u>economía circular</u>,</li>
+                                <li>así como la <u>innovación digital</u>,</li>
+                                <li>y ha incluido el uso la metodología BIM en la <span class="plan-pill"><strong>Estrategia de Movilidad segura, sostenible y conectada 2030</strong></span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-globe icon text-green-600"></i>Con ello el <span class="actor-pill">MITMS</span> <strong>alinea</strong> la política de transportes e infraestructuras de <span class="actor-pill">España</span> con:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>la <span class="plan-pill"><strong>Agenda 2030 de Naciones Unidas</strong></span>,</li>
+                                <li>o con las recientes <strong>Comunicaciones de la <span class="actor-pill">Comisión Europea</span></strong> relacionadas con la <u>digitalización de la construcción en la UE</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
