@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T18. La gestión de la RCE</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .doc-pill, .principle-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .doc-pill { background-color: #dcfce7; color: #166534; border: 1px solid #4ade80; }
+        .principle-pill { background-color: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '�';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-cogs"></i> MEB1T18. La gestión de la RCE <i class="fas fa-road"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-sitemap"></i></div>
+                <h2>1. La gestión de la RCE: sistemas de gestión directos e indirectos</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-gavel icon text-blue-600"></i>Según la <span class="law-pill"><strong>Ley 37/2015 de Carreteras</strong></span> compete al <span class="actor-pill">MITMS</span> la <strong>explotación</strong> de las carreteras del Estado.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-purple-600"></i>Dicha explotación, como <strong>regla general</strong>, se realizará <strong><u>directamente</u></strong>,</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>aunque también podrán ser explotadas por cualquiera de los <span class="definition-pill"><strong>sistemas de gestión indirecta</strong></span> de los servicios públicos que establece la <span class="law-pill"><strong>Ley 9/2017 de Contratos del Sector Público</strong></span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-handshake icon text-orange-600"></i>En la <span class="definition-pill"><strong>gestión indirecta por concesión</strong></span>, la <span class="actor-pill">sociedad concesionaria</span> deberá <strong>facilitar al <span class="actor-pill">MITMS</span></strong>, dentro del plazo que éste establezca, los <strong>datos que le requiera</strong> sobre la explotación,</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                 <li>incluyendo los relacionados con el <u>tráfico</u> y la <u>seguridad viaria</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-handshake"></i></div>
+                <h2>2. Concesiones de carreteras del Estado: autopistas de peaje y autovías en régimen de concesión</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-blue-600"></i>Según la <span class="law-pill"><strong>Ley 9/2017 de Contratos del Sector Público</strong></span>, la <span class="definition-pill"><strong>concesión de obras</strong></span> es un contrato que tiene por objeto:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>la <strong>realización de una obra</strong> a cambio del <strong>derecho a explotarla</strong>,</li>
+                                <li>o de dicho derecho acompañado de <strong>percibir un precio</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-road icon text-purple-600"></i>Es la manera en la que se construyen y explotan:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>las <strong>autopistas de peaje directo</strong> al usuario,</li>
+                                <li>y las <strong>autovías de <span class="definition-pill">peaje en sombra</span></strong> y de <span class="definition-pill"><strong>pago por disponibilidad</strong></span> donde la <span class="actor-pill">Administración</span> abona unas <u>tarifas pactadas</u>, en función del <u>número de usuarios</u> o de la <u>disponibilidad de la infraestructura</u> en condiciones adecuadas, según unos <u>indicadores previamente establecidos</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-tools icon text-orange-600"></i>El contrato de concesión de obras podrá comprender la <u>adecuación</u>, <u>reforma</u>, <u>modernización</u>, <u>reposición</u> o <u>gran reparación</u> de una obra en servicio.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-balance-scale-right icon text-indigo-600"></i>El <strong>derecho de explotación</strong> de las obras deberá implicar la <strong><u>transferencia al concesionario de un riesgo operacional</u></strong> de <u>demanda</u> y/o de <u>suministro</u>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>sin que esté garantizado que, en condiciones normales de funcionamiento, el mismo vaya a <strong>recuperar las inversiones</strong> realizadas ni a <strong>cubrir los costes</strong> en que hubiera incurrido.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-calendar-alt icon text-teal-600"></i>Los contratos de concesión de obras tendrán un <strong>plazo de duración limitado</strong>, que se <u>calculará en función de las obras</u>, y se hará constar en el <span class="doc-pill">pliego de cláusulas administrativas particulares</span>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Si la concesión de obras sobrepasara el plazo de <span class="pill-blue">5 años</span>, la <strong>duración máxima</strong> de la misma <strong>no podrá exceder del tiempo razonable</strong> para que el concesionario <u>recupere las inversiones realizadas</u>, junto con un <u>rendimiento sobre el capital invertido</u>.</li>
+                                <li>En cualquier caso, la <strong>duración máxima es <span class="pill-blue">40 años</span></strong> en los contratos de concesión de obras.</li>
+                                <li>Los plazos fijados en los pliegos de condiciones solo podrán ser <strong>ampliados en un <span class="pill-blue">15%</span></strong> de su duración inicial para <u>restablecer el equilibrio económico del contrato</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-clipboard-list"></i></div>
+                <h2>3. Actuaciones preparatorias de los contratos de concesión: el estudio de viabilidad</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>Los <strong>contratos de concesión de obras</strong> irán precedidos de las siguientes <strong>actuaciones</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-file-alt icon"></i>Realización <strong>preceptiva</strong> de un <span class="doc-pill"><strong>estudio de viabilidad</strong></span> de la obra, que será sometido a <u>información pública</u> durante <span class="pill-blue">un mes</span> con <u>tramitación paralela</u> al trámite de <span class="definition-pill">Evaluación de Impacto Ambiental</span>.</li>
+                                <li><i class="fas fa-ruler-combined icon"></i>Realización, <strong>potestativa</strong> para la <span class="actor-pill">Administración</span> según el grado de dificultad de la obra, de un <span class="doc-pill"><strong>Anteproyecto</strong></span>. Este será también sometido a un <span class="pill-blue">mes</span> de <u>información pública</u> e incorporará las prescripciones de la <span class="doc-pill">DIA</span>.</li>
+                                <li><i class="fas fa-file-signature icon"></i>Aprobación del <span class="doc-pill"><strong>Pliego de Cláusulas Administrativas particulares</strong></span>.</li>
+                                <li><i class="fas fa-drafting-compass icon"></i>Realización del <span class="doc-pill"><strong>Proyecto</strong></span>, en su caso, cuando así lo decida la <span class="actor-pill">Administración</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-search icon text-purple-600"></i>El <span class="doc-pill"><strong>estudio de viabilidad</strong></span> deberá contener, al menos, los datos, análisis, informes o estudios que procedan sobre:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-bullseye icon"></i><strong>Finalidad y justificación</strong> de las obras, así como <strong>definición</strong> de sus <u>características esenciales</u>.</li>
+                                <li><i class="fas fa-thumbs-up icon"></i><strong>Justificación de las ventajas</strong> <u>cuantitativas y cualitativas</u> que aconsejan la utilización del contrato de concesión de obras frente a otros tipos contractuales.</li>
+                                <li><i class="fas fa-chart-line icon"></i><strong>Previsiones</strong> sobre la <u>demanda de uso</u> e <u>incidencia económica y social</u> de las obras en su área de influencia y sobre la <u>rentabilidad</u> de la concesión.</li>
+                                <li><i class="fas fa-database icon"></i><strong>Valoración de los datos e informes existentes</strong> que hagan referencia al <u>planeamiento sectorial, territorial o urbanístico</u>.</li>
+                                <li><i class="fas fa-leaf icon"></i><strong>Estudio de impacto ambiental</strong> cuando este sea preceptivo de acuerdo con la legislación vigente. En los restantes casos, un <strong>análisis ambiental</strong> de las alternativas y las correspondientes <u>medidas correctoras y protectoras</u> necesarias.</li>
+                                <li><i class="fas fa-check-circle icon"></i><strong>Justificación de la solución elegida</strong>, indicando, entre las alternativas consideradas si se tratara de infraestructuras viarias o lineales, las <u>características de su trazado</u>.</li>
+                                <li><i class="fas fa-exclamation-triangle icon"></i><strong>Riesgos operativos y tecnológicos</strong> en la <u>construcción</u> y <u>explotación</u> de las obras.</li>
+                                <li><i class="fas fa-coins icon"></i><strong>Coste de la inversión</strong> a realizar, así como el <strong>sistema de financiación</strong> propuesto para la construcción de las obras.</li>
+                                <li><i class="fas fa-hard-hat icon"></i><strong>Estudio de seguridad y salud</strong> o, en su caso, <strong>estudio básico de seguridad y salud</strong>, en los términos previstos en las disposiciones mínimas de seguridad y salud en obras de construcción.</li>
+                                <li><i class="fas fa-calculator icon"></i>El <strong>valor actual neto</strong> de todas las <u>inversiones, costes e ingresos</u> del concesionario, a efectos de la <u>evaluación del riesgo operacional</u>, así como los <strong>criterios para valorar la tasa de descuento</strong>.</li>
+                                <li><i class="fas fa-euro-sign icon"></i><strong>Existencia de una posible ayuda de Estado</strong> y <strong>compatibilidad</strong> de la misma con el <span class="law-pill">Tratado de Funcionamiento de la UE</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-binoculars"></i></div>
+                <h2>4. Inspección de concesiones</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Según el <span class="law-pill"><strong>RD 253/2024</strong></span> que desarrolla la estructura orgánica básica del <span class="actor-pill">MITMS</span>, corresponde a la <span class="actor-pill"><strong>Dirección General de Carreteras</strong></span> la <u>coordinación, inspección y control</u> de las concesiones de carreteras, en coordinación con la <span class="actor-pill">Subdelegación del Gobierno en las Sociedades Concesionarias de Autopistas Nacionales de Peaje</span>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-purple-600"></i>La <span class="law-pill"><strong>Ley 9/2017 de Contratos del Sector Público</strong></span> establece que el <span class="actor-pill">órgano de contratación</span> ostentará las siguientes <strong>prerrogativas y derechos</strong> en relación con los contratos de concesión de obras:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-file-alt icon"></i><strong>Interpretar los contratos</strong> y <strong>resolver las dudas</strong> que ofrezca su cumplimiento.</li>
+                                <li><i class="fas fa-edit icon"></i><strong>Modificar unilateralmente</strong> los contratos por <u>razones de interés público</u> debidamente justificadas.</li>
+                                <li><i class="fas fa-balance-scale icon"></i><strong>Decidir el restablecimiento del equilibrio económico</strong> de la concesión a favor del <u>interés público</u>.</li>
+                                <li><i class="fas fa-times-circle icon"></i><strong>Acordar la resolución</strong> de los contratos.</li>
+                                <li><i class="fas fa-tags icon"></i><strong>Establecer</strong>, en su caso, las <strong>tarifas máximas</strong> por la utilización de las obras.</li>
+                                <li><i class="fas fa-eye icon"></i><strong>Vigilar y controlar el cumplimiento</strong> de las obligaciones del <span class="actor-pill">concesionario</span>, a cuyo efecto podrá <strong>inspeccionar</strong> el <u>servicio</u>, sus <u>obras</u>, <u>instalaciones</u> y <u>locales</u>, así como la <u>documentación</u>, relacionados con el objeto de la concesión.</li>
+                                <li><i class="fas fa-user-shield icon"></i><strong>Asumir la explotación</strong> de las obras en los supuestos en que se produzca el <u>secuestro</u> o <u>intervención</u> de la concesión.</li>
+                                <li><i class="fas fa-exclamation-triangle icon"></i><strong>Imponer al <span class="actor-pill">concesionario</span></strong> las <strong>penalidades pertinentes</strong> por razón de los <u>incumplimientos</u> en que incurra.</li>
+                                <li><i class="fas fa-shield-alt icon"></i><strong>Ejercer las funciones de policía</strong> en el <u>uso y explotación</u> de las obras.</li>
+                                <li><i class="fas fa-clock icon"></i><strong>Imponer con carácter temporal</strong> las <strong>condiciones de utilización</strong> de las obras que sean necesarias para <u>solucionar situaciones excepcionales de interés general</u>, abonando la <u>indemnización</u> que en su caso proceda.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-landmark"></i></div>
+                <h2>5. La Delegación del Gobierno en las sociedades concesionarias de autopistas nacionales de peaje</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>El <span class="actor-pill"><strong>Delegado del Gobierno en las Sociedades Concesionarias de Autopistas de Peaje</strong></span> es el <strong>órgano coordinador, ejecutivo y de relación</strong> de la <span class="actor-pill">Administración</span> con las citadas sociedades, correspondiéndole:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-cogs icon"></i><strong>Coordinar las actuaciones</strong> que acuerde la <span class="actor-pill">Administración</span> en relación con los <span class="doc-pill">contratos de concesión</span>.</li>
+                                <li><i class="fas fa-tasks icon"></i><strong>Controlar el cumplimiento</strong> por el <span class="actor-pill">concesionario</span> de sus obligaciones durante la fase de explotación de la concesión y <strong>velar por el cumplimiento</strong> del correspondiente <span class="doc-pill">plan económico-financiero</span>.</li>
+                                <li><i class="fas fa-file-alt icon"></i><strong>Tramitar los escritos</strong> que dirijan los <span class="actor-pill">concesionarios</span> a la <span class="actor-pill">Administración</span> e <strong>informar al órgano de contratación</strong> de las <u>incidencias que surjan</u> en el desarrollo del contrato.</li>
+                                <li><i class="fas fa-file-invoice icon"></i><strong>Evacuar los informes</strong> que le sean requeridos por el <span class="actor-pill">órgano de contratación</span> y <strong>expedir las certificaciones</strong> que corresponda.</li>
+                                <li><i class="fas fa-tags icon"></i><strong>Proponer las tarifas de peajes</strong> y sus <strong>revisiones anuales</strong>, que aprueba el <span class="actor-pill">Gobierno</span>.</li>
+                                <li><i class="fas fa-handshake icon"></i><strong>Proponer al órgano de contratación</strong> los <u>acuerdos que procedan</u> en aplicación a los <span class="definition-pill">títulos negociables</span> de los derechos de cobro del concesionario y en materia de <span class="definition-pill">hipoteca de las concesiones</span>.</li>
+                                <li><i class="fas fa-gavel icon"></i><strong>Formular las propuestas</strong> sobre el <span class="definition-pill">secuestro</span> y <span class="definition-pill">reversión</span> de la concesión o sobre la <span class="definition-pill">resolución del contrato</span>.</li>
+                                <li><i class="fas fa-exclamation-triangle icon"></i><strong>Acordar</strong>, previa audiencia del <span class="actor-pill">concesionario</span>, la <strong>imposición de las penalidades y multas coercitivas</strong>.</li>
+                                <li><i class="fas fa-clock icon"></i><strong>Fijar las condiciones de utilización</strong> de la autopista con <strong>carácter temporal</strong>.</li>
+                                <li><i class="fas fa-check-circle icon"></i><strong>Aprobar los contratos</strong> que el <span class="actor-pill">concesionario</span> realice con <span class="actor-pill">terceros</span> para la <u>explotación de las áreas de servicio</u>, así como los que se refieran a la <u>prestación de aquellos servicios necesarios</u> para la explotación de la propia autopista.</li>
+                                <li><i class="fas fa-database icon"></i><strong>Recabar los datos necesarios</strong> de las <span class="actor-pill">Sociedades Concesionarias</span>, <strong>comprobar sus libros de cuentas</strong> y <strong>acordar la inspección</strong> de instalaciones, pudiendo <strong>asistir</strong>, con voz y sin voto, a las reuniones del <span class="actor-pill">Consejo de Administración</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-user-check icon text-purple-600"></i>El <span class="actor-pill"><strong>Delegado de Gobierno</strong></span> podrá ejercer por <strong>delegación</strong> del <span class="actor-pill">órgano de contratación</span> cualquiera de las <strong>competencias</strong> de éste con <strong>excepción</strong> de las que le corresponden en materia de <u>secuestro y reversión de la concesión</u>, así como de <u>resolución del contrato</u>.</p></li>
+                    <li><p><i class="fas fa-user-tie icon text-orange-600"></i>Actualmente, en el <span class="actor-pill">MITMS</span> el <span class="actor-pill">Delegado del Gobierno</span> es el <span class="actor-pill"><strong>Secretario General de Transporte Terrestre</strong></span>.</p></li>
+                    <li><p><i class="fas fa-building icon text-indigo-600"></i>Como <strong>apoyo</strong> a la <span class="actor-pill">Delegación del Gobierno</span> existe, en la estructura del <span class="actor-pill">MITMS</span>, la <span class="actor-pill"><strong>Subdelegación del Gobierno en las Sociedades Concesionarias de Autopistas Nacionales de Peaje</strong></span>.</p></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-handshake"></i></div>
+                <h2>6. La gestión directa a través de la Sociedad Estatal de Infraestructuras del Transporte Terrestre S.M.E., S.A.</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-file-signature icon text-blue-600"></i>La <span class="actor-pill">AGE</span> ha suscrito con la <span class="actor-pill">SEITT</span> un <span class="doc-pill"><strong>Convenio</strong></span> por el que se atribuye a ésta la <strong>gestión directa de la explotación</strong> de las <u>autopistas de titularidad estatal</u>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="definition-pill">Radiales de Madrid</span> (R-2, R-3, R-4 y R-5),</li>
+                                <li><span class="definition-pill">Eje Aeropuerto de Madrid</span> (M-12),</li>
+                                <li><span class="definition-pill">Madrid-Toledo</span>,</li>
+                                <li><span class="definition-pill">Ocaña-La Roda</span>,</li>
+                                <li><span class="definition-pill">Circunvalación de Alicante</span>,</li>
+                                <li>y <span class="definition-pill">Cartagena-Vera</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-cogs icon text-purple-600"></i>La <strong>explotación</strong> comprende:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>las <u>operaciones de conservación y mantenimiento</u> de la vialidad,</li>
+                                <li>las <u>actuaciones de defensa de la vía</u>,</li>
+                                <li>y las <u>actuaciones de reforma, modernización, reposición y gran reparación</u> para mantener la autopista <strong>apta para su fin</strong>.</li>
+                                <li>Los <span class="doc-pill">proyectos de obras</span> de este tipo de actuaciones serán <strong>supervisados y aprobados</strong> por el <span class="actor-pill">MITMS</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-euro-sign icon text-orange-600"></i>Teniendo en cuenta el <u>importe de las actuaciones pendientes de ejecutar</u> por <span class="actor-pill">SEITT</span> y la <u>necesidad de hacerlas en el plazo más breve posible</u>, se realizará una <strong>aportación de capital</strong> para cubrir el déficit generado en los años <span class="pill-blue">2023-2025</span> de <span class="pill-blue"><strong>128 M€</strong></span>.</p></li>
+                    <li><p><i class="fas fa-plus-circle icon text-indigo-600"></i>El <strong>alcance de la explotación podrá ser ampliado</strong> mediante <span class="doc-pill">adenda</span>, para incorporar aquellas <u>actividades de asistencia</u> al <span class="actor-pill">Ministerio de Transportes y Movilidad Sostenible</span> en relación a una <u>futura licitación de las autopistas</u> objeto del convenio que sean precisas.</p></li>
+                    <li><p><i class="fas fa-search icon text-teal-600"></i>Corresponde a la <span class="actor-pill">DGC del MITMS</span> la <strong>inspección de la explotación</strong> de acuerdo con el <span class="doc-pill">documento de coordinación</span> que a tal fin sea elaborado por la <span class="actor-pill">Comisión de Seguimiento y Control del convenio</span>.</p></li>
+                    <li><p><i class="fas fa-calendar-alt icon text-green-600"></i>El <span class="doc-pill">convenio</span> tendrá una <strong>duración de <span class="pill-blue">10 años</span></strong>, hasta <u>diciembre de 2032</u>, <strong>prorrogable</strong> por hasta <span class="pill-blue">7 años</span> más.</p></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
