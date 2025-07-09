@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T17. Incidencias en las obras</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .doc-pill, .principle-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .doc-pill { background-color: #dcfce7; color: #166534; border: 1px solid #4ade80; }
+        .principle-pill { background-color: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-exclamation-triangle"></i> MEB1T17. Construcción de carreteras (II) <i class="fas fa-road"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-hard-hat"></i></div>
+                <h2>1. Incidencias en las obras (en el marco de la LCSP)</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-edit icon"></i>Modificación del contrato de obras</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-check-circle icon text-green-600"></i>Serán <strong>obligatorias</strong> para el <span class="actor-pill">contratista</span> las <strong>modificaciones no previstas</strong> en el <span class="doc-pill">pliego de cláusulas administrativas particulares</span> cuando <strong>no excedan</strong>, aislada o conjuntamente, del <span class="pill-blue"><strong>20%</strong></span> del <u>precio inicial del contrato</u>, IVA excluido.</p></li>
+                                <li><p><i class="fas fa-times-circle icon text-red-500"></i>Cuando la modificación <strong>no resulte obligatoria</strong> para el <span class="actor-pill">contratista</span>, solo será acordada por el órgano de contratación previa <strong>conformidad por escrito</strong> del mismo, resolviéndose el contrato en caso contrario.</p></li>
+                                <li><p><i class="fas fa-arrow-down icon"></i>Si la modificación supone <strong>reducción de unidades de obra</strong>, el <span class="actor-pill">contratista</span> <strong>no tendrá derecho a reclamar indemnización</strong>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-plus-circle icon"></i>Nuevas unidades de obra</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Cuando las modificaciones supongan <strong>nuevas unidades de obra no previstas</strong> en el proyecto, y <u>no sea necesario realizar una nueva licitación</u>, los <strong>precios</strong> aplicables a las mismas serán <strong>fijados por la <span class="actor-pill">Administración</span></strong>, previa audiencia del <span class="actor-pill">contratista</span> por plazo mínimo de <span class="pill-blue">3 días</span>.</p></li>
+                                <li><p><i class="fas fa-handshake-slash icon text-purple-600"></i>Si el <span class="actor-pill">contratista</span> <strong>no aceptase los precios fijados</strong>, el órgano de contratación podrá <u>contratarlas con otro empresario</u> en los mismos precios que hubiese fijado, <u>ejecutarlas directamente</u> o <u>resolver el contrato</u>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-eye-slash icon"></i>Unidades de obra ocultas</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-envelope icon text-orange-600"></i>Cuando la modificación contemple unidades de obra que hayan de quedar <strong>posterior y definitivamente ocultas</strong>, antes de efectuar la medición parcial de las mismas, deberá <strong>comunicarse a la <span class="actor-pill">Intervención</span></strong> con una antelación mínima de <span class="pill-blue">5 días</span>, para que, si lo considera oportuno, pueda acudir a dicho acto en sus funciones de <u>comprobación material de la inversión</u>, y ello, sin perjuicio de, una vez terminadas las obras, efectuar la <u>recepción</u>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-file-signature icon"></i>Expediente de modificación</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-user-tie icon"></i>Cuando el <span class="actor-pill">Director facultativo de la obra</span> considere necesaria una modificación del proyecto y se cumplan los requisitos que a tal efecto regula la <span class="law-pill">LCSP</span>, <strong>recabará del órgano de contratación autorización para iniciar</strong> el correspondiente expediente, que se sustanciará con las siguientes <strong>actuaciones</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><strong>Redacción</strong> de la modificación del proyecto y <strong>aprobación técnica</strong> de la misma.</li>
+                                            <li><strong>Audiencia</strong> del <span class="actor-pill">contratista</span> y del <span class="actor-pill">redactor del proyecto</span>, por plazo mínimo de <span class="pill-blue">3 días</span>.</li>
+                                            <li><strong>Aprobación del expediente</strong> por el <u>órgano de contratación</u>, así como de los <u>gastos complementarios</u> precisos.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-not-equal icon"></i>Excepciones (No se consideran modificaciones)</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-ruler-combined icon text-blue-600"></i>El <span class="definition-pill"><strong>exceso de mediciones</strong></span>, entendiendo por tal, la <strong>variación</strong> que durante la correcta ejecución de la obra se produzca <strong>exclusivamente en el número de unidades</strong> realmente ejecutadas sobre las previstas en las mediciones del proyecto, siempre que en global <u>no representen un incremento del gasto superior al <span class="pill-blue">10%</span></u> del precio del contrato inicial. Dicho exceso de mediciones será recogido en la <u>certificación final de la obra</u>.</p></li>
+                                <li><p><i class="fas fa-euro-sign icon text-purple-600"></i>La <span class="definition-pill"><strong>inclusión de precios nuevos</strong></span>, fijados contradictoriamente por los procedimientos establecidos en la <span class="law-pill">LCSP</span> y en sus normas de desarrollo, siempre que <u>no supongan incremento del precio global</u> del contrato ni afecten a unidades de obra que en su conjunto <u>exceda del <span class="pill-blue">3%</span></u> del presupuesto primitivo del mismo.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-pause-circle icon"></i>Suspensión temporal y continuación provisional</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-orange-600"></i>Cuando la tramitación de una modificación exija la <strong>suspensión temporal total</strong> de la ejecución de las obras y ello ocasione <strong>graves perjuicios para el interés público</strong>, el <span class="actor-pill">Ministro</span>, podrá acordar que <strong>continúen provisionalmente</strong> las mismas tal y como esté previsto en la <u>propuesta técnica</u> que elabore la dirección facultativa.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-check-circle icon text-green-600"></i>Siempre que:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>el <strong>importe máximo</strong> previsto <strong>no supere el <span class="pill-blue">20%</span></strong> del precio inicial del contrato, IVA excluido,</li>
+                                            <li>y <strong>exista crédito</strong> adecuado y suficiente para su financiación.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-calendar-alt icon"></i>Plazos</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-hourglass-half icon text-indigo-600"></i>En el plazo de <span class="pill-blue"><strong>6 meses</strong></span> contados desde el acuerdo de autorización provisional deberá estar <strong>aprobado técnicamente el proyecto</strong>.</p></li>
+                                <li><p><i class="fas fa-hourglass-end icon text-teal-600"></i>Y en el de <span class="pill-blue"><strong>8 meses</strong></span> el <strong>expediente de la modificación del contrato</strong>. Dentro de este plazo de <span class="pill-blue">8 meses</span> se ejecutarán preferentemente, de las unidades de obra previstas, aquellas partes que <u>no hayan de quedar posterior y definitivamente ocultas</u>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-bolt icon"></i>Obras de emergencia</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-blue-600"></i>Un contrato de obra se puede <strong>tramitar de emergencia</strong> cuando se deba <strong>actuar de manera inmediata</strong> por:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><u>acontecimientos catastróficos</u>,</li>
+                                            <li><u>situaciones que supongan grave peligro</u></li>
+                                            <li>y <u>necesidades que afecten a la defensa nacional</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-gavel icon text-purple-600"></i>En este caso, el <span class="actor-pill">órgano de contratación</span>, sin obligación de tramitar expediente de contratación, podrá <strong>ordenar la ejecución</strong> de lo necesario para <u>remediar el acontecimiento</u>.</p></li>
+                                <li><p><i class="fas fa-building icon text-orange-600"></i>La <span class="actor-pill">Administración</span> con sus <strong>medios propios</strong> puede hacer <u>parte o toda la obra de emergencia</u>.</p></li>
+                                <li><p><i class="fas fa-coins icon text-indigo-600"></i>En caso de que <strong>no exista crédito</strong> adecuado y suficiente, una vez adoptado el acuerdo, se procederá a su <strong>dotación</strong> de conformidad con lo establecido en la <span class="law-pill">Ley General Presupuestaria</span>.</p></li>
+                                <li><p><i class="fas fa-paper-plane icon text-teal-600"></i>Si el contrato ha sido celebrado por la <span class="actor-pill">AGE</span>, se dará cuenta de dichos acuerdos al <span class="actor-pill">Consejo de Ministros</span> en el plazo máximo de <span class="pill-blue">30 días</span>.</p></li>
+                                <li><p><i class="fas fa-play icon text-green-600"></i>El <strong>plazo para iniciar</strong> las actuaciones, declarada la emergencia, es de <strong>un mes</strong>. En caso contrario se realizaría la contratación por el <u>procedimiento ordinario</u>.</p></li>
+                                <li><p><i class="fas fa-exclamation icon text-yellow-600"></i>Aunque la realización de obras de emergencia es <strong>más habitual</strong> en la <u>conservación y explotación de carreteras</u>, se pueden dar situaciones durante la ejecución de contratos de obra que justifiquen la necesidad de realizar este tipo de obras.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-cloud-showers-heavy icon"></i>Fuerza mayor</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-blue-600"></i>De acuerdo con la <span class="law-pill">LCSP</span>, el <span class="actor-pill">contratista</span>, siempre que no exista actuación imprudente por su parte, tiene <strong>derecho a una indemnización</strong> por los daños y perjuicios producidos en situaciones de:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-fire-alt icon"></i><strong>Incendios</strong> causados por la <u>electricidad atmosférica</u>.</li>
+                                            <li><i class="fas fa-house-damage icon"></i><strong>Fenómenos naturales catastróficos</strong>: <u>maremotos</u>, <u>terremotos</u>, <u>temporales marítimos</u>, <u>inundaciones</u> u otros similares.</li>
+                                            <li><i class="fas fa-bomb icon"></i><strong>Destrozos</strong> ocasionados violentamente en <u>tiempo de guerra</u> o <u>alteraciones graves del orden público</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-balance-scale-right icon text-purple-600"></i>En el caso de no cumplirse estos supuestos, debe tenerse en cuenta el <strong>principio de <u>riesgo y ventura</u></strong> del <span class="actor-pill">contratista</span>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-times-circle icon"></i>Resolución del contrato de obras</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-blue-600"></i>Son <strong>causas de resolución</strong> del contrato de obras, además de las generales de la <span class="law-pill">LCSP</span>, las siguientes:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>La <strong>demora injustificada</strong> en la <u>comprobación del replanteo</u>.</li>
+                                            <li>La <strong>suspensión de la iniciación</strong> de las obras por plazo superior a <span class="pill-blue">4 meses</span>.</li>
+                                            <li>La <strong>suspensión de las obras</strong> por plazo superior a <span class="pill-blue">8 meses</span> por parte de la <span class="actor-pill">Administración</span>.</li>
+                                            <li>El <strong>desistimiento</strong>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-check-double icon text-purple-600"></i>La <strong>resolución del contrato</strong> dará lugar a:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                             <li>la <u>comprobación, medición y liquidación</u> de las obras realizadas con arreglo al proyecto,</li>
+                                             <li>fijando los <strong>saldos pertinentes</strong> a favor o en contra del <span class="actor-pill">contratista</span>.</li>
+                                             <li>Será necesaria la <strong>citación de éste</strong> para su asistencia al acto de comprobación y medición.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-euro-sign icon text-orange-600"></i><strong>Indemnizaciones</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>Si se <strong>demorase injustificadamente la comprobación del replanteo</strong>, dando lugar a la resolución del contrato, el <span class="actor-pill">contratista</span> solo tendrá derecho a una indemnización equivalente al <span class="pill-blue">2%</span> del precio de la adjudicación, IVA excluido.</li>
+                                            <li>En el supuesto de <strong>desistimiento antes de la iniciación</strong> de las obras, o de <strong>suspensión de la iniciación</strong> de las mismas por parte de la <span class="actor-pill">Administración</span> por plazo superior a <span class="pill-blue">4 meses</span>, el <span class="actor-pill">contratista</span> tendrá derecho a percibir por todos los conceptos una indemnización del <span class="pill-blue">3%</span> del precio de adjudicación, IVA excluido.</li>
+                                            <li>En caso de <strong>desistimiento una vez iniciada la ejecución</strong> de las obras, o de <strong>suspensión de las obras iniciadas</strong> por plazo superior a <span class="pill-blue">8 meses</span>, el <span class="actor-pill">contratista</span> tendrá derecho por todos los conceptos al <span class="pill-blue">6%</span> del precio de adjudicación del contrato de las <u>obras dejadas de realizar</u> en concepto de beneficio industrial, IVA excluido, entendiéndose por obras dejadas de realizar las que resulten de la diferencia entre las reflejadas en el contrato primitivo y sus modificaciones aprobadas y las que hasta la fecha de notificación del desistimiento o de la suspensión se hubieran ejecutado.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-forward icon text-indigo-600"></i>Cuando las obras hayan de ser <strong>continuadas por otro empresario o por la propia Administración</strong>, con <u>carácter de urgencia</u>, por <u>motivos de seguridad</u> o para <u>evitar la ruina de lo construido</u>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>el <span class="actor-pill">órgano de contratación</span>, una vez que haya notificado al <span class="actor-pill">contratista</span> la liquidación de las ejecutadas, podrá <strong>acordar su continuación</strong>,</li>
+                                            <li>sin perjuicio de que el <span class="actor-pill">contratista</span> pueda <strong>impugnar la valoración</strong> efectuada ante el propio órgano, que resolverá lo que proceda en el plazo de <span class="pill-blue">15 días</span>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-calendar-plus icon"></i>Prórrogas</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Si el <strong>retraso de una obra no es imputable al <span class="actor-pill">contratista</span></strong> (falta de autorización para reponer un servicio afectado, tramitación de un modificado de un contrato, detracción de anualidades, etc.), la <span class="actor-pill">Administración</span> puede acordar una <strong>prórroga del contrato</strong> que <u>no será inferior al tiempo perdido</u>, a no ser que el <span class="actor-pill">contratista</span> solicitase una prórroga menor.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-certificate"></i></div>
+                <h2>2. Certificaciones de obras y relaciones valoradas</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-user-tie icon text-blue-600"></i>Corresponde al <span class="actor-pill"><strong>Director de obra</strong></span>, en base a:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>las <u>mediciones mensuales</u> realizadas de cada unidad de obra de acuerdo con los criterios que fije el <span class="doc-pill">PPTP</span>,</li>
+                                <li>y los <u>precios de ejecución material</u> del contrato,</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-file-alt icon text-purple-600"></i>redactar mensualmente la <span class="doc-pill"><strong>relación valorada a origen</strong></span>.</p></li>
+                    <li><p><i class="fas fa-calculator icon text-orange-600"></i>Al resultado de esta valoración se le aplicarán los <strong>porcentajes</strong> para obtener el <u>presupuesto de licitación</u> (<span class="definition-pill">GG</span> y <span class="definition-pill">BI</span>), que se <strong>multiplicará</strong> por el <u>coeficiente de la baja de adjudicación</u> para obtener la <span class="doc-pill"><strong>certificación mensual</strong></span> de la obra.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-calendar-check icon text-indigo-600"></i>La <span class="actor-pill"><strong>Administración</strong></span> tiene la <strong>obligación de abonar el precio</strong> en los <span class="pill-blue"><strong>30 días</strong></span> siguientes a la aprobación de la certificación.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Si se <strong>demorase</strong>, debe abonar al <span class="actor-pill">contratista</span> <u>intereses de demora</u> y la <u>indemnización por los costes de cobro</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-check-double"></i></div>
+                <h2>3. La certificación final y liquidación. Garantía de las obras y vicios ocultos</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-file-powerpoint icon"></i>Acta de recepción</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Cuando las obras han <strong>finalizado</strong> y se encuentran en <strong>buen estado</strong> debe firmarse el <span class="doc-pill"><strong>acta de recepción</strong></span>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-exclamation-triangle icon text-red-500"></i>Cuando las obras <strong>no se hallen en buen estado</strong>, así se hará constar en el acta.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>El <span class="actor-pill">Director de las obras</span> señalará los <strong>defectos observados</strong> y dará al <span class="actor-pill">contratista</span> las <u>instrucciones para remediarlos</u> en determinado plazo.</li>
+                                            <li>Si el <span class="actor-pill">contratista</span> <strong>no lo remediase</strong>, se le concederá un <strong>nuevo plazo improrrogable</strong> o se <strong>resolverá el contrato</strong>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-file-invoice-dollar icon"></i>Certificación final</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-arrows-alt-v icon text-purple-600"></i>Las <strong>mediciones reales finales</strong> pueden ser <strong>superiores</strong> a las mediciones del proyecto, sin necesidad de aprobación previa.</p></li>
+                                <li><p><i class="fas fa-ban icon text-red-600"></i>No obstante, el <strong>incremento del precio</strong> del primitivo contrato <strong>no puede exceder el <span class="pill-blue">10%</span></strong>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-calendar-check icon text-orange-600"></i>Dentro del plazo de <span class="pill-blue"><strong>tres meses</strong></span> contados a partir de la recepción, el <span class="actor-pill">órgano de contratación</span> deberá:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><strong>aprobar la <span class="doc-pill">certificación final</span></strong> de las obras ejecutadas,</li>
+                                            <li>que será <strong>abonada al <span class="actor-pill">contratista</span></strong> a cuenta de la <u>liquidación del contrato</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-shield-alt icon"></i>Garantía y vicios ocultos</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-calendar-alt icon text-indigo-600"></i>Una vez levantada el <span class="doc-pill">acta de recepción</span> comienza el <span class="definition-pill"><strong>plazo de garantía</strong></span>, que se fija en el <span class="doc-pill">Pliego de Cláusulas Administrativas Particulares</span> de cada contrato de obras atendiendo a su complejidad, y no podrá ser <strong>inferior a <span class="pill-blue">1 año</span></strong>, salvo casos especiales.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-file-medical-alt icon"></i>Dentro del plazo de <span class="pill-blue">15 días</span> anteriores al cumplimiento del plazo de garantía, el <span class="actor-pill">director de la obra</span> redactará un <strong>informe sobre el estado de las obras</strong>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p>Si éste fuera <strong>favorable</strong>:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>el <span class="actor-pill">contratista</span> quedará <strong>libre de toda responsabilidad</strong>, salvo los casos de <u>vicios ocultos</u>,</li>
+                                                        <li>procediéndose a la <u>devolución de la garantía</u>, a la <u>liquidación del contrato</u> y, en su caso, al <u>pago de las obligaciones pendientes</u>.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                             <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p>En el caso de que el informe <strong>no fuera favorable</strong> y los defectos observados se debiesen a <u>deficiencias en la ejecución de la obra</u> y no al <u>uso durante el plazo de garantía</u>, el <span class="actor-pill">director de la obra</span> procederá a:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li><strong>dictar las oportunas instrucciones</strong> al <span class="actor-pill">contratista</span> para que realice las <u>reparaciones</u>,</li>
+                                                        <li><strong>concediéndole un plazo</strong> para ello</li>
+                                                        <li>y <u>sin derecho a percibir cantidad alguna</u> por ampliación del plazo de garantía.</li>
+                                                    </ul>
+                                                </div>
+                                             </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                 <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-user-secret icon text-red-500"></i>Si la obra se <strong>arruina con posterioridad</strong> a la expiración del plazo de garantía por <span class="definition-pill"><strong>vicios ocultos de la construcción</strong></span>, debido a <u>incumplimiento del contrato</u> por parte del <span class="actor-pill">contratista</span>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>éste debe <strong>responder de los daños y perjuicios</strong> que se manifiesten durante un plazo de <span class="pill-blue"><strong>15 años</strong></span> a contar desde la recepción.</li>
+                                            <li>Transcurrido este plazo sin que se haya manifestado ningún daño o perjuicio, quedará <strong>totalmente extinguida la responsabilidad</strong> del <span class="actor-pill">contratista</span>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
