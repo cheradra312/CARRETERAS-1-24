@@ -16,7 +16,7 @@
    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
 	<style>
-		body { font-family: 'Inter', sans-serif; overflow: hidden; }
+		body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .font-luckiest { font-family: 'Luckiest Guy', cursive; }
         .fancy-title-word {
             background-clip: text;
@@ -93,8 +93,10 @@
 		<!-- VISTA DEL MENÚ PRINCIPAL -->
 		<div id="main-menu-view">
 			<header class="text-center w-full mb-8 relative bg-gradient-to-br from-orange-200 to-amber-300 rounded-2xl p-8 overflow-hidden shadow-xl">
+                <!-- Figuras decorativas de fondo -->
                 <div class="absolute -top-12 -left-12 w-48 h-48 bg-white/20 rounded-full filter blur-xl opacity-80"></div>
                 <div class="absolute -bottom-20 -right-10 w-64 h-64 bg-white/20 rounded-full filter blur-xl opacity-80"></div>
+                
                 <div class="relative">
                     <h1 class="text-4xl sm:text-5xl md:text-6xl font-luckiest tracking-wider text-white mb-3 text-shadow">
                         <span class="fancy-title-word" style="background-image: linear-gradient(45deg, #c2410c, #ea580c);">Bloque MEB1: Visor Carreteras</span>
@@ -105,6 +107,8 @@
                         <span class="fancy-title-word" style="background-image: linear-gradient(45deg, #F472B6, #EC4899);">2025</span>
                     </p>
                 </div>
+                
+                <!-- Patrón de Olas en la parte inferior -->
                 <div class="absolute bottom-0 left-0 right-0 h-16 overflow-hidden">
                     <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;">
                         <path d="M-5.34,103.27 C150.00,150.00 349.20,-49.98 501.97,102.28 L500.00,150.00 L0.00,150.00 Z" style="stroke: none; fill: rgba(255,255,255,0.1);"></path>
