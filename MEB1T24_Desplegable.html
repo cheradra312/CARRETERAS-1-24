@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T24. Cifras y evolución de la seguridad vial</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .doc-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .doc-pill { background-color: #dcfce7; color: #166534; border: 1px solid #4ade80; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list, .even-deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li, .even-deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        .even-deeper-nested-list > li::before {
+             content: '▫️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before,
+        .even-deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-chart-line"></i> MEB1T24. Seguridad vial <i class="fas fa-car-crash"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-chart-bar"></i></div>
+                <h2>1. Indicadores de seguridad vial</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>Según sus <strong>repercusiones</strong>, los <strong>accidentes se clasifican</strong> en:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="definition-pill"><strong>Accidentes con daños materiales</strong></span> (en los que <u>no se producen lesiones</u>),</li>
+                                <li><span class="definition-pill"><strong>Accidentes con víctimas</strong></span> (en los que se producen <u>lesiones o muerte</u>),</li>
+                                <li><span class="definition-pill"><strong>Accidentes mortales</strong></span> (según un criterio internacional, se considera que la víctima fallece como consecuencia del accidente si se produce en los <span class="pill-blue"><strong>30 días</strong></span> siguientes).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-search icon text-purple-600"></i>Los <strong>estudios de seguridad vial</strong> se basan en el estudio de los <u>accidentes con víctimas</u>.</p></li>
+                    <li><p><i class="fas fa-database icon text-orange-600"></i>Además de los <u>datos de accidentes</u>, para los estudios de seguridad vial es <strong>primordial contar con datos</strong> sobre las <u>características de la carretera</u> y el <u>tráfico</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-list-ol icon text-indigo-600"></i>Los <strong>índices relacionados con los accidentes</strong> se pueden clasificar en:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-globe icon"></i><strong><u>Índices generales</u></strong> (en comparaciones internacionales), como el <u>número anual de víctimas mortales</u> o <u>accidentes con víctimas</u> por cada <span class="pill-blue">10⁵ hab</span> o <span class="pill-blue">10⁵ veh</span>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>tienen el gran <strong>inconveniente</strong> de <u>no tener en cuenta el volumen de tráfico</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-tasks icon"></i><strong><u>Índices para la planificación de medidas</u></strong>, reflejan el <u>riesgo de sufrir un accidente</u>, los más habituales son:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><strong>Índice de mortalidad</strong>: Víctimas mortales / <span class="pill-blue">10⁸</span> vehículo-km</li>
+                                            <li><strong>Índice de peligrosidad</strong>: Accidentes con víctimas / <span class="pill-blue">10⁸</span> vehículo-km</li>
+                                            <li><strong>Índice de gravedad</strong>: Víctimas mortales / <span class="pill-blue">100</span> accidentes con víctimas</li>
+                                            <li><strong>Índice de severidad</strong>: Accidentes con víctimas mortales / <span class="pill-blue">100</span> accidentes con víctimas</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-cogs icon"></i><strong><u>Indicadores específicos para estudios detallados</u></strong>, que sirven para el <u>proyecto de medidas concretas</u>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-car-burst icon"></i><strong>Tipo de accidentes</strong>:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="even-deeper-nested-list">
+                                                        <li>- colisiones frontales, laterales, alcances,</li>
+                                                        <li>- salidas de vía,</li>
+                                                        <li>- atropellos,</li>
+                                                        <li>- vuelcos, etc.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                     <p><i class="fas fa-cloud-sun-rain icon"></i><strong>Condiciones ambientales y estado de la vía</strong>:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                     <ul class="even-deeper-nested-list">
+                                                         <li>- día o noche (iluminada o no),</li>
+                                                         <li>- pavimento seco, mojado, nieve o hielo.</li>
+                                                     </ul>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-user-friends icon"></i><strong>Vehículos implicados</strong>:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="even-deeper-nested-list">
+                                                        <li>- <i class="fas fa-bicycle icon"></i> bicicletas,</li>
+                                                        <li>- <i class="fas fa-motorcycle icon"></i> motocicletas,</li>
+                                                        <li>- <i class="fas fa-car icon"></i> turismos,</li>
+                                                        <li>- <i class="fas fa-bus icon"></i> autobuses,</li>
+                                                        <li>- <i class="fas fa-truck icon"></i> camiones</li>
+                                                        <li>- o <i class="fas fa-walking icon"></i> peatones.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-chart-area"></i></div>
+                <h2>2. Últimas cifras y evolución de los principales indicadores</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-calendar-day icon text-blue-600"></i>Durante <span class="pill-blue"><strong>2023</strong></span> <strong>fallecieron <span class="pill-blue">1.806</span> personas</strong> en siniestros de tráfico, un <span class="pill-blue"><strong>3%</strong></span> <strong>más</strong> que en 2022.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="pill-blue"><strong>1.288</strong></span> en <u>vías interurbanas</u></li>
+                                <li>y <span class="pill-blue"><strong>518</strong></span> en <u>vías urbanas</u>, siendo el aumento en estas del <span class="pill-blue"><strong>10%</strong></span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-users icon text-purple-600"></i>Los <strong>fallecidos vulnerables</strong> (<u>peatones</u>, <u>usuarios de patinetes</u>, <u>ciclistas</u> y <u>motoristas</u>) supusieron el <span class="pill-blue"><strong>52%</strong></span> del total, porcentaje que en vías urbanas alcanza el <span class="pill-blue"><strong>80%</strong></span>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-exclamation-triangle icon text-red-500"></i><strong>Factores clave</strong> en los accidentes con víctimas mortales:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-tachometer-alt icon"></i>el <u>exceso de velocidad</u></li>
+                                <li><i class="fas fa-mobile-alt icon"></i>o las <u>distracciones por el teléfono móvil</u></li>
+                                <li><i class="fas fa-user-shield icon"></i>a los que se añade la <strong>falta de protección adecuada</strong> (<u>cinturón de seguridad</u> o <u>casco</u> en motoristas y ciclistas), como <strong>agravante</strong> en la severidad de los siniestros.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-road icon text-orange-600"></i>De total de fallecidos en <strong>vías interurbanas</strong>, aproximadamente la <strong>tercera parte</strong> perdieron la vida en la <span class="definition-pill"><strong>Red de Carreteras del Estado</strong></span>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-chart-area icon text-green-600"></i>Estas cifras, aunque dramáticas, son <strong>muy positivas</strong> en comparación con las de hace años:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>pues en el año <span class="pill-blue">2003</span> fallecieron en accidentes de tráfico <span class="pill-blue"><strong>3 veces más</strong></span>,</li>
+                                <li>teniendo ahora <strong>menos víctimas</strong> en carretera que en el año <span class="pill-blue"><strong>1960</strong></span> cuando había <span class="pill-blue"><strong>30 veces menos</strong></span> de vehículos.</li>
+                            </ul>
+                        </div>
+                    </li>
+                     <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-balance-scale icon text-indigo-600"></i>En <span class="pill-blue"><strong>2022</strong></span> en la <span class="definition-pill">RCE</span>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>el <span class="definition-pill"><strong>índice de peligrosidad</strong></span> era de aproximadamente <span class="pill-blue"><strong>8</strong></span></li>
+                                <li>y el <span class="definition-pill"><strong>índice de mortalidad</strong></span> aproximadamente <span class="pill-blue"><strong>0,3</strong></span>.</li>
+                                <li><i class="fas fa-exclamation-triangle icon"></i>El <strong>riesgo de tener un accidente</strong> con víctimas en una <u>carretera convencional estatal</u> es <strong>más de <span class="pill-blue">2 veces</span></strong> el de una <u>carretera de gran capacidad</u>,</li>
+                                <li><i class="fas fa-skull-crossbones icon"></i>siendo el <strong>riesgo de fallecer <span class="pill-blue">4 veces</span></strong> el de una <u>vía de gran capacidad</u>, lo que denota la <strong>mayor severidad</strong> de los accidentes que se producen en las carreteras convencionales.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-car-burst icon text-teal-600"></i>En cuanto a los <strong>tipos de accidentes</strong> que se dan en la red estatal:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-road-circle-xmark icon"></i>Las <strong>salidas de la vía</strong> son el tipo de accidentes con <strong>más víctimas mortales</strong>, el <span class="pill-blue"><strong>32%</strong></span> de los muertos se produce en este tipo de accidentes (son los <u>mayoritarios en vías de gran capacidad</u>).</li>
+                                <li><i class="fas fa-car-burst icon"></i>Le siguen las <strong>colisiones frontales y fronto-laterales</strong>, en las que se producen el <span class="pill-blue"><strong>24%</strong></span> de las víctimas mortales (son los <u>mayoritarios en carreteras convencionales</u>).</li>
+                                <li><i class="fas fa-walking icon"></i>Destaca también la <strong>elevada severidad de los accidentes por atropello</strong>, pues si bien representan tan solo el <span class="pill-blue"><strong>2%</strong></span> de los accidentes con víctimas, arrojan el <span class="pill-blue"><strong>14%</strong></span> de las víctimas mortales en las carreteras del Estado.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-road"></i></div>
+                <h2>3. Aspectos de la infraestructura que más incidencia tienen sobre la seguridad vial</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>Entre las <strong>características de la carretera</strong> que más <strong>influyen en la seguridad</strong> se pueden citar las siguientes:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-sign-in-alt icon"></i>El <strong>control de accesos</strong>, ya que un buen control de accesos:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><u>evita incorporaciones o salidas</u> de la carretera de forma indiscriminada</li>
+                                            <li>en lugares que pueden no reunir las <u>condiciones adecuadas</u> por <strong>falta de visibilidad</strong> o <strong>ausencia de carriles de cambio de velocidad</strong>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-road-bridge icon"></i>La <strong>sección transversal</strong>, donde influyen de forma notable:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>los <u>arcenes</u>,</li>
+                                            <li>la disposición de <u>bermas adecuadas</u></li>
+                                            <li>y las <u>zonas de despeje lateral</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-drafting-compass icon"></i>El <strong>trazado en planta y alzado</strong>, que debe ser <strong>coherente</strong> con la <u>velocidad de recorrido</u>, con:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><u>radios de curvatura superiores al mínimo</u> exigido para esa velocidad,</li>
+                                            <li><u>peraltes adecuados</u>,</li>
+                                            <li><u>acuerdos verticales que garanticen la visibilidad</u>,</li>
+                                            <li>también debe <strong>evitar saltos bruscos</strong> entre la <u>velocidad específica de elementos de trazado contiguos</u>,</li>
+                                            <li>y una adecuada <strong>coordinación planta alzado</strong>, evitando <u>pérdidas de trazado</u> o <u>problemas de visibilidad</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-code-branch icon"></i>La <strong>disposición de intersecciones y enlaces</strong>, en:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><u>número</u>,</li>
+                                            <li><u>distancia entre ellos</u></li>
+                                            <li>y con <u>tipologías adecuadas</u> para las intensidades de tráfico a las que deban servir.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-traffic-light icon"></i>La <strong>señalización horizontal y vertical</strong>, para garantizar una <u>circulación lo más segura posible</u>.</p></li>
+                                <li><p><i class="fas fa-road-barrier icon"></i>Los <strong>sistemas de contención de vehículos</strong>, ubicados en los <u>lugares precisos</u> y con la <u>tipología correcta</u>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-layer-group icon"></i>Las <strong>características superficiales del pavimento</strong>, fundamentalmente:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>el <span class="definition-pill"><strong>CRT</strong></span>,</li>
+                                            <li>y en menor medida el <span class="definition-pill"><strong>IRI</strong></span> puesto que es más un <u>indicador de confort que de seguridad</u>.</li>
+                                            <li>Se puede presentar la <strong>situación paradójica</strong> en la que en una carretera con <u>pavimento en mal estado</u> sucedan <strong>menos accidentes</strong> por la <u>menor velocidad</u> a la que transitan los vehículos.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-gavel"></i></div>
+                <h2>4. RD 345/2011 sobre gestión de la seguridad de las infraestructuras viarias en la RCE y su desarrollo en las OC 30/2012 y 39/2017</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>El <span class="law-pill"><strong>Real Decreto 345/2011</strong></span> sobre gestión de la seguridad de las infraestructuras viarias en la <span class="definition-pill">RCE</span>, es la <strong>trasposición</strong> de la <span class="law-pill"><strong>Directiva 2008/96</strong></span> sobre la Gestión de la Seguridad Vial de las Infraestructuras.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-road icon text-purple-600"></i>El <strong>ámbito de aplicación</strong> del RD es el conjunto de todas las <u>carreteras integrantes de la Red Transeuropea</u>, las <u>autopistas</u> y las <u>otras carreteras principales</u> (autovías) que forman parte de la <span class="definition-pill">RCE</span>, independientemente de que se encuentren en fase de <u>planificación</u>, <u>proyecto</u>, <u>construcción</u> o <u>servicio</u>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>El RD se aplica tanto a <strong>nuevas carreteras</strong>, como a <strong>modificaciones sustanciales</strong> de las existentes (<u>duplicaciones de calzada</u>, <u>variantes de población</u> u <u>obras de acondicionamiento de más de <span class="pill-blue">10 km</span></u>).</li>
+                                <li>Están <strong>excluidos los túneles</strong> de carretera, dado que tienen una reglamentación específica de seguridad mediante el <span class="law-pill">RD 635/2006</span> sobre Seguridad en Túneles.</li>
+                                <li>La <span class="law-pill"><strong>Ley 37/2015</strong></span> ha <strong>extendido</strong> la evaluación y gestión de la seguridad de las infraestructuras viarias en servicio y las inspecciones periódicas de seguridad viaria a <strong>toda la <span class="definition-pill">RCE</span></strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-cogs icon text-orange-600"></i>El RD define diferentes <strong>procedimientos</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-chart-pie icon"></i>Evaluación del impacto de las infraestructuras viarias en la seguridad,</li>
+                                <li><i class="fas fa-user-check icon"></i>Auditorías de seguridad viaria,</li>
+                                <li><i class="fas fa-shield-alt icon"></i>Evaluación y gestión de la seguridad de las infraestructuras viarias en servicio,</li>
+                                <li><i class="fas fa-search-location icon"></i>e Inspecciones periódicas de seguridad viaria.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-book-open icon text-indigo-600"></i>Por su parte, la <span class="law-pill"><strong>OC 30/2012</strong></span>, modificada por la <span class="law-pill"><strong>OC 39/2017</strong></span>, ha aprobado las <strong>directrices básicas</strong> de estos procedimientos, así como el <strong>programa de formación inicial y actualización periódica</strong> de los auditores.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-lightbulb icon text-teal-600"></i>El <span class="law-pill">RD 345/2011</span> también define <strong>dos conceptos fundamentales</strong>, que son:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="definition-pill"><strong>Tramo de concentración de accidentes (TCA)</strong></span>, tramo de carretera de longitud <u>no superior a <span class="pill-blue">3 km</span></u>, salvo excepciones justificadas, que lleve en explotación <u>más de <span class="pill-blue">3 años</span></u>, en el que las estadísticas de accidentes registrados indican que el <strong>nivel de riesgo es significativamente superior</strong> al de tramos semejantes.</li>
+                                <li><span class="definition-pill"><strong>Tramo de alto potencial de mejora (TAPM)</strong></span>, tramo de carretera con <strong>alto potencial de ahorro</strong> de los <u>costes originados por los accidentes</u> en el que se espera que una <u>mejora de la infraestructura</u> sea <strong>altamente efectiva</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-chart-pie icon"></i>Evaluación del impacto de las infraestructuras viarias en la seguridad (EIIVS)</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Consiste en un <strong>análisis comparativo</strong> de la <u>repercusión de una carretera nueva</u> o de la <u>modificación sustancial de una carretera existente</u> sobre la <strong>seguridad de la red viaria</strong>.</p></li>
+                                <li><p><i class="fas fa-file-alt icon text-purple-600"></i>El <span class="doc-pill">informe de evaluación de impacto</span> debe exponer las <strong>consideraciones de seguridad</strong> que sean relevantes para la <u>elección de la alternativa óptima</u>, para ello debe incluir un <strong>análisis cualitativo y cuantitativo</strong> del efecto de las alternativas sobre la seguridad vial.</p></li>
+                                <li><p><i class="fas fa-tasks icon text-orange-600"></i>En el <span class="definition-pill">análisis multicriterio</span> de las alternativas estudiadas en el <span class="doc-pill">estudio informativo</span> se tendrán en cuenta la <span class="definition-pill">EIIVS</span>, de acuerdo con un <u>factor de ponderación</u>.</p></li>
+                                <li><p><i class="fas fa-search-dollar icon text-indigo-600"></i>También se considerará en los <span class="definition-pill">análisis coste-beneficio</span> de las diferentes alternativas el efecto de la <strong>reducción de la accidentalidad</strong> que se espere de cada alternativa respecto a la <u>alternativa “cero”</u>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-user-check icon"></i>Auditorías de seguridad viaria</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Son una <strong>comprobación independiente, pormenorizada y sistemática</strong> de la <u>seguridad de las características de diseño</u> del proyecto de una carretera, aplicada a las diferentes fases que van desde el <u>anteproyecto</u> a la <u>explotación en su fase inicial</u>.</p></li>
+                                <li><p><i class="fas fa-bullseye icon text-purple-600"></i>Con las auditorías de seguridad viaria se busca <strong>identificar con antelación suficiente</strong> los <u>potenciales problemas</u> que afecten a la seguridad vial, a fin de adoptar <strong>medidas para eliminarlos o reducirlos</strong>.</p></li>
+                                <li><p><i class="fas fa-archive icon text-orange-600"></i>Tanto los <span class="doc-pill">informes de auditoría</span> como los de <span class="doc-pill">respuesta</span> en las etapas de <u>proyecto</u> y <u>previa a la apertura</u> deben <strong>incorporarse al expediente del proyecto y obra</strong>, siendo archivados con él. Los informes de la <u>fase inicial de servicio</u> serán archivados por los servicios de conservación de la <span class="actor-pill">Demarcación</span>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-users icon text-indigo-600"></i>El <span class="law-pill">Real Decreto 345/2011</span> fija que los <strong>equipos de auditoría</strong> estarán compuestos al menos por un <span class="actor-pill"><strong>auditor principal</strong></span> y uno <span class="actor-pill"><strong>auxiliar</strong></span>, que serán designados por la <span class="actor-pill">Dirección General de Carreteras</span>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p>Los <strong>auditores</strong> deberán cumplir estos <strong>requisitos</strong>:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>
+                                                            <div class="collapsible-trigger">
+                                                                <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                                <p><span class="actor-pill"><strong>Auditores auxiliares</strong></span>: deben tener:</p>
+                                                            </div>
+                                                            <div class="collapsible-content hidden">
+                                                                <ul class="even-deeper-nested-list">
+                                                                    <li><i class="fas fa-road icon"></i><u>experiencia o formación</u> en el diseño de carreteras, estudio de accidentes y seguridad vial,</li>
+                                                                    <li><i class="fas fa-graduation-cap icon"></i>haber realizado el <u>programa de formación</u>,</li>
+                                                                    <li><i class="fas fa-check-double icon"></i>superado las <u>pruebas de acreditación</u>,</li>
+                                                                    <li><i class="fas fa-sync-alt icon"></i>y participado en los <u>cursos periódicos de actualización</u>,</li>
+                                                                    <li><i class="fas fa-user-secret icon"></i>y ser <u>independientes</u>, sin haber participado en el anteproyecto o proyecto.</li>
+                                                                </ul>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="collapsible-trigger">
+                                                                <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                                <p><span class="actor-pill"><strong>Auditores principales</strong></span>: además de los requisitos anteriores, deben haber:</p>
+                                                            </div>
+                                                            <div class="collapsible-content hidden">
+                                                                <ul class="even-deeper-nested-list">
+                                                                     <li><i class="fas fa-project-diagram icon"></i><u>participado en la auditoría de 3 proyectos análogos</u> considerados en dos grupos (anteproyecto/proyecto, puesta en servicio/fase inicial de servicio) bajo la dirección de un auditor principal.</li>
+                                                                </ul>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-shield-alt icon"></i>Evaluación y gestión de la seguridad de las infraestructuras viarias en servicio</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                 <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Incluirá la <strong>evaluación de la seguridad</strong> de los <u>tramos completos</u> de las carreteras en servicio en la que se integran la <strong>identificación</strong> (cada <span class="pill-blue">3 años</span>) y el <strong>tratamiento</strong> (sin fijar periodo) de los <span class="definition-pill">TCA</span> y los <span class="definition-pill">TAPM</span>.</p></li>
+                                 <li><p><i class="fas fa-sort-amount-up icon"></i>La <span class="actor-pill">DGC</span> <strong>priorizará</strong> en sus programas de actuaciones de mejora la ejecución de las <strong>medidas de mayor índice de rentabilidad esperada</strong> (cociente entre el ahorro de costes sociales por reducción de la accidentalidad, a lo largo de la vida útil de la medida, y el coste de la medida), e <strong>informará a los usuarios</strong> sobre los <span class="definition-pill">TCA</span>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-search-location icon"></i>Inspecciones periódicas de seguridad viaria</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>La <span class="actor-pill">DGC</span> llevará a cabo <strong>periódicamente inspecciones</strong> de las carreteras a través de las cuales se <strong>identificarán los elementos</strong> de la carretera <u>susceptibles de mejora</u> en los que se requiera una <u>actuación de mantenimiento por motivos de seguridad</u>, así como la <u>repercusión de las obras viarias sobre la seguridad de la circulación</u> y <strong>velará</strong> para que se adopten las <u>medidas de seguridad pertinentes</u>.</p></li>
+                                <li><p><i class="fas fa-calendar-check icon text-purple-600"></i>Las Inspecciones se llevarán a cabo con una <strong>frecuencia mínima de <span class="pill-blue">6 años</span></strong> por <strong>inspectores</strong> designados por la <span class="actor-pill">DGC</span> que tendrán <u>experiencia o formación específica</u> en el <u>diseño de carreteras</u>, <u>ingeniería de la seguridad vial</u> y <u>análisis de accidentes</u>.</p></li>
+                                <li><p><i class="fas fa-tasks icon text-orange-600"></i>Los <strong>inspectores revisarán</strong> los aspectos relacionados con la <u>seguridad de la circulación</u> realizando <strong>recorridos</strong> con el fin de <strong>detectar</strong> aquellos elementos <u>susceptibles de mejora</u> mediante actuaciones de mantenimiento.</p></li>
+                                <li><p><i class="fas fa-file-alt icon"></i>Estos elementos, así como las <strong>propuestas de actuaciones preventivas</strong> se reflejarán en un <span class="doc-pill"><strong>informe de inspección</strong></span>, que podrá proponer la adopción de medidas que se realizarán en el <strong>menor plazo posible</strong> en función de la <u>disponibilidad presupuestaria</u>, y que serán objeto del oportuno <strong>seguimiento</strong>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
