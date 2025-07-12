@@ -290,7 +290,7 @@
            </div>
        </div>
 
-		<audio id="topic-audio" src=""></audio>
+		<audio id="topic-audio" src=""></audios>
 	</div>
 
 	<!-- Firebase SDKs -->
@@ -672,7 +672,7 @@
                     playPauseButton.disabled = false;
                     playPauseIcon.className = "fas fa-play";
                     contentFrame.src = currentTopic.file;
-                    const audioSrc = `audio/${currentTopic.file.replace(/_Desplegable\.html$/i, ".mp3")}`;
+                    const audioSrc = `audios/${currentTopic.file.replace(/_Desplegable\.html$/i, ".mp3")}`;
                     topicAudio.src = audioSrc;
                     updateChapters(currentTopic.chapters);
                     updateEditor(currentTopic.chapters);
