@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T10. Obras de paso</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .formula-pill, .doc-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .formula-pill { background-color: #ffedd5; color: #9a3412; border: 1px solid #fb923c; }
+        .doc-pill { background-color: #dcfce7; color: #166534; border: 1px solid #4ade80; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list, .even-deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li, .even-deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        .even-deeper-nested-list > li::before {
+             content: '▫️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before,
+        .even-deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-bridge"></i> MEB1T10. Obras de paso <i class="fas fa-archway"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-info-circle"></i></div>
+                <h2>1. Obras de paso: tipologías y materiales. Métodos constructivos y medios auxiliares</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Las <span class="definition-pill"><strong>obras de paso</strong></span> <strong>salvan los obstáculos</strong> en el trazado de una carretera.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-cubes icon text-purple-600"></i>Los <strong>materiales más empleados</strong> en su construcción son:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>Hormigón armado</strong>, en <u>cimentaciones y pilas</u>, y <u>tableros de luces hasta <span class="pill-blue">20 m</span></u>;</li>
+                                <li><strong>Hormigón pretensado</strong>, en <u>tableros construidos in situ</u> a partir de <span class="pill-blue">20 m</span> de luz o en <u>vigas prefabricadas</u>;</li>
+                                <li><strong>Acero estructural</strong>, en <u>puentes metálicos o mixtos</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-sitemap icon text-orange-600"></i>Las <strong>tipologías estructurales más frecuentes</strong>, así como los <strong>procedimientos constructivos</strong>, con los que están íntimamente relacionadas dependen de las <u>diferentes clases de estructuras</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-road icon"></i>Pasos inferiores de camino</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Son estructuras con una <strong>luz libre</strong> que no suele superar los <span class="pill-blue"><strong>8 m</strong></span>, y <strong>atraviesan los rellenos</strong> de la carretera para dar <u>servicio a caminos o carreteras poco importantes</u>.</p></li>
+                                <li><p><i class="fas fa-cogs icon text-purple-600"></i>Normalmente son de <strong>hormigón armado</strong>, fabricados <u>in-situ</u> o <u>prefabricados</u>.</p></li>
+                                <li><p><i class="fas fa-hard-hat icon text-orange-600"></i>En el caso de soluciones <strong>in-situ</strong> se construyen mediante <span class="definition-pill"><strong>cimbras cuajadas</strong></span>.</p></li>
+                                <li><p><i class="fas fa-archway icon"></i>Se distinguen <strong>pórticos</strong>, <strong>marcos</strong> y <strong>bóvedas</strong>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-bridge icon"></i>Puentes de luces cortas o medias</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Son las <strong>estructuras habituales</strong> en <u>pasos superiores</u>, <u>pasos inferiores de carreteras</u> y muchos <u>viaductos del trazado</u>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-sitemap icon"></i>Se distinguen las siguientes <strong>tipologías</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-truck-loading icon"></i><strong><u>Tableros de vigas prefabricadas</u></strong>: luces habituales hasta <span class="pill-blue"><strong>40-45 m</strong></span>.</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>Las vigas más comúnmente empleadas son en <strong>T</strong>, <strong>doble T</strong> o <strong>artesa</strong>.</li>
+                                                        <li>Se construyen en un <u>taller de prefabricación</u>, se <u>transportan a obra</u> y se colocan normalmente mediante <u>grúas</u> o <u>vigas de lanzamiento</u>.</li>
+                                                        <li>Una vez colocadas las vigas, se debe construir la <strong>losa de hormigón armado superior</strong> en el ancho del tablero, que recibirá el <u>firme</u>, los <u>pretiles</u> y las <u>cargas del tráfico</u>. Normalmente esto se hace sobre <strong>prelosas de hormigón armado prefabricadas</strong>, que se instalan sobre las vigas con grúas.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                             <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-layer-group icon"></i><strong><u>Tableros losa de hormigón armado o pretensado</u></strong>: luces hasta <span class="pill-blue"><strong>40-45 m</strong></span>, aunque la zona de distribución normal suele oscilar en torno a los <span class="pill-blue">30 m</span>.</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>La construcción suele llevarse a cabo mediante <strong>cimbras convencionales</strong>, ya sean <u>cuajadas</u> (altura hasta 15-20 m), <u>aporticadas</u> para alturas mayores, o incluso <u>autocimbras</u>.</li>
+                                                        <li>Las losas pueden estar <strong>aligeradas o no</strong>, y ser de <strong>hormigón armado o pretensado</strong> en función de la luz (menos o más de 20 m).</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-road-bridge icon"></i>Viaductos de luces grandes</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                             <ul>
+                                 <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Aunque la distinción de luces cortas y medias con las grandes luces es dudosa, convencionalmente se puede establecer la <strong>frontera en los <span class="pill-blue">50 m</span> de luz</strong>:</p></li>
+                                 <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-sitemap icon"></i><strong>Tipologías</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-box icon"></i><strong><u>Cajones de hormigón pretensado</u></strong>:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>se pueden distinguir <strong>cajones de canto e inercia constante</strong> que se usan en luces hasta <span class="pill-blue">60 m</span>;</li>
+                                                        <li><strong>cajones de canto constante e inercia variable</strong> con luces de <span class="pill-blue">80-90 m</span> y hasta <span class="pill-blue">120-150 m</span>;</li>
+                                                        <li>y <strong>cajones de canto variable</strong> con luces mayores de <span class="pill-blue">100 m</span>.</li>
+                                                        <li>
+                                                            <div class="collapsible-trigger">
+                                                                <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                                <p>Para su <strong>construcción</strong> se utilizan:</p>
+                                                            </div>
+                                                            <div class="collapsible-content hidden">
+                                                                <ul class="even-deeper-nested-list">
+                                                                    <li>- <i class="fas fa-hard-hat icon"></i><u>cimbras convencionales cuajadas o aporticadas</u>;</li>
+                                                                    <li>- <i class="fas fa-truck-monster icon"></i><u>autocimbras</u> en las que la construcción es por fases en vanos sucesivos de 50-60 m;</li>
+                                                                    <li>- <i class="fas fa-arrows-alt-h icon"></i><u>empuje</u>, ejecutando el tablero en un extremo del puente para empujarlo mediante gatos hasta su posición definitiva;</li>
+                                                                    <li>- <i class="fas fa-angle-double-right icon"></i><u>avance en voladizo</u>, se pueden alcanzar luces de hasta 250 m, aunque las luces típicas rondan los 100 m, la técnica consiste en la construcción del tablero desde las pilas hacia los centros de vano avanzando en voladizo mediante carros de avance.</li>
+                                                                </ul>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                             <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-bars icon"></i><i class="fas fa-layer-group icon"></i><strong><u>Soluciones mixtas acero-hormigón</u></strong>:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>en ellas se <strong>optimizan las propiedades</strong> de ambos materiales, del <u>hormigón</u> la buena resistencia a compresión y el bajo coste, y del <u>acero</u> la alta resistencia a tracción.</li>
+                                                        <li>Se pueden emplear tanto en el ámbito de las <strong>luces medias</strong> como en el de las <strong>luces grandes</strong>.</li>
+                                                        <li>Además de la instalación con <u>grúas o izado</u> de los elementos metálicos, en puentes mixtos de grandes luces es habitual la técnica de <strong>empuje</strong> de las vigas o cajón metálico desde uno de los estribos, alcanzando luces máximas de <span class="pill-blue">90 m</span>.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-plus-circle icon"></i><strong><u>Otras soluciones</u></strong> son:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                         <li><i class="fas fa-archway icon"></i>los <strong>arcos</strong>,</li>
+                                                         <li><i class="fas fa-road-bridge icon"></i>los <strong>puentes colgantes</strong></li>
+                                                         <li><i class="fas fa-project-diagram icon"></i>y los <strong>puentes atirantados</strong>,</li>
+                                                         <li><i class="fas fa-info-circle icon"></i>que normalmente son soluciones excepcionales para abordar el ámbito de las <strong>grandes luces</strong>.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                     </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-clipboard-check"></i></div>
+                <h2>2. Conservación e inspección de obras de paso</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>En los <strong>programas de conservación</strong>, la <strong>inspección de los puentes</strong> resulta <strong>esencial</strong> para <u>conocer su estado</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-list-ol icon text-purple-600"></i>Los <strong>tipos de inspecciones</strong> en la red de carreteras del Estado son:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-eye icon"></i><span class="definition-pill"><strong>Inspecciones básicas</strong></span>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><strong>inspección visual</strong> efectuada por los <u>encargados del mantenimiento</u>,</li>
+                                            <li>con el <strong>objeto</strong> de <u>detectar cuanto antes los deterioros</u>, <u>previniendo que degeneren en graves</u>, o de <u>localizar daños graves que necesitan una intervención urgente</u>.</li>
+                                            <li>Su <strong>periodicidad</strong> es de unos <span class="pill-blue">15 meses</span>.</li>
+                                            <li>De las inspecciones básicas normalmente se derivan <strong>actuaciones de mantenimiento ordinario</strong>, cuyo objeto es <u>retrasar la aparición de deterioros</u> y <u>evitar que se agraven los existentes</u> para <strong>alargar la vida</strong> de la estructura.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-binoculars icon"></i><span class="definition-pill"><strong>Inspecciones principales</strong></span>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>es una <strong>inspección visual minuciosa</strong> de <u>todos los elementos del puente</u>, llevada a cabo por <u>personal especializado</u> <strong>sin el uso de medios especiales</strong>.</li>
+                                            <li>El <strong>intervalo</strong> entre inspecciones es de unos <span class="pill-blue">5 años</span>.</li>
+                                            <li>El <strong>objetivo fundamental</strong> es <strong>evaluar con detalle el estado de deterioro</strong> de una estructura, lo que puede implicar en algunos casos la necesidad de realizar una <strong>actuación de mantenimiento extraordinario</strong> (<u>protección</u>, <u>reparación</u> de la estructura, <u>refuerzo</u>, <u>renovación</u> de ciertos elementos).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-exclamation-triangle icon"></i><span class="definition-pill"><strong>Inspecciones especiales</strong></span>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><strong>no se realizan sistemáticamente</strong> o con carácter periódico, sino que surgen como consecuencia de la <u>detección de daños</u> en una inspección principal o de una <u>situación excepcional</u> (una riada, el impacto de un vehículo).</li>
+                                            <li>Implican la presencia de <strong>técnicos especializados</strong> con <strong>medios especiales</strong>.</li>
+                                            <li>Estas inspecciones van enfocadas a la <strong>determinación del nivel de seguridad</strong> de la estructura y las <strong>posibles alternativas</strong> para intervenir.</li>
+                                            <li>Con estas inspecciones se obtienen <strong>datos imprescindibles</strong> para redactar los <span class="doc-pill">proyectos de rehabilitación</span> que en su caso pudieran ser necesarios.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-cogs icon text-orange-600"></i>En la <span class="definition-pill">RCE</span> la <strong>información de las inspecciones</strong>, junto con el <strong>inventario</strong>, se integran en un <span class="definition-pill"><strong>sistema de gestión de obras de paso</strong></span> que permite <u>conocer su estado</u>, <u>definir alternativas de reparación</u>, y <u>elaborar un programa de actuación</u>.</p></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-search-plus"></i></div>
+                <h2>3. Patologías de degradación</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>La <span class="doc-pill"><strong>Guía para la realización de inspecciones principales de obras de paso en la RCE</strong></span> recoge los <strong>deterioros</strong> que se pueden presentar de forma más habitual, entre los que se pueden destacar los siguientes:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-water icon"></i>en el <strong>cimiento</strong>, como los provocados por los efectos de la <u>socavación en cauces</u>;</li>
+                                <li><i class="fas fa-archway icon"></i>en la <strong>subestructura</strong>, como <u>asientos y giros</u> de estribos o pilas;</li>
+                                <li><i class="fas fa-road-bridge icon"></i>en la <strong>superestructura</strong>, con una <u>amplia variedad</u> en función del <u>material</u> y de la <u>tipología del tablero</u>;</li>
+                                <li><i class="fas fa-link icon"></i>en los <strong>elementos de conexión</strong>, como en los <u>aparatos de apoyo</u>;</li>
+                                <li><i class="fas fa-shield-alt icon"></i>asociados a los <strong>equipamientos</strong> como <u>rotura de las defensas</u>;</li>
+                                <li><i class="fas fa-cubes icon"></i>o en los <strong>materiales</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-tools"></i></div>
+                <h2>4. Rehabilitación de las obras de paso</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>Las <strong>operaciones de rehabilitación</strong> de obras de paso <strong>más frecuentes</strong> son las de:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-tint icon"></i><strong>reparación o sustitución</strong> de los <u>sistemas de drenaje y desagües</u> (más relevante en carreteras afectadas por problemas de vialidad invernal donde es habitual el uso de fundentes),</li>
+                                <li><i class="fas fa-grip-lines icon"></i>de las <u>juntas</u>,</li>
+                                <li><i class="fas fa-cogs icon"></i>de los <u>aparatos de apoyo</u>,</li>
+                                <li><i class="fas fa-road-barrier icon"></i>o de los <u>sistemas de contención</u>;</li>
+                                <li><i class="fas fa-layer-group icon"></i>la <strong>impermeabilización</strong> de <u>tableros</u>;</li>
+                                <li><i class="fas fa-road icon"></i>la <strong>renovación del pavimento</strong> sin aumentar su espesor;</li>
+                                <li><i class="fas fa-shield-alt icon"></i>la <strong>protección de paramentos</strong> contra <u>humedades</u> o <u>desconchones</u>;</li>
+                                <li><i class="fas fa-paint-roller icon"></i>el <strong>pintado de elementos metálicos</strong> expuestos a la <u>corrosión</u>,</li>
+                                <li><i class="fas fa-search icon"></i>o la <strong>creación de dispositivos</strong> que faciliten la <u>inspección</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-balance-scale"></i></div>
+                <h2>5. Normativa aplicable</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>La <strong>más destacada</strong> en relación con las obras de paso es la siguiente:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-book-open icon"></i><span class="law-pill"><strong>Código Estructural 2021</strong></span>;</li>
+                                <li><i class="fas fa-book-open icon"></i><span class="law-pill"><strong>Instrucción sobre las acciones a considerar en el proyecto de puentes de carretera IAP-11</strong></span>;</li>
+                                <li><i class="fas fa-book-open icon"></i><span class="law-pill"><strong>Norma de construcción sismorresistente: puentes NCSP-07</strong></span>;</li>
+                                <li><i class="fas fa-book-open icon"></i><span class="law-pill"><strong>Instrucción para la recepción de cementos RC-16</strong></span>;</li>
+                                <li><i class="fas fa-book-open icon"></i><span class="doc-pill"><strong>Recomendaciones para el proyecto de puentes metálicos para carreteras (RPM-96)</strong></span>;</li>
+                                <li><i class="fas fa-book-open icon"></i><span class="doc-pill"><strong>Recomendaciones para el proyecto de puentes mixtos para carreteras (RPX-96)</strong></span>;</li>
+                                <li><i class="fas fa-book-open icon"></i><span class="doc-pill"><strong>Recomendaciones para la realización de pruebas de carga en puentes de carreteras (1999)</strong></span>;</li>
+                                <li><i class="fas fa-file-alt icon"></i><span class="doc-pill"><strong>Notas de servicio</strong></span> sobre la utilización de <u>cimbras autolanzables</u> (<span class="pill-blue">2007</span>), sobre <u>aparatos de apoyo</u> (<span class="pill-blue">1995</span>), o sobre <u>losas de transición en obras de paso</u> (<span class="pill-blue">1992</span>);</li>
+                                <li><i class="fas fa-book-reader icon"></i><span class="doc-pill"><strong>Guías para la realización de inspecciones principales y básicas en obras de paso en la RCE</strong></span> (<span class="pill-blue">2012</span> y <span class="pill-blue">2009</span>).</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-building"></i></div>
+                <h2>6. Aspectos principales del Real Decreto 470/2021 por el que se aprueba el Código Estructural</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>El <span class="law-pill"><strong>Código Estructural</strong></span> es de <strong>aplicación</strong> al <u>proyecto</u>, <u>construcción</u>, <u>control</u> y <u>mantenimiento</u> de todas las <strong>estructuras y elementos estructurales</strong> de <u>hormigón</u>, de <u>acero</u> o <u>mixtos de hormigón-acero</u>, con ciertas <strong>excepciones</strong>, como, entre otras:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>los <u>elementos estructurales mixtos</u> compuestos por hormigón y cualquier otro material distinto del acero estructural;</li>
+                                <li>las <u>estructuras pretensadas</u> con armaduras activas fuera del canto del elemento;</li>
+                                <li>las <u>estructuras realizadas con hormigones especiales</u> no considerados en el Código;</li>
+                                <li>las <u>estructuras expuestas normalmente a temperaturas superiores a <span class="pill-blue">70 °C</span></u>;</li>
+                                <li>las <u>cimentaciones profundas</u>;</li>
+                                <li>las <u>tuberías de hormigón</u> para la distribución de fluidos;</li>
+                                <li>los <u>depósitos a presión</u>, <u>plataformas offshore</u> o <u>balsas de almacenamiento de líquidos</u>;</li>
+                                <li>o las <u>presas</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-cogs icon text-purple-600"></i>En el Código se <strong>regulan las cuestiones relativas</strong> a:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>las <u>bases de proyecto</u> y el <u>análisis estructural</u>,</li>
+                                <li>así como a los <u>requisitos técnicos exigibles a los materiales</u> componentes,</li>
+                                <li>a la <u>durabilidad y vida útil</u> de las estructuras,</li>
+                                <li>a la <u>seguridad en caso de incendio</u>,</li>
+                                <li>y al <u>control y la ejecución</u> de las estructuras,</li>
+                                <li><strong>actualizando</strong> las Instrucciones <span class="law-pill">EHE-08</span> y <span class="law-pill">EAE</span> que se <strong>derogan</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-check-double icon text-orange-600"></i>Para <strong>justificar</strong> que la estructura cumple las exigencias que establece el Código, el <span class="actor-pill">autor del proyecto</span>, con la conformidad de la <span class="actor-pill">propiedad</span>, y la <span class="actor-pill">dirección facultativa</span> deberán <strong>adoptar cualquiera de las siguientes 3 opciones</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-book icon"></i><strong>Soluciones técnicas de acuerdo con los procedimientos</strong> que contempla el Código cuya aplicación es <u>suficiente para acreditar el cumplimiento</u> de las exigencias establecidas en el mismo.</li>
+                                <li><i class="fas fa-globe-europe icon"></i>Para el <strong>dimensionamiento y comprobación</strong> de las estructuras en el proyecto, los <strong>procedimientos establecidos en los <span class="law-pill">eurocódigos estructurales</span></strong>, junto con los correspondientes <span class="doc-pill">Anejos Nacionales</span>, respetando su <u>ámbito de aplicación</u> y el <u>resto de la reglamentación específica vigente</u>.</li>
+                                <li><i class="fas fa-lightbulb icon"></i><strong>Soluciones alternativas</strong> que se <u>aparten de los procedimientos del Código</u>, siempre que se <strong>justifique</strong> que la estructura <strong>cumple las exigencias</strong> del Código porque sus <u>prestaciones son equivalentes</u> a las que se obtendrían aplicando éste.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-chart-line"></i></div>
+                <h2>7. Monitorización en tiempo real de estructuras y taludes</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>La <span class="definition-pill"><strong>Red de Carreteras del Estado</strong></span> contiene un conjunto de <strong>puentes y obras geotécnicas</strong> que disponen o han dispuesto en algún momento de su vida de un <span class="definition-pill"><strong>sistema de monitorización</strong></span> para la <u>vigilancia de su comportamiento estructural o geotécnico</u>, como:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-hard-hat icon"></i><strong>ayuda a la construcción</strong>,</li>
+                                <li><i class="fas fa-search-plus icon"></i>para <strong>controlar la evolución</strong> de una <u>patología determinada</u>,</li>
+                                <li><i class="fas fa-check-circle icon"></i>para <strong>vigilar su correcto funcionamiento</strong>,</li>
+                                <li><i class="fas fa-database icon"></i>o para <strong>recoger datos</strong> que puedan explotarse con fines de <u>investigación</u> y <u>redacción de normativa</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-exclamation-triangle icon text-red-500"></i>Con el tiempo, el <strong>número de obras</strong> objeto de estas instrumentaciones <strong>ha crecido apreciablemente</strong>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Los sistemas de instrumentación dispuestos, con <u>características técnicas heterogéneas</u> y <u>sin requisitos comunes de comunicación</u>, han funcionado de <strong>manera aislada y sin estandarizar</strong>, lo que ha <strong>impedido una gestión centralizada</strong> del conjunto.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-gavel icon text-purple-600"></i>por lo que la <span class="actor-pill"><strong>Dirección General de Carreteras del MITMS</strong></span> ha aprobado la <span class="law-pill"><strong>Orden Circular 2/2021</strong></span> sobre la <u>plataforma de monitorización de estructuras de la RCE</u>, con el objeto de <strong>armonizar los datos</strong> y <strong>registrarlos en un único punto</strong>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-sitemap icon text-orange-600"></i>Define su <strong>ámbito de aplicación</strong> para:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>puentes y estructuras asimilables</u>;</li>
+                                <li><u>terraplenes, desmontes y otras obras geotécnicas</u>;</li>
+                                <li>y <u>túneles</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-desktop icon text-indigo-600"></i>Todos los elementos de la <span class="definition-pill">RCE</span> citados, en los que exista o se prevea disponer un <u>sistema de instrumentación electrónica de control</u> de parámetros de tipo estructural o geotécnico, se <strong>integrarán en la <span class="plan-pill">Plataforma CELOSÍA</span></strong> para el <strong>seguimiento y análisis en tiempo real</strong> de las estructuras monitorizadas de la <span class="definition-pill">RCE</span>.</p></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
