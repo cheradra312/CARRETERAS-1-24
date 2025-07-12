@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T21. Explotación de carreteras (I)</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .doc-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .doc-pill { background-color: #dcfce7; color: #166534; border: 1px solid #4ade80; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-road-barrier"></i> MEB1T21. Explotación de carreteras (I) <i class="fas fa-shield-alt"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-landmark"></i></div>
+                <h2>1. Protección del dominio público y limitaciones a la propiedad.</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-blue-600"></i>La <span class="law-pill"><strong>Ley de Carreteras 37/2015</strong></span> establece las <strong>zonas de protección</strong> del dominio público viario, fijando <strong>limitaciones a la propiedad</strong> en las:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="definition-pill">zona de dominio público</span>,</li>
+                                <li><span class="definition-pill">servidumbre</span></li>
+                                <li>y <span class="definition-pill">afección</span>,</li>
+                                <li>además de una <span class="definition-pill">zona de limitación a la edificabilidad</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-ruler-horizontal icon text-purple-600"></i>Las <strong>medidas</strong> de las tres primeras zonas de protección se establecen desde la <strong>arista exterior de la explanación</strong>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-bridge icon"></i>En los <strong>puentes</strong> se puede fijar esa arista exterior como la <u>proyección ortogonal del tablero sobre el terreno</u> o utilizar otros criterios, pero los <strong>soportes de la estructura son dominio público</strong>, expropiándose al menos los <u>terrenos ocupados por la excavación de los cimientos</u> y una <u>franja de <span class="pill-blue">1 m</span> a su alrededor</u>.</li>
+                                <li><i class="fas fa-archway icon"></i>En los <strong>túneles</strong> se puede <strong>extender el dominio público</strong> a la <u>superficie del terreno sobre ellos</u> si es necesario para la <u>conservación y mantenimiento</u> de la obra.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-file-signature icon text-orange-600"></i>La realización de cualquier actividad que pueda afectar al régimen de las zonas de protección requiere <strong>autorización del <span class="actor-pill">MITMS</span></strong>, sin perjuicio de otras competencias concurrentes.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-exclamation-triangle icon text-red-500"></i>La <strong>prohibición y la necesidad de autorización</strong> operarán tanto respecto de las carreteras:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>construidas</u></li>
+                                <li>como de las <u>proyectadas o en construcción</u> una vez aprobado definitivamente el <span class="doc-pill">estudio informativo</span> correspondiente o, en su defecto, el <span class="doc-pill">anteproyecto</span> o <span class="doc-pill">proyecto</span>, cualquiera que sea el plazo previsible de la actuación contemplada en el estudio.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-landmark"></i></div>
+                <h2>2. Zonas de dominio público, servidumbre y afección. Zona de limitación a la edificabilidad</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-gavel icon text-blue-600"></i>La <span class="law-pill"><strong>Ley de Carreteras 37/2015</strong></span> establece las <strong>zonas de protección</strong> del dominio público viario, fijando <strong>limitaciones a la propiedad</strong>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-vector-square icon"></i>Dominio Público</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-purple-600"></i>Terrenos ocupados por las <strong>carreteras</strong> y sus <strong>elementos funcionales</strong> (afectos a la <u>conservación y explotación</u> de la carretera, como <u>áreas de descanso</u>, <u>estacionamiento</u>, <u>pesaje</u>, <u>parada de autobuses</u>, <u>áreas de servicio</u>, <u>vías de servicio</u>, <u>centros de conservación</u>) y una <strong>franja</strong> de:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><span class="pill-blue"><strong>8 m</strong></span> en <u>autopistas y autovías</u>,</li>
+                                            <li>y de <span class="pill-blue"><strong>3 m</strong></span> en el <u>resto de las carreteras</u>,</li>
+                                            <li>a cada lado de la vía, medida en horizontal desde la <strong>arista exterior de la explanación</strong> y perpendicularmente a ella.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-hard-hat icon text-orange-600"></i>Sólo podrán realizarse <strong>obras o instalaciones</strong> de un <u>servicio público de interés general</u>, y con motivo de la <span class="law-pill">Ley General de Telecomunicaciones</span> se da derecho a los <span class="actor-pill">operadores de telecomunicaciones</span> a la <u>extensión de sus redes</u>.</p></li>
+                                <li><p><i class="fas fa-exchange-alt icon text-indigo-600"></i>Es necesario precisar que una cosa es el <strong>dominio público expropiado</strong> y otra la <strong>zona de protección de dominio público</strong>, que puede incluir <u>terrenos privados</u>.</p></li>
+                                <li><p><i class="fas fa-check-circle icon text-green-600"></i>En la actualidad se <strong>expropia toda la zona de dominio público</strong>, pero en carreteras existentes pueden <u>no coincidir</u> ambos conceptos.</p></li>
+                                <li><p><i class="fas fa-ruler icon text-teal-600"></i>Además, la nueva <span class="law-pill">Ley 37/2015</span> establece la <strong>obligatoriedad de su deslinde</strong>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-road-barrier icon"></i>Zona de servidumbre</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-purple-600"></i><strong>Dos franjas de terreno</strong> a ambos lados, delimitadas interiormente por la <u>zona de dominio público</u> y exteriormente por dos <u>líneas paralelas a las aristas exteriores de la explanación</u> a <span class="pill-blue"><strong>25 m</strong></span> en <u>autopistas y autovías</u>, y <span class="pill-blue"><strong>8 m</strong></span> en el <u>resto de las carreteras</u>.</p></li>
+                                <li><p><i class="fas fa-ban icon text-red-500"></i><strong>No podrán realizarse obras</strong> ni se permitirán más usos que aquellos que sean <strong>compatibles con la seguridad vial</strong> y la <strong>adecuada explotación</strong> de la vía.</p></li>
+                                <li><p><i class="fas fa-user-check icon text-orange-600"></i>El <span class="actor-pill">MITMS</span> podrá <strong>utilizar o autorizar a terceros</strong> la utilización de la zona de servidumbre por <u>razones de interés general</u> o cuando lo requiera el <u>mejor servicio de la carretera</u>.</p></li>
+                                <li><p><i class="fas fa-euro-sign icon text-green-600"></i>Serán <strong>indemnizables</strong> la <u>ocupación de la zona de servidumbre</u> y los <u>daños y perjuicios</u> que se causen por su utilización.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-draw-polygon icon"></i>Zona de afección</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                 <li><p><i class="fas fa-info-circle icon text-purple-600"></i><strong>Dos franjas de terreno</strong> a ambos lados, delimitadas interiormente por la <u>zona de servidumbre</u> y exteriormente por dos <u>líneas paralelas a las aristas exteriores de la explanación</u> a <span class="pill-blue"><strong>100 m</strong></span> en <u>autopistas y autovías</u>, y <span class="pill-blue"><strong>50 m</strong></span> en el <u>resto de las carreteras</u>.</p></li>
+                                 <li><p><i class="fas fa-file-signature icon text-orange-600"></i>en las que, para la <u>realización de obras e instalaciones</u>, <u>obras de reparación o mejora en existentes</u>, así como para el <u>cambio de su uso</u> y <u>plantar o talar árboles</u>, se exige <strong>autorización previa</strong>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-ruler-horizontal icon"></i>Zona de limitación a la edificabilidad</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-ruler icon text-purple-600"></i>Se sitúa a:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><span class="pill-blue"><strong>50 m</strong></span> en <u>autopistas y autovías</u></li>
+                                            <li>y a <span class="pill-blue"><strong>25 m</strong></span> en el <u>resto</u>, con respecto a la <strong>arista exterior de la calzada</strong>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-map-pin icon"></i>En <strong>variantes de población</strong> y en <strong>nudos viarios</strong>, <strong>cambios de sentido</strong>, <strong>intersecciones</strong> y <strong>vías de giro</strong> siempre a <span class="pill-blue"><strong>50 m</strong></span>.</p></li>
+                                <li><p><i class="fas fa-compress-arrows-alt icon"></i>En el caso de <strong>taludes muy grandes</strong> que hagan caer la línea en el interior de las zonas de dominio público o servidumbre se hará <strong>coincidir con el borde exterior de la zona de servidumbre</strong>.</p></li>
+                                <li><p><i class="fas fa-edit icon text-orange-600"></i>El <span class="actor-pill">MITMS</span>, previo <u>informe no vinculante</u> de las <span class="actor-pill">comunidades autónomas</span> y <span class="actor-pill">entidades locales</span> afectadas a emitir en un plazo no superior a <span class="pill-blue">dos meses</span>, podrá, por razones geográficas o socioeconómicas, <strong>fijar una línea límite de edificación inferior</strong> a la establecida con carácter general, aplicable a determinadas carreteras estatales en zonas o tramos perfectamente delimitados.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-building-shield icon text-red-500"></i>Dentro de esta línea queda <strong>prohibida cualquier obra</strong> de:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><u>construcción</u>,</li>
+                                            <li><u>reconstrucción</u> o <u>ampliación</u>,</li>
+                                            <li>o <u>cambio de uso</u>,</li>
+                                            <li><strong>salvo</strong> las imprescindibles para la <strong>conservación y mantenimiento</strong> de las construcciones o instalaciones ya existentes.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-volume-up icon text-indigo-600"></i>Además, la <strong>edificación residencial</strong>, y la asimilada a la misma en lo relativo a <u>zonificación acústica</u> conforme a la legislación vigente en materia de ruido, estarán sometidas, con independencia de su distancia de separación con respecto a la carretera, a las <strong>restricciones</strong> que resulten del establecimiento de las <strong>zonas de servidumbre acústica</strong> que se definan como consecuencia de los <u>mapas de ruido</u> realizados por el <span class="actor-pill">MITMS</span>.</p></li>
+                                <li><p><i class="fas fa-hand-holding-usd icon text-green-600"></i>Será <strong>indemnizable la depreciación</strong> originada en las fincas contiguas a carreteras que se construyan, incluida la <strong>pérdida de edificabilidad</strong> que tuvieran reconocida las fincas sitas en las zonas de protección de dichas carreteras y no pudiera ejercerse en otras ubicaciones.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-charging-station icon text-teal-600"></i>El <span class="actor-pill">MITMS</span> podrá <strong>autorizar la colocación de instalaciones fácilmente desmontables</strong> entre el <u>borde exterior de la zona de dominio público</u> y el de la <u>zona de limitación a la edificabilidad</u>, especialmente:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><strong>puntos de recarga de vehículos</strong></li>
+                                            <li>y <strong>marquesinas</strong> e instalaciones que precisen para su correcto funcionamiento,</li>
+                                            <li>siempre que no se comprometa la <u>seguridad viaria</u>, la <u>adecuada explotación de la carretera</u> o la <u>utilización de la zona de servidumbre</u> para los fines previstos en la <span class="law-pill">Ley 37/2015 de Carreteras</span>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-project-diagram icon"></i>Aplicación de distancias</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>A efectos de aplicación de las distancias, los <u>nudos viarios</u>, los <u>ramales de enlace</u>, los <u>cambios de sentido</u>, las <u>intersecciones</u>, las <u>vías colectoras-distribuidoras</u> y las <u>calzadas laterales</u> se considerarán <strong>carreteras convencionales</strong>.</p></li>
+                                <li><p><i class="fas fa-road-circle-xmark icon text-purple-600"></i>A las <strong>vías de servicio no les serán de aplicación</strong> las zonas de protección de la carretera <strong>salvo el dominio público</strong>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-ad"></i></div>
+                <h2>3. Publicidad</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>A efectos de la <span class="law-pill"><strong>Ley 37/2015</strong></span> <strong>no se consideran publicidad</strong> los <span class="doc-pill"><strong>carteles informativos</strong></span> autorizados por el <span class="actor-pill">MITMS</span> que, según el <span class="law-pill">Reglamento de Carreteras de 1994</span>, vigente en lo que no se opone a la nueva Ley, son:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-concierge-bell icon"></i>Las <strong>señales de servicio</strong>.</li>
+                                <li><i class="fas fa-landmark icon"></i>Los <strong>carteles que indiquen</strong> <u>lugares de interés cultural, turístico, poblaciones, urbanizaciones</u> y <u>centros importantes de atracción</u> con acceso directo e inmediato desde la carretera.</li>
+                                <li><i class="fas fa-hard-hat icon"></i>Los que se refieran a <strong>actividades y obras</strong> que afecten a la carretera.</li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-store icon"></i>Los <strong>rótulos de los establecimientos mercantiles</strong> que sean <u>indicativos de su actividad</u>, que pueden ser autorizados si:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>su <strong>segunda mayor dimensión</strong> no es superior al <span class="pill-blue">10%</span> de su distancia al borde de calzada,</li>
+                                            <li>y su <strong>luminosidad y características</strong> no producen <u>deslumbramientos, confusión o distracción</u> en los conductores,</li>
+                                            <li>siempre que estén <strong>situados sobre los inmuebles</strong> o en su <u>inmediata proximidad</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-gas-pump icon"></i>Los que se refieran a los <strong>carburantes disponibles, marca y precio</strong> en la <u>estación de servicio más próxima</u>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-ban icon text-red-500"></i>El <strong>resto de carteles</strong> que tiendan a <u>promover la contratación de bienes o servicios</u>, puedan <u>producir deslumbramientos, confusión o distracción</u> a los usuarios de la carretera, o sean <u>incompatibles con la seguridad vial</u>, serán considerados como <span class="definition-pill"><strong>publicidad</strong></span>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>y <strong>no podrán colocarse fuera de los tramos urbanos</strong> si son visibles desde las calzadas de la carretera.</li>
+                                <li>Esta prohibición <strong>no dará en ningún caso derecho a indemnización</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-check-circle"></i></div>
+                <h2>4. Procedimiento de autorizaciones</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-file-alt icon"></i>Informes previos</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-blue-600"></i>En el caso de <strong>planes de infraestructuras</strong>, el <span class="doc-pill"><strong>informe de la DGC</strong></span> deberá:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>tener en cuenta las <u>previsiones futuras</u> de nuevas carreteras y de ampliación de las existentes,</li>
+                                            <li>indicando la <u>documentación a presentar</u> por el <span class="actor-pill">promotor</span></li>
+                                            <li>y los <u>criterios generales</u> que deben cumplirse en las futuras obras del plan.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-road icon text-purple-600"></i>A menor escala, en el caso de necesidad de <strong>accesos a la carretera</strong>, la solicitud de <span class="doc-pill"><strong>informes previos de viabilidad</strong></span> puede presentar una <u>descripción y esquema gráfico</u> suficientemente precisos de la actuación que pretenden realizar con el <u>tramo de carretera afectado</u> y sus <u>accesos y conexiones más cercanos</u>, incluyendo la situación de las <u>zonas de protección</u> de la carretera.</p></li>
+                                <li><p><i class="fas fa-check-double icon text-green-600"></i>En caso de que el <span class="actor-pill">promotor</span> consiga un <span class="doc-pill"><strong>informe de viabilidad favorable</strong></span>, para obtener la autorización de las obras deberá presentar un <span class="doc-pill"><strong>proyecto</strong></span> (según la entidad de la afección) con <u>todos los datos necesarios</u> y con el <u>grado de detalle</u> que se exija desde el <span class="actor-pill">Ministerio</span>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-cogs icon"></i>Procedimiento de autorización</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-blue-600"></i>Está definido en el <span class="law-pill"><strong>Reglamento de Carreteras</strong></span> y contempla las siguientes <strong>etapas</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-inbox icon"></i><strong>Recepción de la solicitud</strong> en la <span class="actor-pill">Demarcación</span> o <span class="actor-pill">Unidad de Carreteras</span>, y <strong>notificación al interesado</strong> de la <u>recepción de la solicitud</u> de autorización y de la necesidad de <u>abono de las tasas administrativas</u> por la gestión del expediente.</li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-file-import icon"></i><strong>Solicitud de informes internos</strong> a:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>el <u>servicio de proyectos y obras de la Demarcación</u> (para que evalúe posibles incidencias sobre proyectos en redacción o finalizados y obras en ejecución),</li>
+                                                        <li>y las <u>empresas adjudicatarias de los contratos de conservación y explotación</u> (para que evalúen las afecciones sobre la carretera).</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-reply icon"></i><strong>Preparación por la <span class="actor-pill">Demarcación</span> de la contestación</strong>, mediante la correspondiente <u>autorización</u> o mediante un <u>informe negativo</u>.</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>Si la <span class="actor-pill">Demarcación</span> no es competente, elevará informe a los <u>servicios centrales de la <span class="actor-pill">DGC</span></u> para que resuelva el <u>órgano competente</u> (<span class="actor-pill">Subdirector de Planificación y Explotación</span>, <span class="actor-pill">Director General de Carreteras</span>).</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-file-invoice-dollar icon"></i><strong>Antes de la remisión de la autorización</strong> y según las características de la solicitud, se notificará al interesado la <strong>necesidad de constitución de un <span class="doc-pill">aval</span></strong> para poder llevar a cabo las obras.</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>en caso de <strong>ocupación permanente del Dominio Público</strong> con alguna instalación se exigirá el pago de un <span class="definition-pill"><strong>canon de ocupación anual</strong></span>.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-file-signature"></i></div>
+                <h2>5. Informes vinculantes a instrumentos de planeamiento urbanístico y ordenación territorial</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>Acordada la <strong>redacción, revisión o modificación</strong> de un <span class="doc-pill">instrumento de planeamiento urbanístico</span> u <span class="doc-pill">ordenación territorial</span> que pudiera afectar a <u>carreteras estatales</u>, el <span class="actor-pill">órgano competente</span> para otorgar su aprobación inicial deberá:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>enviar</strong>, con anterioridad a dicha aprobación, el contenido del proyecto al <span class="actor-pill">MITMS</span>,</li>
+                                <li>para que <strong>emita</strong>, en el plazo de <span class="pill-blue">tres meses</span>, un <span class="doc-pill"><strong>informe</strong></span> comprensivo de las <u>consideraciones que estime convenientes</u> para la protección del dominio público.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-gavel icon text-purple-600"></i>Este <strong>informe</strong> tendrá <strong><u>carácter vinculante</u></strong> en lo que se refiere a las posibles <strong>afecciones a la <span class="definition-pill">Red de Carreteras del Estado</span></strong>.</p></li>
+                    <li><p><i class="fas fa-check-circle icon text-green-600"></i>Si transcurrido dicho plazo, <strong>no se hubiera evacuado el informe</strong> citado, se <strong>entenderá su conformidad</strong> con el mismo.</p></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-gavel"></i></div>
+                <h2>6. Aplicación del RDL 7/2015 por el que se aprueba el TRLey de Suelo y Rehabilitación Urbana en materia de explotación de carreteras.</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>El <span class="law-pill"><strong>RDL 7/2015</strong></span> tiene diferentes <strong>implicaciones</strong> sobre la explotación de carreteras:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-layer-group icon"></i><strong>Recoge la clasificación de los suelos</strong> en función de su <u>edificabilidad</u> (con la repercusión que esto tiene sobre los <span class="definition-pill">EDTUs</span>, publicidad, etc.),</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>indicando que solo el <strong>suelo urbanizado</strong> puede ejercer sus derechos a la edificación;</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-file-signature icon"></i><strong>establece que la <span class="actor-pill">administración competente</span> en carreteras</strong> deberá emitir <span class="doc-pill"><strong>informe determinante</strong></span> sobre los <u>instrumentos de ordenación urbanística</u> acerca de:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>la <u>afección</u></li>
+                                            <li>y del <u>impacto de la actuación</u> sobre la <strong>capacidad de las infraestructuras</strong>;</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-coins icon"></i>y <strong>recoge como deberes</strong> vinculados a la <u>promoción de las actuaciones de transformación urbanística</u> y a las <u>actuaciones edificatorias</u> el <strong>costear y ejecutar</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>las <strong>infraestructuras de conexión</strong> con las <u>redes generales de servicios</u></li>
+                                            <li>y las de <strong>ampliación y reforzamiento</strong> de las existentes.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-balance-scale"></i></div>
+                <h2>7. Régimen sancionador</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-book-open icon text-blue-600"></i>La <span class="law-pill"><strong>Ley 37/2015 de Carreteras</strong></span> regula en la <strong>sección 2ª de su capítulo III</strong> dedicado al <u>Uso y defensa de las carreteras</u>, las <strong>infracciones y sanciones</strong>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-list-ol icon text-purple-600"></i>Las <strong>infracciones</strong> son catalogadas como:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>muy graves</strong>,</li>
+                                <li><strong>graves</strong></li>
+                                <li>y <strong>leves</strong>,</li>
+                            </ul>
+                        </div>
+                    </li>
+                     <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-calendar-times icon text-orange-600"></i><strong>Prescribiendo</strong> a los:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="pill-blue"><strong>6</strong></span>, <span class="pill-blue"><strong>4</strong></span> y <span class="pill-blue"><strong>1</strong></span> año, respectivamente.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-euro-sign icon text-indigo-600"></i>Las <strong>infracciones serán sancionadas</strong> atendiendo a los <u>daños producidos</u>, al <u>riesgo creado</u> y a la <u>intencionalidad del causante</u>, con las siguientes <strong>multas</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>infracciones <strong>leves</strong> de <span class="pill-blue">300</span> a <span class="pill-blue">3.000 €</span>,</li>
+                                <li>infracciones <strong>graves</strong> de <span class="pill-blue">3.001</span> a <span class="pill-blue">15.000 €</span>,</li>
+                                <li>e infracciones <strong>muy graves</strong> de <span class="pill-blue">15.001</span> a <span class="pill-blue">300.000 €</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-hourglass-end icon text-teal-600"></i>Las <strong>sanciones</strong> tienen como <strong>plazos de prescripción</strong> <span class="pill-blue"><strong>3, 2 y 1 año</strong></span>, respectivamente, según la <span class="law-pill"><strong>Ley 40/2015 del Régimen Jurídico del Sector Público</strong></span>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-user-tie icon text-green-600"></i>La <strong>imposición de sanciones</strong> por infracciones:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>leves</strong> corresponderá al <span class="actor-pill">Delegado del Gobierno</span>;</li>
+                                <li>la de las <strong>graves</strong>, al <span class="actor-pill">Director General de Carreteras</span></li>
+                                <li>y la de las <strong>muy graves</strong>, al <span class="actor-pill">Ministro de TMS</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                     <li><p><i class="fas fa-exclamation-circle icon text-red-500"></i>La <strong>imposición de la sanción</strong> que corresponda será <strong>independiente</strong> de la <u>obligación de indemnizar los daños y perjuicios causados</u>, y de la de <u>restituir o reponer las cosas a su estado anterior</u>.</p></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
