@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T22. Explotación de carreteras (II)</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .doc-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .doc-pill { background-color: #dcfce7; color: #166534; border: 1px solid #4ade80; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-truck-monster"></i> MEB1T22. Explotación de carreteras (II) <i class="fas fa-road"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-truck-loading"></i></div>
+                <h2>1. Transportes especiales. Nota de Servicio 4/2023</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-exclamation-triangle icon text-red-500"></i>La circulación de <span class="definition-pill"><strong>vehículos especiales</strong></span> implica <strong>factores de riesgo</strong> para la <u>seguridad vial</u> y el <u>deterioro de la infraestructura</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-check-circle icon text-green-600"></i>Por consiguiente, su circulación <strong>sólo debe ser autorizada</strong> si:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>aporta un <strong>interés económico general</strong></li>
+                                <li>y ante la <strong>imposibilidad de otras alternativas</strong> de transporte.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-blue-600"></i>De acuerdo con el <span class="law-pill"><strong>Reglamento General de Vehículos</strong></span>, el <span class="actor-pill">órgano competente en materia de tráfico</span> puede conceder las <strong>autorizaciones</strong> por un <u>número limitado de circulaciones</u> o por un <u>plazo determinado</u>,</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>previo <span class="doc-pill"><strong>informe vinculante</strong></span> del <span class="actor-pill">titular de la vía</span>, cuando se supere la <u>geometría</u> o <u>cargas máximas por eje</u> permitidas.</li>
+                                <li>La autorización propiamente dicha corresponde a la <span class="actor-pill">DGT</span>, salvo que el itinerario discurra íntegramente por <span class="actor-pill">Cataluña</span>, <span class="actor-pill">Navarra</span> o <span class="actor-pill">País Vasco</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-file-alt icon text-purple-600"></i>La <span class="actor-pill">SG de Planificación y Explotación de la DGC</span> ha elaborado la <span class="law-pill"><strong>Nota de Servicio 4/2023</strong></span> sobre <u>instrucciones para la emisión de los informes preceptivos y vinculantes</u> relativos a solicitudes de autorización de transportes especiales.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-sitemap icon text-orange-600"></i>En función de sus dimensiones y cargas, se distinguen <strong>cuatro categorías</strong> de transporte especial:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="definition-pill"><strong>genérico</strong></span>, se considera <u>informado favorablemente</u> con carácter general.</li>
+                                <li><span class="definition-pill"><strong>ordinario</strong></span>, <u>no necesita un estudio específico</u>.</li>
+                                <li><span class="definition-pill"><strong>extraordinarios y excepcionales</strong></span>, necesitan un <u>estudio específico</u> que acredite que la afección a la carretera <u>no resulta inadmisible</u>, pudiendo quedar el informe favorable condicionado a la aportación por el titular de un <span class="doc-pill"><strong>certificado de indivisibilidad de la carga</strong></span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-concierge-bell"></i></div>
+                <h2>2. Áreas de servicio e instalaciones de servicio</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-map-pin icon"></i>Áreas de servicio</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Son <strong>elementos funcionales</strong> de la carretera, formando parte del <strong><u>dominio público viario</u></strong>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-bullseye icon text-purple-600"></i>Diseñados para <strong>albergar instalaciones</strong> que satisfagan a los usuarios (<u>gasolineras</u>, <u>restaurantes</u>, <u>hoteles</u>, <u>talleres</u>, <u>zona de descanso</u>, etc.),</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>estando <strong>prohibidas</strong> las actividades de <u>espectáculo o diversión</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-gavel icon text-orange-600"></i>El <strong>diseño</strong> de las áreas de Servicio está <strong>regulado</strong> por la <span class="law-pill">Ley de Carreteras</span> y su <span class="law-pill">Reglamento</span>, así como la <span class="law-pill">Orden Circular 320/94</span>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-map-marker-alt icon text-indigo-600"></i>En cuanto a su <strong>ubicación</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><strong>no se podrán instalar</strong> en <u>variantes o circunvalaciones</u>, extendiéndose la prohibición a los <span class="pill-blue">5 km</span> anteriores y posteriores.</li>
+                                            <li>Actualmente <strong>no existe limitación alguna de distancia</strong> entre áreas de servicio, salvo las que deriven de razones de <u>seguridad vial</u> o <u>explotación de la carretera</u>, recogidas en la normativa vigente.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-door-closed icon text-teal-600"></i>Las áreas de servicio cuentan con <strong>accesos directos</strong> desde la carretera, y desde ellas <strong>no se puede tener acceso</strong> a <u>propiedades colindantes</u> o a <u>otras carreteras</u>. El <strong>cerramiento</strong> de la autovía/autopista las <strong>rodea</strong>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-gas-pump icon"></i>Instalaciones de servicio</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Las instalaciones de servicio son aquellas que <strong>satisfacen las necesidades de los usuarios</strong> como <u>estaciones de servicio</u>, <u>restaurantes</u>, <u>hoteles</u>, <u>talleres</u>, etc.</p></li>
+                                <li><p><i class="fas fa-key icon text-purple-600"></i>pero que a diferencia de las áreas de servicio son <strong><u>propiedades privadas</u></strong> y <strong>no son de dominio público</strong>.</p></li>
+                                <li><p><i class="fas fa-road-barrier icon text-orange-600"></i>No obstante, por su proximidad a la carretera les son de aplicación las <strong>limitaciones a la propiedad</strong> que establece la <span class="law-pill">Ley de carreteras</span>.</p></li>
+                                <li><p><i class="fas fa-link icon text-indigo-600"></i>En <strong>autovías y autopistas</strong> los accesos a una instalación de servicio deben ser <strong>siempre a través de <u>enlaces</u> o <u>vías de servicio</u></strong> conectadas con ellos.</p></li>
+                                <li><p><i class="fas fa-road-circle-check icon text-teal-600"></i>En <strong>carreteras convencionales</strong> se puede admitir <strong>accesos directos</strong> cuando esté suficientemente <u>justificada la imposibilidad</u> de otro tipo de acceso.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-car-on"></i></div>
+                <h2>3. Aparcamientos seguros</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-blue-600"></i>La <span class="law-pill"><strong>Ley 37/2015 de Carreteras</strong></span> define los <span class="definition-pill"><strong>aparcamientos seguros</strong></span> como aquellas:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>zonas dotadas de instalaciones</strong> destinadas a <u>facilitar el estacionamiento temporal de vehículos</u>, fundamentalmente destinados al <u>transporte</u>,</li>
+                                <li>en <strong>condiciones de seguridad</strong>,</li>
+                                <li>ubicadas en la <strong>proximidad de carreteras</strong> o sus <u>zonas de influencia</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-check-circle icon text-green-600"></i>Deben incluir <strong>servicios básicos</strong> como:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>duchas y aseos</u>,</li>
+                                <li><u>internet</u></li>
+                                <li>y <u>opciones de compra de alimentos</u> para proporcionar un <strong>confort estándar</strong>,</li>
+                                <li>y reunir condiciones de <strong>accesibilidad universal</strong> para <u>personas con discapacidad</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-user-tie icon text-purple-600"></i>Corresponde al <span class="actor-pill"><strong>MITMS</strong></span>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>verificar el cumplimiento</strong> de los requisitos que habrán de cumplir los aparcamientos seguros,</li>
+                                <li>y <strong>gestionar la <span class="plan-pill">Plataforma Nacional de Aparcamiento Seguro y Protegido</span></strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-globe-europe icon text-orange-600"></i>La <span class="actor-pill"><strong>Comisión Europea</strong></span> ha elaborado un <strong>estándar</strong> para <u>catalogar los aparcamientos seguros para camiones</u>, que contempla:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>unos <strong>servicios mínimos</strong></li>
+                                <li>y <strong>cuatro categorías</strong>, según los niveles de seguridad que ofrecen:
+                                    <ul class="deeper-nested-list">
+                                        <li><i class="fas fa-medal" style="color: #CD7F32;"></i>bronce,</li>
+                                        <li><i class="fas fa-medal" style="color: #C0C0C0;"></i>plata,</li>
+                                        <li><i class="fas fa-medal" style="color: #FFD700;"></i>oro</li>
+                                        <li><i class="fas fa-gem" style="color: #E5E4E2;"></i>y platino.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-directions"></i></div>
+                <h2>4. Accesos a la Red de Carreteras del Estado: normativa aplicable</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-blue-600"></i>Los <strong>accesos a la <span class="definition-pill">Red de Carreteras del Estado</span></strong> se regulan en:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>la <span class="law-pill"><strong>Ley de Carreteras 37/2015</strong></span>,</li>
+                                <li>en la <span class="law-pill"><strong>instrucción 3.1-IC</strong></span></li>
+                                <li>y en la <span class="law-pill"><strong>Orden de 16 de diciembre de 1997</strong></span> de accesos a las carreteras del Estado, las vías de servicio y la construcción de instalaciones de servicios.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-purple-600"></i>Se consideran <span class="definition-pill"><strong>accesos</strong></span> a una carretera estatal:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>las <strong>conexiones</strong> de ésta con sus <u>vías de servicio</u> o con <u>otras vías no estatales</u>,</li>
+                                <li>y las <strong>entradas y salidas directas</strong> a <u>núcleos urbanos</u>, <u>industriales</u>, y a <u>fincas colindantes</u>.</li>
+                                <li>Son <span class="definition-pill"><strong>accesos directos</strong></span> aquellos en los que la incorporación de los vehículos se produce <strong>sin utilizar las conexiones de otras vías públicas</strong> con la carretera.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-ban icon text-red-500"></i>Se <strong>prohíben los accesos directos</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p>a las <u>autopistas y autovías</u>, y a las <u>nuevas carreteras que no sean vías de servicio</u>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>Los accesos a las autopistas y autovías se realizarán a través de <strong>enlaces</strong> y a nuevas carreteras a través de sus <strong>nudos</strong> o de <strong>vías de servicio</strong>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p>Tampoco se autorizarán accesos directos a los <u>ramales de los enlaces e intersecciones</u> y a los <u>carriles de cambio de velocidad</u>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p>En el <strong>resto de carreteras</strong>, las <u>propiedades colindantes</u> tampoco tendrán acceso directo, <strong>salvo</strong> que:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>se realice a través de <u>vías de servicio</u>,</li>
+                                            <li>o el acceso sea de <u>interés público</u>,</li>
+                                            <li>o no sea posible <u>otro tipo de acceso</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-user-tie icon text-orange-600"></i>La <span class="law-pill"><strong>Orden de Accesos</strong></span> otorga al <span class="actor-pill"><strong>Director General de Carreteras</strong></span> las <strong>competencias</strong> para:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>limitar</strong> los accesos a las carreteras estatales,</li>
+                                <li><strong>establecer</strong> los lugares en que pueden construirse,</li>
+                                <li>y <strong>reordenar</strong> los accesos existentes;</li>
+                                <li><strong>otorgar, modificar o suspender</strong> las <u>autorizaciones de acceso</u> y para las <u>instalaciones de servicio</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-road-bridge"></i></div>
+                <h2>5. Travesías y tramos urbanos</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-blue-600"></i>La <span class="law-pill"><strong>Ley 37/2015 de Carreteras</strong></span> define:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="definition-pill"><strong>Travesías</strong></span> como las partes de carretera en las que existen <u>edificaciones consolidadas</u> al menos en <u>dos terceras partes</u> de la longitud de ambas márgenes y un <u>entramado de calles conectadas</u> con aquélla en al menos una de sus márgenes;</li>
+                                <li>y los <span class="definition-pill"><strong>tramos urbanos</strong></span> como tramos de carretera estatal que discurren por <u>suelo clasificado como urbano</u> en el correspondiente instrumento de planeamiento urbanístico y reconocidos por un <span class="doc-pill">estudio de delimitación de tramos urbanos</span> aprobado por el <span class="actor-pill">Ministerio</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-file-signature icon text-purple-600"></i>El <strong>otorgamiento de autorizaciones</strong> para realizar obras:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>en la <u>zona de dominio público y servidumbre</u> de los <strong>tramos urbanos que no sean travesía</strong> corresponde al <span class="actor-pill">Ministerio</span>, previo <span class="doc-pill">informe</span> del <span class="actor-pill">Ayuntamiento</span> correspondiente.</li>
+                                <li>En las <strong>travesías que no sean tramo urbano</strong> el otorgamiento es <strong>igual</strong>, incluso en las restantes <u>zonas de protección</u> (afección y limitación a la edificabilidad) de la carretera.</li>
+                                <li>Y, por último, en las <strong>travesías que sí sean tramo urbano</strong>, el otorgamiento le corresponde al <span class="actor-pill">Ministerio</span>, previo <span class="doc-pill">informe</span> del <span class="actor-pill">ayuntamiento</span>, pero <strong>solo en la zona de dominio público</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-times-circle icon text-red-500"></i>El <strong>silencio administrativo</strong> respecto a las solicitudes de autorización indicadas tendrá <strong>siempre carácter negativo</strong>.</p></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-map-marked-alt"></i></div>
+                <h2>6. Estudios de delimitación de tramos urbanos</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-blue-600"></i>La <span class="law-pill"><strong>Ley 37/2015 de Carreteras</strong></span> establece que en los <span class="doc-pill"><strong>estudios de delimitación de tramos urbanos (EDTU)</strong></span> el <span class="actor-pill">MITMS</span> fijará, para la fracción de <span class="definition-pill">Red de Carreteras del Estado</span> estudiada:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>los tramos que se consideran <strong>urbanos</strong> y los que se consideran <strong>travesías</strong>.</li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p>Asimismo, se fijará en todos los casos:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>la <strong>línea límite de edificación</strong></li>
+                                            <li>y la <strong>zona de dominio público</strong></li>
+                                            <li>y, en los urbanos, también la de <strong>servidumbre</strong>,</li>
+                                            <li>todo ello según las <u>circunstancias de cada margen de la vía</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p>La <strong>anchura</strong> definida por dicha línea límite de edificación:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                             <li>podrá ser <strong>no uniforme</strong>,</li>
+                                             <li>y la misma podrá fijarse a <strong>distancia inferior</strong> a la prescrita con carácter general por la Ley, de acuerdo con el <u>planeamiento urbanístico previamente existente</u> a la entrada en vigor de la Ley.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-paper-plane icon text-purple-600"></i>A efectos de lo previsto en el apartado anterior, el <span class="actor-pill">MITMS</span> <strong>notificará</strong> al <span class="actor-pill">ayuntamiento</span> y <span class="actor-pill">comunidad autónoma</span> afectados el <span class="doc-pill">EDTU</span> a fin de que en el plazo de <span class="pill-blue"><strong>dos meses</strong></span> a partir del día siguiente a la fecha de dicha notificación emitan <span class="doc-pill"><strong>informe</strong></span>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tasks icon text-orange-600"></i>Procedimiento de aprobación:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>En caso de <strong>conformidad</strong>, o si el <span class="actor-pill">ayuntamiento</span> o la <span class="actor-pill">comunidad afectada</span> <strong>no contestasen en plazo</strong>, el <span class="doc-pill">EDTU</span> podrá ser <strong>aprobado por el <span class="actor-pill">MITMS</span></strong>.</li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p>En caso de <strong>disconformidad</strong>, que deberá ser <u>motivada</u>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>el <span class="actor-pill">MITMS</span> decidirá si procede continuar con la tramitación,</li>
+                                            <li>y en este caso la <strong>elevará al <span class="actor-pill">Consejo de Ministros</span></strong>, que resolverá si procede aprobar el estudio de delimitación.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-bullhorn icon text-indigo-600"></i>Con independencia de la información oficial mencionada, se llevará a cabo un <strong>trámite de información pública</strong> durante un período de <span class="pill-blue"><strong>treinta días hábiles</strong></span>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Las <strong>observaciones</strong> en este trámite solamente se podrán tener en consideración si versan sobre la <u>repercusión que el estudio tendría</u> en lo referente a <strong>limitaciones a la propiedad</strong>, <strong>régimen de autorizaciones</strong>, <strong>infracciones</strong> y <strong>sanciones</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-sync-alt icon text-green-600"></i>Los <span class="doc-pill">EDTUs</span> deberán <strong>actualizarse</strong>, siguiendo el procedimiento indicado, cuando las circunstancias así lo demanden, y como <strong>máximo cada <span class="pill-blue">cinco años</span></strong> después de su aprobación definitiva.</p></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-people-arrows"></i></div>
+                <h2>7. Cesión de tramos. Orden TMA/1160/2021, de cesión de tramos a Ayuntamientos</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-gavel icon text-blue-600"></i>La <span class="law-pill"><strong>Ley de Carreteras 37/2015</strong></span> establece que el <span class="actor-pill">MITMS</span> <strong>promoverá los acuerdos oportunos</strong> para <strong>transferir</strong> a la administración que corresponda las <u>carreteras o tramos de las mismas</u> que, siendo de titularidad del Estado, <strong>no cumplan los requisitos precisos</strong> para formar parte de la <span class="definition-pill">RCE</span>.</p></li>
+                    <li><p><i class="fas fa-file-alt icon text-purple-600"></i>La <strong>cesión de tramos urbanos</strong> de carreteras estatales está <strong>regulada</strong> por la <span class="law-pill"><strong>Orden TMA/1160/2021</strong></span>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-user-friends icon text-orange-600"></i>El <span class="doc-pill"><strong>expediente</strong></span> se <strong>promoverá</strong> a instancia del <span class="actor-pill">Ayuntamiento</span> o del <span class="actor-pill">MITMS</span>, y será <strong>resuelto</strong> por el <span class="actor-pill">Consejo de Ministros</span>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                             <ul class="nested-list">
+                                 <li><strong>excepcionalmente</strong> podrá resolverlo el <span class="actor-pill">Ministro</span> cuando exista <u>acuerdo entre ambas partes</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-check-double icon text-indigo-600"></i>Una carretera estatal o un tramo determinado adquieren la <strong>condición de vía urbana</strong> si se cumplen a la vez estas <strong>dos condiciones</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>que el <strong>tráfico</strong> de la carretera sea <strong>mayoritariamente urbano</strong>,</li>
+                                <li>y que <strong>exista alternativa viaria</strong> que mantenga la <u>continuidad de la RCE</u>.</li>
+                                <li>Se trata de una <strong>situación habitual</strong> con la construcción de <u>autovías</u> y <u>variantes de población</u> de carreteras convencionales.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-file-signature icon text-teal-600"></i>El <strong>acuerdo se formalizará</strong> sobre la base de un <span class="doc-pill"><strong>proyecto de acondicionamiento</strong></span> redactado por la <span class="actor-pill">Dirección General de Carreteras del MITMS</span>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>La <strong>ejecución de las obras</strong> será contratada por el <span class="actor-pill">MITMS</span>, que <strong>asumirá su financiación</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-exchange-alt icon text-green-600"></i>Una vez firmada el <span class="doc-pill"><strong>acta de recepción</strong></span> de las obras, el <span class="actor-pill">MITMS</span> dictará <span class="doc-pill"><strong>resolución</strong></span> por la que se <strong>transferirá al <span class="actor-pill">Ayuntamiento</span> la titularidad</strong> del tramo de carretera con todos sus <u>elementos auxiliares y equipamientos</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-key icon text-red-500"></i>Desde ese momento y sin más trámites, el <span class="actor-pill"><strong>Ayuntamiento</strong></span>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>asumirá plenamente la titularidad</strong> del tramo</li>
+                                <li>y será <strong>responsable de su conservación y explotación</strong>,</li>
+                                <li>sin perjuicio del <u>régimen de responsabilidad del contratista</u> establecido en la <span class="law-pill">LCSP</span> para las obras por él ejecutadas.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-times-circle icon text-gray-600"></i>El tramo de carretera entregado al <span class="actor-pill">Ayuntamiento</span> será <strong>excluido de la <span class="definition-pill">Red de Carreteras del Estado</span></strong> y de sus <u>inventarios y catálogos</u>.</p></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
