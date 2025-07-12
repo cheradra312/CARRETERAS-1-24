@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T23. Innovación aplicada a la movilidad por carretera</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .doc-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .doc-pill { background-color: #dcfce7; color: #166534; border: 1px solid #4ade80; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-lightbulb"></i> MEB1T23. Innovación aplicada a la movilidad por carretera <i class="fas fa-road"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-cogs"></i></div>
+                <h2>1. Innovación aplicada a la movilidad por carretera, sistemas inteligentes de transporte cooperativos (C-ITS)</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>Los <span class="definition-pill"><strong>sistemas inteligentes de transporte (ITS)</strong></span> son un <strong>conjunto de aplicaciones</strong> <u>informáticas</u>, <u>electrónicas</u> o de <u>comunicaciones</u> para:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>mejorar</strong> la <u>movilidad</u>, <u>seguridad</u> y <u>productividad</u> del transporte,</li>
+                                <li><strong>optimizando</strong> la <u>utilización de las infraestructuras</u></li>
+                                <li>y <strong>aumentando</strong> la <u>eficiencia energética</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tasks icon text-purple-600"></i>Destacan los siguientes <strong>ITS relacionados con las carreteras</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-car-side icon"></i>Los <strong>equipos y sistemas de aforo</strong> de vehículos y <strong>detección</strong> de sus características.</li>
+                                <li><i class="fas fa-credit-card icon"></i>Los <strong>sistemas de cobro electrónico de peajes o tasas</strong> por el uso de infraestructuras, <u>sin necesidad de parar el vehículo</u>.</li>
+                                <li><i class="fas fa-satellite-dish icon"></i>Los <strong>equipos para la captación de datos ajenos</strong> a la propia infraestructura y al vehículo, como <u>estaciones meteorológicas</u>, <u>detectores de niebla</u>, <u>detectores de temperatura del pavimento</u>, <u>células fotoeléctricas</u>.</li>
+                                <li><i class="fas fa-archway icon"></i>Los <strong>sistemas para la gestión en túneles</strong>.</li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-network-wired icon"></i><strong>Comunicación entre vehículos y con la infraestructura</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>están en desarrollo <strong>sistemas <span class="definition-pill">I2V</span></strong> en los que los <u>sistemas a bordo del vehículo</u> gestionarían los datos recibidos a través de los <u>sensores de comunicación con la infraestructura</u>,</li>
+                                            <li>consiguiendo <strong>mantener niveles de seguridad altos</strong> en la conducción,</li>
+                                            <li><strong>informando</strong> de la posibilidad de <u>cambiar el itinerario</u> en función de los problemas detectados en la vía, etc.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-hands-helping icon text-orange-600"></i>Los <span class="definition-pill"><strong>ITS cooperativos (C-ITS)</strong></span> son el área de los ITS que se ocupa del <strong>intercambio de información en tiempo real</strong> entre los <u>usuarios de la carretera</u> y la <u>infraestructura</u>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>permitiendo <strong>aplicaciones y servicios avanzados</strong> con un enorme potencial para <strong>aumentar</strong> la <u>comodidad</u>, la <u>movilidad</u> y la <u>seguridad</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-robot"></i></div>
+                <h2>2. Vehículo autónomo y conectado</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>El <span class="definition-pill"><strong>vehículo autónomo</strong></span> es capaz de:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>desplazarse por sí mismo</strong>, sin la interacción del conductor,</li>
+                                <li><strong>respetando</strong> las <u>señales y normas de tráfico</u>,</li>
+                                <li>pudiendo <strong>tomar decisiones</strong> en función de todo aquello que le rodea</li>
+                                <li>y pudiendo <strong>calcular de nuevo la ruta</strong> hacia su destino ante cualquier imprevisto durante el viaje.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-chart-line icon text-green-600"></i>Se espera que la <strong>conducción autónoma revolucione el tráfico rodado</strong> mitigando las externalidades actuales, especialmente al:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>reducir los accidentes</strong> (el <u>factor humano</u> se considera el responsable del <span class="pill-blue">90%</span> de los accidentes de tráfico),</li>
+                                <li><strong>reducir la contaminación y la congestión</strong> (al ser el vehículo autónomo más eficiente en la conducción).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-users icon text-purple-600"></i>Además, el coche autónomo puede contribuir a una <strong>movilidad más inclusiva</strong>, haciendo posible que personas que no pueden conducir (algunas <u>personas de edad avanzada</u> o con <u>discapacidad</u>, <u>menores</u> o <u>personas sin carné</u>) puedan desplazarse en estos vehículos sin necesidad de depender de otra persona.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-exclamation-triangle icon text-red-500"></i>A pesar de estas ventajas, existen aún <strong>muchas dudas y desafíos a superar</strong>, ya que la operación de los vehículos autónomos implica:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>no solo el <strong>desarrollo de los vehículos</strong></li>
+                                <li>sino también el <strong>desarrollo de todo el entorno de conducción</strong> (<u>infraestructura digital y física</u>, conectadas entre sí y con el vehículo),</li>
+                                <li>así como la consideración de un gran abanico de <strong>aspectos <u>éticos</u>, <u>regulatorios</u> y <u>socio-económicos</u></strong> a tener en cuenta.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tasks icon text-orange-600"></i>La <span class="plan-pill"><strong>Estrategia de Movilidad Segura, Sostenible y Conectada 2030</strong></span> del <span class="actor-pill">MITMS</span> incluye una <strong>línea de actuación</strong> centrada en la <u>automatización del transporte</u> y el <u>impulso a vehículos conectados y autónomos</u>, dentro del <span class="definition-pill"><strong>Eje 5 de Movilidad Inteligente</strong></span>. En particular, se propone:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-road icon"></i><strong>Avanzar en el diseño de una <span class="doc-pill">Hoja de Ruta</span></strong> para el impulso del vehículo autónomo, que será desarrollada en el seno de un <u>grupo interministerial</u> que partirá de un “<u>mapa</u>” de las normas y estándares existentes que afectan al vehículo autónomo, con identificación de las <u>autoridades competentes</u>.</li>
+                                <li><i class="fas fa-map-marked-alt icon"></i><strong>Caracterizar las carreteras estatales</strong> en función de su <u>idoneidad</u> para ser testadas para la conducción autónoma y conectada.</li>
+                                <li><i class="fas fa-vial icon"></i><strong>Analizar la creación de un <span class="definition-pill">sandbox regulatorio</span></strong> o <u>entorno seguro</u> desde el punto de vista de la regulación, en el que puedan <u>probarse innovaciones tecnológicas</u> antes de su llegada al mercado, bajo <u>estricto seguimiento</u> de las autoridades y con <u>máximas garantías</u> para los participantes.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-long-arrow-alt-right icon text-indigo-600"></i>Se trata de <strong>medidas concretas para los próximos años</strong> que ayudarán al <u>desarrollo a largo plazo</u> de la conducción autónoma. Y es que aunque pasarán muchos años, incluso décadas, hasta ver vehículos autónomos operando masivamente en las calles, los vehículos autónomos son ya una <strong>realidad tangible</strong> en algunas partes del mundo.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-globe-europe icon text-teal-600"></i><span class="actor-pill"><strong>Alemania</strong></span>, principal productor automovilístico de Europa está <strong>avanzando en la regulación</strong> de la conducción autónoma.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Desde el <span class="actor-pill">Gobierno alemán</span> se defiende que este marco regulatorio ofrecerá la <strong>oportunidad de avanzar</strong> en la <u>investigación y el desarrollo</u> y de hacer que la movilidad del futuro sea más <u>versátil</u>, más <u>segura</u>, más <u>respetuosa con el medio ambiente</u> y más <u>orientada al usuario</u>.</li>
+                                <li>Numerosos <span class="actor-pill">fabricantes de vehículos alemanes</span> aprovecharán este marco regulatorio para <strong>acelerar la investigación</strong> en el campo y seguir <strong>posicionándose estratégicamente</strong> en él.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-flag icon text-red-600"></i>En <strong>nuestro país</strong>, también se ha avanzado recientemente en la puesta en marcha de vehículos autónomos, en particular, de <strong>autobuses autónomos</strong>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>En <span class="pill-blue"><strong>febrero de 2021</strong></span>, se puso en circulación un <strong>autobús autónomo cero emisiones</strong> en las calles de <strong>Málaga</strong>.</li>
+                                <li>Era la <strong>primera vez en Europa</strong> que un vehículo de alta capacidad entraba en servicio en <u>situación de tráfico real</u> en una ciudad.</li>
+                                <li>El autobús circuló en <strong>fase de pruebas durante un mes</strong>, realizando el trayecto desde el <span class="actor-pill">Ayuntamiento de Málaga</span> hasta el <u>puerto</u>, y los pasajeros que querían probar el funcionamiento podían <strong>reservar su plaza</strong> a través de una aplicación.</li>
+                                <li>Aunque la conducción era autónoma, durante las pruebas había <strong>siempre un conductor</strong> para <u>revisar la operativa</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-brain"></i></div>
+                <h2>3. Carreteras inteligentes</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Las <span class="definition-pill"><strong>carreteras inteligentes</strong></span> son vías que incorporan <strong>tecnología avanzada</strong> en materia de <u>seguridad</u>, <u>carga de vehículos</u> y <u>conectividad</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-bullseye icon text-purple-600"></i>Tienen <strong>tres objetivos claros</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>aumentar la eficiencia</strong> en la conducción,</li>
+                                <li><strong>mejorar la seguridad</strong></li>
+                                <li>y <strong>reducir la contaminación</strong> en el medio ambiente.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-satellite-dish"></i></div>
+                <h2>4. Tecnologías aplicables para la tarificación de las carreteras</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-gavel icon text-blue-600"></i>El <strong>pago por uso</strong> de las carreteras en Europa está <strong>regulado</strong> por la <span class="law-pill"><strong>Directiva 2019/520</strong></span> relativa a la <u>interoperatividad de los sistemas de telepeaje</u> de las carreteras y por la que se facilita el <u>intercambio transfronterizo de información</u> sobre el impago de cánones de carretera en la Unión.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-cogs icon text-purple-600"></i>Existen <strong>dos posibles tecnologías</strong> para la implantación de los sistemas de pago por uso.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-broadcast-tower icon"></i>Una está basada en dispositivos de comunicación de corto alcance <span class="definition-pill"><strong>DSRC (Dedicated Short Range Communication)</strong></span>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>donde cada vehículo instala un pequeño <strong>equipo embarcado</strong></li>
+                                            <li>y el <strong>pago se activa</strong> cuando ese equipo es detectado por un <strong>pórtico</strong> situado en la carretera.</li>
+                                            <li>Para permitir la <strong>tarificación en función de la distancia recorrida</strong> es necesario que exista uno de esos pórticos por cada <u>sentido y tramo</u> de la vía donde exista una <u>entrada o salida</u>.</li>
+                                            <li>Este es el sistema que actualmente usa el <span class="definition-pill"><strong>Via-T</strong></span> en <span class="actor-pill">España</span>, siendo una <strong>solución óptima</strong> en las <u>autopistas</u> donde el número de entradas y salidas es <u>reducido</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-satellite icon"></i>La segunda tecnología considerada es la <strong>unión de la <u>navegación por satélite</u> y la <u>telefonía móvil</u></strong>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>En este caso el <strong>equipo embarcado es más complejo</strong>, ya que es capaz de <strong>detectar de forma autónoma</strong>, basado en la <u>posición estimada</u>, el uso de la infraestructura sujeta a cobro <strong>sin necesidad de pórticos</strong>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-network-wired"></i></div>
+                <h2>5. Digitalización de la Red de Carreteras del Estado</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>El <span class="actor-pill">MITMS</span> avanza hacia una <strong>gestión digital</strong> de la <span class="definition-pill">Red de Carreteras del Estado</span>.</p></li>
+                    <li><p><i class="fas fa-bullseye icon text-purple-600"></i>Afrontando este reto en su <span class="plan-pill"><strong>Estrategia de Movilidad Segura, Sostenible y Conectada 2030</strong></span>, así como desde la Presidencia de la <span class="actor-pill"><strong>Comisión Interministerial para la incorporación de la metodología <span class="definition-pill">BIM</span></strong></span> (Building information modelling) en la licitación pública.</p></li>
+                    <li><p><i class="fas fa-cogs icon text-orange-600"></i><span class="definition-pill"><strong>BIM (Building Information Modeling)</strong></span> es una <strong>metodología de trabajo colaborativa</strong> para la <u>gestión de proyectos</u> a través de una <strong>maqueta digital</strong>, que conforma una <strong>gran base de datos</strong> que permite <u>gestionar los elementos</u> que forman parte de la infraestructura durante todo su <strong>ciclo de vida</strong>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-rocket icon text-indigo-600"></i>La metodología <span class="definition-pill">BIM</span> está suponiendo una <strong>verdadera revolución tecnológica</strong> para la <u>cadena de producción y gestión de las infraestructuras</u>, permitiendo:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>construir</strong> de una manera <strong>más eficiente</strong>,</li>
+                                <li><strong>reduciendo costes</strong></li>
+                                <li>al tiempo que permite a <span class="actor-pill">proyectistas</span>, <span class="actor-pill">constructores</span> y demás <span class="actor-pill">agentes implicados</span> <strong>trabajar de forma colaborativa</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-landmark icon text-teal-600"></i>Desde el punto de vista <strong>institucional</strong>, el uso de la metodología <span class="definition-pill">BIM</span> es un <strong>facilitador</strong> de:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>una política de <strong>construcción sostenible</strong>,</li>
+                                <li>de la <strong>eficiencia del gasto público</strong>,</li>
+                                <li>y de la <strong>competitividad nacional</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-user-tie icon text-indigo-600"></i>El <span class="actor-pill"><strong>MITMS</strong></span> ostenta la <strong>Presidencia y Secretaría</strong> de la <span class="actor-pill">Comisión Interministerial para la incorporación de la Metodología BIM en la licitación pública</span>, que contempla:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>la <u>gestión sostenible de los recursos</u> y la <u>economía circular</u>,</li>
+                                <li>así como la <u>innovación digital</u>,</li>
+                                <li>y ha incluido el uso la metodología BIM en la <span class="plan-pill"><strong>Estrategia de Movilidad segura, sostenible y conectada 2030</strong></span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-globe icon text-green-600"></i>Con ello el <span class="actor-pill">MITMS</span> <strong>alinea</strong> la política de transportes e infraestructuras de <span class="actor-pill">España</span> con:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>la <span class="plan-pill"><strong>Agenda 2030 de Naciones Unidas</strong></span>,</li>
+                                <li>o con las recientes <strong>Comunicaciones de la <span class="actor-pill">Comisión Europea</span></strong> relacionadas con la <u>digitalización de la construcción en la UE</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-project-diagram icon"></i>La <strong>incorporación de la metodología <span class="definition-pill">BIM</span></strong> depende en un <span class="pill-blue">80%</span> de las <u>personas y los procesos</u> y un <span class="pill-blue">20%</span> de la <u>tecnología</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-exclamation-triangle icon text-red-500"></i>Este proceso supone un <strong>enorme desafío</strong> en la <span class="actor-pill">DGC</span>, por varias <strong>razones</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>La <strong>gran extensión de la red en servicio</strong>: La <span class="actor-pill">Dirección General de Carreteras</span> gestiona <strong>más de <span class="pill-blue">26.000 km</span></strong> de tronco principal de carreteras, autovías y autopistas, a los que hay que sumar el resto de viales que conforman la red (vías de servicio, ramales de enlace, glorietas, etc).</li>
+                                <li>La <strong>organización de la <span class="actor-pill">DGC</span></strong> en <u>servicios centrales</u> (Subdirecciones) y en <u>servicios periféricos</u> (Demarcaciones de Carreteras), con un total de <span class="pill-blue"><strong>1.900</strong></span> <strong>empleados</strong>, lo que da una idea de la <u>complejidad de su organización y de sus procedimientos</u>.</li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><strong>Vías gestionadas mediante diferentes modalidades</strong> de gestión:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><strong><u>Gestión directa</u></strong>: Red no concesionada, dividida en diferentes sectores que incluyen tramos de autovías, de carreteras convencionales, etc.</li>
+                                            <li><strong><u>Gestión indirecta</u></strong>: Autovías concesionadas en el programa de autovías de primera generación, junto con la autovía en concesión A-66 Benavente - Zamora; autovías y autopistas de peaje gestionadas actualmente por SEITTSA y autopistas de peaje en concesión.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-sync-alt icon text-green-600"></i>La incorporación de la nueva metodología de trabajo <span class="definition-pill">BIM</span> <strong>difiere de los usos y costumbres</strong> aplicados en los procedimientos administrativos durante décadas en la <span class="actor-pill">DGC</span>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tasks icon"></i>La <span class="actor-pill">DGC</span> realizó una <strong>evaluación integral previa</strong> e identificó la necesidad de una serie de <strong>actuaciones iniciales de transformación</strong> de la gestión.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Estas actuaciones <strong>no constituyen en sí mismas resultados de implantación <span class="definition-pill">BIM</span></strong>, pero son <strong>ineludibles</strong> a la hora de conseguir la <u>plataforma de trabajo única</u> y la <u>base de datos interoperable</u> que configure el escritorio de todos los empleados de la <span class="actor-pill">DGC</span>, las <span class="actor-pill">empresas contratistas</span> o los <span class="actor-pill">ciudadanos</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-users icon text-yellow-600"></i>Entre otras iniciativas, la <span class="actor-pill">DGC</span> ha impulsado desde principios del año <span class="pill-blue">2020</span> la creación de varios <strong>grupos de trabajo internos</strong>, asociados a distintas líneas de actuación con el objetivo de <strong>avanzar en dicho proceso de digitalización</strong> que permita la adaptación a la metodología de trabajo <span class="definition-pill">BIM</span>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p>En concreto se trabaja en:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><strong>Digitalización</strong> de la <u>información</u> y del <u>expediente administrativo</u>.</li>
+                                            <li><strong><span class="definition-pill">BIM</span> gestión de activos</strong> (<span class="definition-pill">BIM COEX</span>).</li>
+                                            <li><strong><span class="definition-pill">BIM</span> innovación</strong> en <u>proyecto y obra</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-link icon text-blue-600"></i>La <strong>metodología <span class="definition-pill">BIM</span></strong> solo <strong>generará valor</strong> al sector de la construcción cuando esté <strong>integrada por todos los agentes</strong> que intervienen en el <u>ciclo de vida de la infraestructura</u>, permitiendo que la <strong>información fluya</strong> entre <u>fases e implicados</u>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Para ello, la <strong><u>interoperabilidad</u> será la clave</strong> debido a la <u>diversidad de las aplicaciones</u> que existen o se crearán en el futuro para resolver las distintas necesidades a los que se enfrentan <span class="actor-pill">proyectistas</span>, <span class="actor-pill">constructores</span>, <span class="actor-pill">conservadoras</span> y <span class="actor-pill">explotadores</span> de carreteras a lo largo del ciclo de vida de la infraestructura.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-tractor icon text-purple-600"></i>La <span class="actor-pill">DGC</span> es <strong>consciente de su papel tractor</strong> sobre el sector de la construcción y <strong>trabaja para adaptarse</strong> a la transformación que implica <span class="definition-pill">BIM</span> y para <strong>definir con concreción los requisitos</strong> de trabajo y entregables en <span class="definition-pill">BIM</span> que constituirán su forma habitual de trabajo en los próximos años.</p></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
