@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T20. Construcción de carreteras (II)</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .doc-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .doc-pill { background-color: #dcfce7; color: #166534; border: 1px solid #4ade80; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-lightbulb"></i> MEB1T20. Construcción de carreteras (II) <i class="fas fa-road"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-hard-hat"></i></div>
+                <h2>1. Proyectos y obras de conservación extraordinaria. Normativa específica de conservación y particularidades de la normativa genérica aplicable</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>La <strong>redacción de proyectos de conservación extraordinaria</strong> es necesaria cuando se trata de <strong>actuaciones de mayor envergadura</strong> que las actividades de conservación ordinaria, para ser posteriormente <u>licitados como contratos de obra</u>, tal es el caso de:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-layer-group icon"></i><strong>Rehabilitación o mejora del firme</strong> (<u>rehabilitación estructural</u> o <u>tratamientos superficiales</u>).</li>
+                                <li><i class="fas fa-bridge icon"></i><strong>Rehabilitación de estructuras</strong> (<u>protección y recalce</u> de cimentaciones, <u>sustitución</u> de aparatos de apoyo y juntas, <u>reparación</u> de desconchones, <u>sellado</u> de fisuras, <u>sustitución</u> de impostas y pretiles, <u>impermeabilización</u> del tablero, <u>aplicación de pinturas protectoras</u> sobre paramentos o elementos metálicos, <u>refuerzo</u> de la estructura).</li>
+                                <li><i class="fas fa-mountain icon"></i><strong>Reparación de taludes</strong> (<u>saneo</u> retirando elementos sueltos que pueden desprenderse, <u>colocación de muros</u> de gaviones, escollera u hormigón, <u>instalación de mallas</u> de triple torsión, <u>revegetación</u>, <u>retaluzado</u>).</li>
+                                <li><i class="fas fa-road-circle-check icon"></i><strong>Renovación de marcas viales</strong> (normalmente se actúa en todas las carreteras estatales en una provincia).</li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-sign icon"></i><strong>Reposición de la señalización vertical</strong> por:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><u>deterioro</u> o <u>mal estado</u>,</li>
+                                            <li><u>pérdida de características retrorreflectantes</u>,</li>
+                                            <li><u>cambios de leyenda</u>,</li>
+                                            <li><u>adaptación a la normativa vigente</u>.</li>
+                                            <li>Se suele actuar por provincias.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-lightbulb icon"></i><strong>Renovación o implantación de iluminación</strong> (<u>instalación de báculos y luminarias</u>, <u>líneas eléctricas</u>, <u>transformadores</u>).</p></li>
+                                <li><p><i class="fas fa-archway icon"></i><strong>Mejora de túneles</strong> (en especial para adaptarlos al <span class="law-pill">RD 635/2006</span> de requisitos mínimos de seguridad).</p></li>
+                                <li><p><i class="fas fa-parking icon"></i><strong>Elementos funcionales</strong> (<u>estaciones de pesaje</u>, <u>áreas de descanso</u>, <u>aparcamientos de vialidad invernal</u>).</p></li>
+                                <li><p><i class="fas fa-shield-alt icon"></i><strong>Seguridad Vial o Mejoras locales</strong> (<u>implantación de enlaces</u> por intersecciones, <u>reordenación de accesos</u>, <u>prolongación de carriles</u> de cambio de velocidad o de vehículos lentos, <u>mejora de trazado</u>, <u>ensanche de plataforma</u>, <u>pantallas de protección contra el ruido</u>).</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-gavel icon"></i>Aspectos a tener en cuenta en la redacción de proyectos</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-exclamation-circle icon text-purple-600"></i>La mayor parte de la <strong>normativa</strong> está pensada para <strong>carreteras de nueva construcción</strong>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                             <li>las <strong>rehabilitaciones</strong> están consideradas en general dentro de las <strong><u>excepciones</u></strong> en la propia normativa (p.e. admitir giros a la izquierda con <span class="pill-blue">IMD>5.000</span> en reordenación o mejora de accesos ya existentes).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-bullhorn icon text-orange-600"></i>El <span class="law-pill"><strong>Reglamento General de Carreteras</strong></span> <strong>exime de información pública</strong>, por declaración de interés general de la carretera y concepción global de su trazado, a los <strong>estudios de carretera</strong> que se refieran a:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><u>acondicionamientos de trazado</u>,</li>
+                                            <li><u>ensanches de plataforma</u>,</li>
+                                            <li><u>mejoras de firme</u>,</li>
+                                            <li><u>duplicaciones de calzada</u></li>
+                                            <li>y, en general, a <u>actuaciones que no supongan una modificación sustancial</u> de la carretera.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                 <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon"></i>Puede, no obstante, ser <strong>necesaria la información pública</strong> por otras causas previstas en la Ley:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><u>expropiaciones</u>,</li>
+                                            <li><u>reordenación de accesos</u>,</li>
+                                            <li><u>modificación de enlaces</u>,</li>
+                                            <li><u>legislación ambiental</u>, etc.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-traffic-light icon text-indigo-600"></i>Estas obras se deben realizar normalmente <strong>manteniendo la carretera en servicio para el tráfico</strong>, lo que puede condicionar:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>el <u>proceso constructivo</u>,</li>
+                                            <li>el <u>plazo de la obra</u></li>
+                                            <li>y la <u>solución a adoptar</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-file-excel icon text-teal-600"></i>En muchos casos, los <strong>proyectos de conservación no necesitan la misma documentación</strong> que un proyecto de una nueva carretera.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>pudiendo <strong>suprimirse muchos documentos</strong> exigidos al resto de proyectos.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-info-circle"></i></div>
+                <h2>2. Nota de Servicio 1/2019</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-bullseye icon text-blue-600"></i>El <strong>objetivo</strong> de esta <span class="law-pill"><strong>Nota de Servicio 1/2019</strong></span> sobre instrucciones para la redacción de los proyectos supervisados por la <span class="actor-pill">Subdirección General de Conservación</span> de la <span class="actor-pill">Dirección General de Carreteras</span> es:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>mejorar la calidad</strong> de los proyectos que tienen por objeto la <u>conservación y mejora del patrimonio viario</u> y/o de la <u>seguridad vial</u>,</li>
+                                <li>así como <strong>agilizar su supervisión y aprobación</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-file-excel icon text-purple-600"></i>Estos proyectos <strong>no han dispuesto de una normativa propia</strong>, más allá de:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>la <span class="law-pill"><strong>norma 6.3-IC</strong></span> específica para actuaciones de <u>rehabilitación de firmes</u>,</li>
+                                <li>y de algunos artículos correspondientes a <u>unidades de reciclado del firme</u> de que consta el <span class="law-pill"><strong>PG-4</strong></span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-ban icon text-red-500"></i>La mayor parte de la <strong>normativa vigente</strong>, pensada para <u>nuevas carreteras</u>, <strong>exceptúa de su cumplimiento</strong> a muchos de los proyectos de la <span class="actor-pill">Subdirección General de Conservación y Gestión de Activos</span>, ya que resulta, en muchos casos, <strong>inviable tanto técnica como económicamente</strong>, al tratarse, por ejemplo, de:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>proyectos de <u>actuaciones específicas</u> y de <u>mejoras locales</u> a los que no es de aplicación la <span class="law-pill"><strong>Norma de Trazado 3.1-IC</strong></span>;</li>
+                                <li>ni tampoco la <span class="law-pill"><strong>Orden Circular 35/2014</strong></span> de Recomendaciones sobre criterios de aplicación de sistemas de contención de vehículos, que exceptúa de su ámbito de aplicación las <u>obras de conservación</u> para las que la aplicación de esos criterios exija la <u>ampliación de la sección transversal</u> de la carretera, que constituyen proyectos de mejoras locales.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-lightbulb icon text-orange-600"></i>No obstante, la <strong>inaplicabilidad</strong> de determinas normas en los proyectos de la <span class="actor-pill">Subdirección General de Conservación y Gestión de Activos</span> <strong>no puede significar que se actúe</strong> en los mismos como si dichas normas <strong>no existieran</strong>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Por ello, con las instrucciones recogidas en la <span class="law-pill"><strong>NS 1/2019</strong></span> se pretende <strong>aportar unos criterios de aplicación</strong> de la normativa en esos proyectos.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-sync-alt icon text-indigo-600"></i>También, desde la <span class="actor-pill">SGC</span> se considera necesario realizar un esfuerzo para conseguir una <strong><u>homogeneización y una estandarización</u></strong> en el <u>contenido y alcance</u> de los proyectos que se redactan desde las diferentes <span class="actor-pill">Demarcaciones de Carreteras del Estado</span> y que necesitan de su supervisión por parte de la <span class="actor-pill">Subdirección General de Conservación y Gestión de Activos</span>.</p></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-first-aid"></i></div>
+                <h2>3. Obras de emergencia</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-blue-600"></i>Según recoge la <span class="law-pill"><strong>Ley 9/2017 de Contratos del Sector Público</strong></span>, cuando la <span class="actor-pill">Administración</span> tenga que <strong>actuar de manera inmediata</strong> a causa de:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-house-damage icon"></i><u>acontecimientos catastróficos</u>,</li>
+                                <li><i class="fas fa-exclamation-triangle icon"></i>de <u>situaciones que supongan grave peligro</u></li>
+                                <li><i class="fas fa-shield-alt icon"></i>o de <u>necesidades que afecten a la defensa nacional</u>,</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-cogs icon text-purple-600"></i>se aplicará el siguiente <strong>régimen excepcional</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-gavel icon"></i>El <span class="actor-pill"><strong>órgano de contratación</strong></span>, <u>sin obligación de tramitar expediente de contratación</u>, podrá <strong>ordenar la ejecución</strong> de lo necesario para <u>remediar el acontecimiento</u> producido o <u>satisfacer la necesidad sobrevenida</u>, o <strong>contratar libremente</strong> su objeto, en todo o en parte, sin sujetarse a los <u>requisitos formales</u> establecidos en la <span class="law-pill">LCSP</span>.</li>
+                                <li><i class="fas fa-coins icon"></i>En caso de que <strong>no exista crédito</strong> adecuado y suficiente, una vez adoptado el acuerdo, se procederá a su <strong>dotación</strong> de conformidad con lo establecido en la <span class="law-pill">Ley General Presupuestaria</span>.</li>
+                                <li><i class="fas fa-paper-plane icon"></i>Si el contrato ha sido celebrado por la <span class="actor-pill">Administración General del Estado</span>, sus <span class="actor-pill">Organismos Autónomos</span> o demás <span class="actor-pill">entidades públicas estatales</span>, se <strong>dará cuenta al <span class="actor-pill">Consejo de Ministros</span></strong> en el plazo máximo de <span class="pill-blue">30 días</span>.</li>
+                                <li><i class="fas fa-play icon"></i>El <strong>plazo de inicio</strong> de la ejecución de las prestaciones no podrá ser superior a <strong><span class="pill-blue">un mes</span></strong>, contado desde la adopción del acuerdo. Si se excediese este plazo, la contratación requerirá la <u>tramitación de un procedimiento ordinario</u>.</li>
+                                <li><i class="fas fa-check-double icon"></i><strong>Ejecutadas las actuaciones</strong> objeto de este régimen excepcional, se observará lo dispuesto la <span class="law-pill">LCSP</span> sobre <u>cumplimiento de los contratos</u>, <u>recepción</u> y <u>liquidación</u> de la prestación.</li>
+                                <li><i class="fas fa-file-invoice-dollar icon"></i>En el supuesto de que el <strong>libramiento de los fondos</strong> necesarios se hubiera realizado <u>a justificar</u>, transcurrido el plazo de <span class="pill-blue">un mes</span> desde el acuerdo, se rendirá la <strong>cuenta justificativa</strong> del mismo, con <u>reintegro de los fondos no invertidos</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-forward icon text-orange-600"></i>Las <strong>restantes prestaciones</strong> que sean necesarias para <u>completar la actuación</u> acometida por la Administración y que <u>no tengan carácter de emergencia</u> se contratarán con arreglo a la <strong>tramitación ordinaria</strong> regulada en la <span class="law-pill">LCSP</span>.</p></li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-file-alt"></i></div>
+                <h2>4. OC 36/2015 sobre criterios a aplicar en la iluminación de carreteras a cielo abierto y túneles</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>El <strong>objeto</strong> de la <span class="law-pill"><strong>OC 36/2015</strong></span> es ser el <strong>documento de referencia</strong> en las actuaciones de <u>iluminación de los tramos de carretera a cielo abierto y túneles</u> de la <span class="definition-pill">Red de Carreteras del Estado</span>, y tiene como <strong>objetivos</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-gavel icon"></i><strong>establecer los criterios</strong> a aplicar sobre los tramos de carreteras en que está <u>justificado iluminar</u> y con qué <u>nivel de iluminación</u>;</li>
+                                <li><i class="fas fa-sitemap icon"></i><strong>describir los elementos</strong> que componen una instalación, sus <u>posibles alternativas</u> y <u>ayudar en la elección óptima</u> de la solución a emplear;</li>
+                                <li><i class="fas fa-tasks icon"></i><strong>fijar los criterios</strong> para la <u>redacción de los proyectos</u> de las instalaciones de iluminación, las <u>condiciones de ejecución</u> de las obras, y los <u>procedimientos para el mantenimiento y la explotación</u> de las instalaciones de forma eficiente;</li>
+                                <li><i class="fas fa-search icon"></i>así como los <strong>criterios de evaluación</strong> de las <u>instalaciones existentes</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-check-circle icon text-purple-600"></i>Las <strong>recomendaciones</strong> recogidas en la <span class="law-pill">OC 36/2015</span> son de <strong>aplicación</strong> en los:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>proyectos de construcción de nuevas carreteras y túneles</u>,</li>
+                                <li>de <u>acondicionamiento de los existentes</u></li>
+                                <li>y de <u>actuaciones específicas de iluminación</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-file-invoice-dollar icon text-orange-600"></i>Dichos proyectos deberán incluir en un <span class="doc-pill">anejo de su memoria</span> el <strong>análisis económico</strong> de las posibles soluciones a aplicar, determinando la <strong>más eficiente</strong> desde un punto de vista <u>técnico y económico</u>.</p></li>
+                    <li><p><i class="fas fa-drafting-compass icon text-indigo-600"></i>El <span class="doc-pill">proyecto constructivo</span> contemplará con el <strong>detalle exigido</strong> todos los <u>elementos de la instalación</u>, desde la <u>acometida general</u> hasta las <u>luminarias</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-lightbulb icon"></i>La <span class="law-pill">OC 36/2015</span> establece los <strong>criterios para iluminar</strong> un tramo de carretera de la <span class="definition-pill">Red de Carreteras del Estado</span>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Las <strong>autovías y autopistas</strong> se iluminarán cuando discurran por <u>suelo urbano</u> en ambas márgenes y su <span class="definition-pill">IMD</span> sea igual o superior a <span class="pill-blue">80.000</span> o a <span class="pill-blue">60.000</span> si hay más de <span class="pill-blue">120 días</span> de lluvia al año.</li>
+                                <li>Las <strong>carreteras convencionales no se iluminarán en general</strong>, aunque podrá justificarse su iluminación en <u>tramos de concentración de accidentes</u> en los que más del <span class="pill-blue">50%</span> de los accidentes se hayan producido en <u>periodo nocturno</u> durante los dos últimos años.</li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p>También estará <strong>justificada la iluminación</strong> de los siguientes <strong>puntos singulares</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><strong>glorietas</strong> situadas en carreteras convencionales, en las que por tener una <u>importante intensidad de tráfico</u> o por su <u>peligrosidad</u> no sea suficiente con una correcta señalización y balizamiento de la misma;</li>
+                                            <li><strong>enlaces de autovías y autopistas</strong> que se deban iluminar según lo mencionado anteriormente;</li>
+                                            <li><strong>cruces con glorietas e intersecciones a nivel</strong>, siempre que el <u>tráfico de la carretera secundaria sea mayor que <span class="pill-blue">10.000</span> vehículos por día</u>, o bien sea un <span class="definition-pill">TCA</span> con un porcentaje de <u>accidentes nocturnos superior al <span class="pill-blue">50%</span></u> durante los dos últimos años.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>A los efectos, la <span class="definition-pill"><strong>IMD</strong></span> que se debe tener en cuenta es la del <strong>año de puesta en servicio</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-archway icon text-teal-600"></i>Los <strong>túneles se iluminarán siempre</strong> si tiene una longitud superior a <span class="pill-blue">200 m</span>, siendo objeto de un <u>estudio específico</u> en caso contrario.</p></li>
+                    <li><p><i class="fas fa-user-check icon text-green-600"></i>La iluminación de un tramo carretera o de un punto singular de la Red que <strong>no cumpla los criterios anteriores</strong> requerirá la <strong>autorización expresa</strong> del <span class="actor-pill">Director General de Carreteras</span>, previo <span class="doc-pill">informe justificativo</span> del <span class="actor-pill">Jefe de la Demarcación</span> correspondiente.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-cogs icon"></i>Una vez confirmada la necesidad de iluminar, la <span class="law-pill">OC 36/2015</span> estudia las <u>situaciones de proyecto</u>, los <u>criterios de calidad</u> y las <span class="definition-pill"><strong>Clases de Alumbrado</strong></span>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Una <span class="definition-pill"><strong>Clase de Alumbrado</strong></span> se define como el conjunto de <u>requisitos fotométricos</u> que deben cumplirse para satisfacer las <u>necesidades visuales</u> de un grupo de usuarios de la vía pública en distintos tipos de áreas y alrededores.</li>
+                                <li>Son aplicables las clases <span class="definition-pill"><strong>ME</strong></span>, <span class="definition-pill"><strong>MEW</strong></span> y <span class="definition-pill"><strong>CE</strong></span>.</li>
+                                <li>Las clases <span class="definition-pill"><strong>ME</strong></span> y <span class="definition-pill"><strong>MEW</strong></span> están destinadas a <u>conductores de vehículos motorizados</u> en <u>vías de tráfico fluido</u>, ya que permiten velocidades de circulación elevadas.</li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p>La clase <span class="definition-pill"><strong>CE</strong></span> está destinada a <u>conductores de vehículos motorizados</u>, pero en <strong>áreas conflictivas</strong>, tales como:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><u>calles comerciales</u>,</li>
+                                            <li><u>intersecciones de vías públicas de alguna complejidad</u>,</li>
+                                            <li><u>glorietas</u></li>
+                                            <li>y <u>áreas en las que se forman retenciones</u>,</li>
+                                        </ul>
+                                    </div>
+                                    así como para <u>peatones y ciclistas</u>.
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tools icon text-red-500"></i>La <span class="law-pill"><strong>OC 36/2015</strong></span> dedica también capítulos a los <strong>componentes de una instalación de iluminación</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>fuentes de luz</u>, como las lámparas de vapor de sodio de alta presión y los diodos electroluminiscentes (LEDS);</li>
+                                <li><u>equipos eléctricos auxiliares</u>;</li>
+                                <li><u>luminarias</u>;</li>
+                                <li><u>columnas y soportes</u> de puntos de luz;</li>
+                                <li><u>dispositivos de regulación del flujo luminoso y consumo</u> de los puntos de luz;</li>
+                                <li><u>distribución eléctrica</u>;</li>
+                                <li>y <u>control y gestión</u> de la instalación.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
