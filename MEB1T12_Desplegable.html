@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T12. Túneles en carreteras (II)</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .doc-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .doc-pill { background-color: #dcfce7; color: #166534; border: 1px solid #4ade80; }
+        .formula-pill { background-color: #ffedd5; color: #9a3412; border: 1px solid #fb923c; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list, .even-deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li, .even-deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '�';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        .even-deeper-nested-list > li::before {
+             content: '▫️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before,
+        .even-deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-archway"></i> MEB1T12. Túneles en carreteras (II) <i class="fas fa-tools"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-wrench"></i></div>
+                <h2>1. Mantenimiento de túneles de carreteras</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>La <strong>explotación de un túnel</strong> requiere de <strong>operaciones de mantenimiento</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-shield-alt icon"></i><span class="definition-pill"><strong>Preventivas</strong></span> (<u>inspección de funcionamiento</u>, <u>labores rutinarias de mantenimiento</u> y <u>reparación de deficiencias</u>),</li>
+                                <li><i class="fas fa-tools icon"></i><span class="definition-pill"><strong>Correctivas</strong></span> (<u>reparación de defectos</u> detectados en el mantenimiento preventivo no subsanables en el momento, y <u>averías inesperadas</u>),</li>
+                                <li><i class="fas fa-chart-line icon"></i>y <span class="definition-pill"><strong>Predictivas</strong></span> (<u>optimización de acciones</u> y su <u>periodicidad</u>).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tasks icon text-purple-600"></i>Las <strong>tareas más habituales</strong> de mantenimiento son:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>la <u>inspección visual</u> del revestimiento,</li>
+                                <li>la <u>limpieza</u> de los conductos de drenaje,</li>
+                                <li><u>reparaciones de daños</u> por accidentes de tráfico,</li>
+                                <li><u>vigilancia</u> del estado del firme,</li>
+                                <li><u>limpieza de lámparas</u> y <u>sustitución de dañadas</u>,</li>
+                                <li><u>revisión periódica</u> de ventiladores,</li>
+                                <li><u>limpieza de la señalización</u> y <u>reparación de paneles luminosos</u>,</li>
+                                <li><u>comprobación periódica</u> de las instalaciones de seguridad y lucha contra los incendios, etc.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-tasks"></i></div>
+                <h2>2. Plan de adecuación de túneles al Real Decreto 635/2006</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-gavel icon text-blue-600"></i>El <span class="law-pill"><strong>RD 635/2006</strong></span> establece que el <span class="actor-pill">MITMS</span> debía elaborar un <span class="plan-pill"><strong>Plan de adecuación de túneles</strong></span> a los <u>requisitos mínimos de seguridad</u> en él establecidos.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-check-circle icon text-purple-600"></i>Por ello, en <span class="pill-blue"><strong>2007</strong></span> se aprobó el <span class="plan-pill"><strong>“Plan de adecuación de los túneles de carreteras del Estado a los requisitos establecidos en el RD 635/2006”</strong></span>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p>Para su <strong>elaboración</strong> se:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><i class="fas fa-search icon"></i><u>analizaron</u> los túneles estatales,</li>
+                                            <li><i class="fas fa-tasks icon"></i>se <u>identificaron los aspectos que no cumplían</u> con el Real Decreto,</li>
+                                            <li><i class="fas fa-calculator icon"></i>se realizó una <u>valoración económica</u>,</li>
+                                            <li><i class="fas fa-calendar-alt icon"></i>y se <u>programaron las actuaciones</u> con una <strong>inversión de <span class="pill-blue">250 M€</span></strong> hasta el año <span class="pill-blue"><strong>2019</strong></span> (que era la <strong>fecha límite</strong> de adecuación de acuerdo con la <span class="law-pill">Directiva 2004/54</span>).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-exclamation-triangle icon text-red-500"></i>Este <strong>plazo límite no se cumplió</strong>, principalmente por el <strong>incremento de los requisitos de seguridad</strong> que exige el <span class="law-pill">RD 635/2006</span> respecto a la <span class="law-pill">Directiva 2004/54</span>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-euro-sign icon text-green-600"></i>Con ayuda de los <span class="plan-pill"><strong>Fondos Next Generation EU</strong></span>, se ha hecho un <strong>gran esfuerzo</strong> por lograr este hito,</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>estando la <strong>mayor parte de los túneles</strong> de la red de carreteras del estado <u>adecuados</u> o en <u>licitación</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-clipboard-check"></i></div>
+                <h2>3. Metodología de análisis de riesgo en túneles de la Red de Carreteras del Estado</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-blue-600"></i>Por <span class="doc-pill"><strong>resolución de 2012</strong></span>, la <span class="actor-pill">Autoridad Administrativa</span> aprobó la <span class="definition-pill"><strong>metodología de análisis de riesgo en túneles de la red de carreteras del estado (MARTE)</strong></span>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-purple-600"></i>dado que así lo establece el <span class="law-pill"><strong>RD 635/2006</strong></span> por la necesidad de realizar <strong>análisis de riesgo</strong> en túneles para:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>justificar determinadas variaciones</u> respecto a los requisitos mínimos fijados,</li>
+                                <li>así como para <u>permitir el paso de mercancías peligrosas</u> por el túnel.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-cogs icon"></i>Esta metodología ha sido <strong>desarrollada</strong> por la <span class="actor-pill">Dirección General de Carreteras</span> y <strong>aprobada</strong> por la <span class="actor-pill">Secretaría de Estado</span> de la que depende.</p></li>
+                    <li><p><i class="fas fa-exchange-alt icon text-orange-600"></i>Los análisis de riesgo basados en la metodología <span class="definition-pill">MARTE</span> buscan la <strong>comparación</strong> de las medidas de seguridad del <u>túnel real</u> con un <u>túnel virtual</u> que se adecúa al <span class="law-pill">RD 635/2006</span>.</p></li>
+                    <li><p><i class="fas fa-user-cog icon text-indigo-600"></i>La <span class="actor-pill"><strong>Dirección General de Carreteras</strong></span>, como <span class="actor-pill">gestor del túnel</span>, debe <strong>redactar y actualizar</strong> el <span class="doc-pill">manual de explotación</span>; que incluirá el <u>análisis de riesgo</u>, cuando resulte necesario, que será realizado por un <u>organismo funcionalmente independiente</u> del gestor del túnel.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-calculator icon text-teal-600"></i>En el análisis de riesgo se determina el <span class="definition-pill"><strong>índice de riesgo del túnel (IR)</strong></span> que es el <strong>cociente</strong> entre el <u>coeficiente de riesgo del túnel real</u> y el del <u>túnel virtual</u>, con los siguientes <strong>criterios de aceptación</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>si <span class="formula-pill">IR < 1,15</span>, el túnel se considera <strong>seguro</strong>, y <u>no requiere más medidas</u> para estar en servicio;</li>
+                                <li>si <span class="formula-pill">1,15 < IR < 1,5</span>, el túnel <strong>puede estar en servicio</strong>, pero es necesario <u>adoptar medidas adicionales</u> o <u>mejorar las existentes</u>;</li>
+                                <li>si <span class="formula-pill">IR > 1,5</span>, se trata de un túnel con una <strong>elevada peligrosidad</strong>, y será necesario <u>reducir el riesgo</u> antes de que entre en servicio.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-check-double icon text-green-600"></i>En todos los túneles de la <span class="definition-pill">RTE</span> con longitud mayor que <span class="pill-blue">500 m</span> se llevaron a cabo las <strong>medidas compensatorias</strong> deducidas del análisis de riesgo y ya se ha conseguido un <span class="formula-pill">IR < 1,15</span>. También se está actuando en numerosos túneles de la <span class="definition-pill">RCE</span> para conseguir este mismo objetivo.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-exclamation-circle icon"></i>Casos que requieren análisis de riesgo</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-blue-600"></i>Si se presentaran <strong>características de diseño o condiciones de explotación especiales</strong>, se debe realizar un <strong>análisis de riesgo</strong> que contemple los siguientes casos:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-hard-hat icon"></i>Incumplimiento de <u>requisitos estructurales</u>.</li>
+                                            <li><i class="fas fa-lightbulb icon"></i>Excepcionalidad por <u>técnicas innovadoras</u>.</li>
+                                            <li><i class="fas fa-shield-alt icon"></i>Características especiales en relación con los <u>parámetros de seguridad</u>.</li>
+                                            <li><i class="fas fa-cogs icon"></i>Desviación respecto a los <u>requisitos mínimos de equipamiento</u>.</li>
+                                            <li><i class="fas fa-sort-amount-up-alt icon"></i>Pendientes <u>superiores al <span class="pill-blue">3%</span></u>.</li>
+                                            <li><i class="fas fa-ruler-horizontal icon"></i>Anchura del carril derecho <u>inferior a <span class="pill-blue">3,5 m</span></u>.</li>
+                                            <li><i class="fas fa-wind icon"></i><u>Ventilación y demás medidas de seguridad</u> insuficientes.</li>
+                                            <li><i class="fas fa-parking icon"></i>Evaluación de <u>viabilidad de apartaderos</u> para túneles sin carril de emergencia.</li>
+                                            <li><i class="fas fa-truck-moving icon"></i>Viabilidad o no del <u>transporte de mercancías peligrosas</u> por el túnel.</li>
+                                            <li><i class="fas fa-first-aid icon"></i>Evaluación de la necesidad de situar <u>servicios de emergencia</u> en el centro de control.</li>
+                                            <li><i class="fas fa-exchange-alt icon"></i><u>Adelantamientos en los túneles</u> por parte de los vehículos pesados en túneles con más de un carril por sentido.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-biohazard icon"></i>Mercancías peligrosas</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                             <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Se recoge también un <strong>método de estudio</strong> para los <strong>análisis de riesgos</strong> relacionados con las <span class="definition-pill"><strong>Mercancías peligrosas</strong></span>, siendo <strong>recomendable</strong> para los túneles que pertenezcan a la <span class="definition-pill"><strong>Red de Itinerarios de Mercancías Peligrosas (RIMP)</strong></span>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-search-plus icon"></i>Definición del análisis de riesgo</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>El <strong>análisis de riesgo</strong> es un <strong>proceso</strong> en el que se realiza un <strong>estudio pormenorizado de los riesgos</strong> asociados a la <u>explotación de un determinado túnel</u> y se concluye con una <strong>evaluación o determinación cuantitativa o cualitativa</strong> de los mismos, que debe permitir <strong>decidir al gestor</strong> bajo qué condiciones se desarrollará la explotación del túnel en función de la <u>comparación de su nivel de riesgo</u> con unos <u>patrones de referencia determinados</u>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-file-alt"></i></div>
+                <h2>4. Orden Circular 27/2008 sobre metodología de inspección de túneles</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>La <span class="law-pill"><strong>Orden Circular 27/2008</strong></span> sobre metodología de inspección de túneles, se redacta para <strong>dar cumplimiento a la obligación</strong> recogida en el <span class="law-pill"><strong>RD 635/2006</strong></span>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-purple-600"></i>Este RD establece que corresponde a la <span class="actor-pill"><strong>Autoridad Administrativa</strong></span> ejercer las <strong>tareas de inspección</strong> sobre los aspectos regulados en el mismo, bien <u>directamente</u> o bien a través de <u>organismos de inspección debidamente habilitados</u>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>realizando <strong>inspecciones periódicas</strong> para asegurarse que todos los túneles incluidos en el ámbito de aplicación de dicho real decreto <u>cumplen sus disposiciones</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-lightbulb icon text-orange-600"></i>Para el cumplimiento de la citada obligación se hace necesario <strong>disponer de una metodología</strong> en la que se recojan los <u>procedimientos técnicos y administrativos</u> a los cuales deben ajustarse las actuaciones de inspección, de forma que resulten <strong>homogéneos y coherentes</strong> con la finalidad prevista en el citado real decreto.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-cogs icon"></i>Criterios Generales de la Metodología</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-tasks icon text-blue-600"></i>La metodología de inspección se desarrolla con los siguientes <strong>criterios generales</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-hard-hat icon"></i><strong>Obra civil</strong> para <u>comprobar la seguridad</u> de la estructura,</li>
+                                            <li><i class="fas fa-tools icon"></i><strong>equipamientos</strong> para su <u>verificación funcional</u>,</li>
+                                            <li><i class="fas fa-users icon"></i>y <strong>recursos humanos</strong> analizando que el <span class="actor-pill">gestor del túnel</span> cuenta con el <u>personal necesario</u> para la operación del túnel y con los <u>medios materiales suficientes</u> para el desempeño de sus funciones.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-user-check icon"></i>Organismos de Inspección</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-blue-600"></i>Deberán ser en todos los casos <strong>independientes</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>del <span class="actor-pill">gestor del túnel</span> o <span class="actor-pill">empresa encargada</span> de realizar las labores de su <u>explotación, control y mantenimiento</u>;</li>
+                                            <li>y de la <span class="actor-pill">empresa fabricante, instaladora o mantenedora</span> del <u>equipamiento</u> de los túneles.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-calendar-alt icon"></i>Periodicidad de las Inspecciones</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>La <strong>periodicidad máxima</strong> entre inspecciones sucesivas será de <span class="pill-blue"><strong>5 años</strong></span>, según establece el <span class="law-pill">Real Decreto 635/2006</span>.</p></li>
+                                <li><p><i class="fas fa-plus-circle icon text-purple-600"></i>Siempre a instancias de la <span class="actor-pill">Autoridad Administrativa</span>, se podrán establecer <strong>periodos de inspección inferiores a <span class="pill-blue">5 años</span></strong>, o se solicitará la realización de una <strong>nueva inspección</strong>, en túneles que por sus <u>características</u>, su <u>situación estratégica</u> en la red de transporte, o por haber sufrido un <u>incidente grave</u> se estime oportuno y necesario.</p></li>
+                                <li><p><i class="fas fa-history icon text-orange-600"></i>También será <strong>recomendable</strong> realizar inspecciones <span class="pill-blue"><strong>6 meses</strong></span> después de la <strong>entrada en servicio</strong> de un túnel (tanto <u>inicial</u> como después de una <u>obra de acondicionamiento</u> del diseño de túneles preexistentes).</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-tasks icon text-indigo-600"></i>Las inspecciones se llevarán a cabo de acuerdo con un <span class="plan-pill"><strong>Plan de Inspección de Túneles</strong></span> aprobado por la <span class="actor-pill">Dirección General de Carreteras</span>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                         <ul class="nested-list">
+                                             <li>Para la elaboración del citado plan, se tendrá en cuenta fundamentalmente el <strong>nivel de riesgo</strong> asociado a cada túnel, función de factores tales como la <u>longitud</u> del mismo, <span class="definition-pill">IMD</span>, etc.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-calendar-check icon text-teal-600"></i>Salvo razones justificadas se recomienda que las inspecciones se realicen con la siguiente <strong>periodicidad máxima</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>túneles unidireccionales y bidireccionales de longitud superior a <span class="pill-blue">2.000 m</span>, cada <span class="pill-blue"><strong>3 años</strong></span>;</li>
+                                            <li>túneles unidireccionales y bidireccionales de longitud entre <span class="pill-blue">1.000</span> y <span class="pill-blue">2.000 m</span>, cada <span class="pill-blue"><strong>4 años</strong></span>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-hard-hat icon"></i>Ejecución de las Inspecciones</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                             <ul>
+                                <li><p><i class="fas fa-moon icon text-blue-600"></i>Los trabajos que tengan que realizarse en el <strong>interior de los túneles</strong> y que supongan su <u>corte parcial o total</u> se deberán realizar como norma general en <strong>horario nocturno</strong> y en colaboración con la <span class="actor-pill">Autoridad de Tráfico</span>.</p></li>
+                                <li><p><i class="fas fa-handshake icon text-purple-600"></i>El <strong>periodo exacto</strong> en el que se vaya a realizar la inspección se deberá <strong>consensuar</strong> con el <span class="actor-pill">Gestor del túnel</span> y el <span class="actor-pill">Responsable de Seguridad</span>.</p></li>
+                                <li><p><i class="fas fa-sync-alt icon text-orange-600"></i>Además se intentará, en la medida de lo posible, que estos trabajos <strong>coincidan con actuaciones de conservación o mantenimiento programadas</strong>, con objeto de <u>no interferir en la explotación del túnel</u>.</p></li>
+                             </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-file-alt"></i></div>
+                <h2>5. Orden Circular 33/2013 sobre el manual de explotación de los túneles de la RCE</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>La <span class="law-pill"><strong>OC 33/2013</strong></span> es de <strong>aplicación a todos los túneles</strong> de la <span class="definition-pill">RCE</span> que requieren <span class="doc-pill"><strong>Manual de Explotación</strong></span>, que son:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>todos los <u>urbanos</u>,</li>
+                                <li>y los <u>interurbanos</u> con longitud no inferior a <span class="pill-blue">200 m</span>,</li>
+                                <li>según establece el <span class="law-pill">RD 635/2006</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-shield-alt icon text-purple-600"></i>Además deberán disponer, de acuerdo con lo establecido en el <span class="law-pill">RD 393/2007</span> por el que se aprueba la <span class="law-pill">Norma Básica de Autoprotección</span> de los centros, de un <span class="plan-pill"><strong>Plan de Autoprotección</strong></span> o <span class="plan-pill"><strong>Plan de Emergencia</strong></span>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>redactado en <strong>coordinación</strong> con los <span class="actor-pill">Servicios de Emergencia</span> y de <span class="actor-pill">Protección Civil</span> competentes a nivel autonómico o local</li>
+                                <li>e <strong>integrado</strong> en el <span class="doc-pill">Manual de Explotación</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-sync-alt icon text-orange-600"></i>El <span class="doc-pill"><strong>Manual de Explotación</strong></span> de túneles:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>se <strong>redacta inicialmente</strong> durante la redacción del <u>proyecto</u>.</li>
+                                <li>Posteriormente es <strong>revisado, modificado y completado</strong> en lo necesario durante la <u>fase de construcción</u> y <u>previamente a la puesta en servicio</u>.</li>
+                                <li>Posteriormente, durante la <strong>explotación</strong> también se deberá ir <strong>revisando</strong> en base a la <u>experiencia que se vaya adquiriendo</u> (incidentes, accidentes, simulacros, etc.) y por las <u>modificaciones que se realicen</u> en el túnel y sus sistemas de seguridad.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-user-cog icon text-indigo-600"></i>La <strong>elaboración</strong> del <span class="doc-pill">Manual de Explotación</span> será <strong>responsabilidad</strong> del <span class="actor-pill"><strong>gestor del túnel</strong></span>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-user-check icon text-teal-600"></i>El <span class="doc-pill"><strong>Manual de Explotación</strong></span> habrá de ser <strong>redactado y firmado</strong> por un <span class="actor-pill"><u>técnico competente</u></span> en la materia, y <strong>conformado</strong> por:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>el <span class="actor-pill">ingeniero Director de las obras</span>,</li>
+                                <li><span class="actor-pill">Director del contrato de conservación</span></li>
+                                <li>o <span class="actor-pill">Inspector de la concesión</span>, según corresponda.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-user-edit icon text-green-600"></i>En el caso de <strong>túneles en servicio</strong>, tendrá que ser <strong>firmado también por el <span class="actor-pill">Director de Explotación del túnel</span></strong>, quien podrá ser al mismo tiempo autor del manual.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-calendar-check icon text-red-500"></i>El <span class="doc-pill"><strong>Manual de Explotación</strong></span> deberá <strong>revisarse</strong> con una <strong>periodicidad no superior a <span class="pill-blue">3 años</span></strong>, sin ser necesaria una nueva aprobación tras cada revisión.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>En los túneles de la <span class="definition-pill">Red de Carreteras de Estado</span> la <strong>aprobación</strong> del manual de explotación le corresponde al <span class="actor-pill"><strong>Director General de Carreteras</strong></span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-book icon text-yellow-600"></i>El <span class="doc-pill"><strong>Manual de Explotación</strong></span> describirá las <strong>medidas necesarias</strong> para <strong>garantizar la seguridad</strong> de los usuarios.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                 <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p>Tendrá en cuenta:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li><i class="fas fa-road icon"></i>las <u>características de la vía</u>,</li>
+                                            <li><i class="fas fa-sitemap icon"></i>la <u>configuración de la estructura</u>,</li>
+                                            <li><i class="fas fa-tree icon"></i>el <u>entorno</u>,</li>
+                                            <li><i class="fas fa-traffic-light icon"></i>la <u>naturaleza del tráfico</u>,</li>
+                                            <li><i class="fas fa-ambulance icon"></i>los <u>márgenes de actuación de los servicios de emergencia</u>,</li>
+                                            <li><i class="fas fa-wheelchair icon"></i>con especial consideración a los posibles <u>usuarios con movilidad reducida y con discapacidad</u>.</li>
+                                        </ul>
+                                    </div>
+                                 </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
