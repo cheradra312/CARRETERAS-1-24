@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T13. Señalización, balizamiento y sistemas de contención</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .doc-pill, .color-white-pill, .color-yellow-pill, .color-blue-pill, .color-green-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .doc-pill { background-color: #dcfce7; color: #166534; border: 1px solid #4ade80; }
+        .color-white-pill { background-color: #f1f5f9; color: #1e293b; border: 1px solid #94a3b8; }
+        .color-yellow-pill { background-color: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
+        .color-blue-pill { background-color: #dbeafe; color: #1e4d91; border: 1px solid #60a5fa; }
+        .color-green-pill { background-color: #dcfce7; color: #166534; border: 1px solid #4ade80; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-traffic-light"></i> MEB1T13. Señalización, balizamiento y sistemas de contención <i class="fas fa-road-barrier"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-sign"></i></div>
+                <h2>1. Señalización: norma 8.1-IC de señalización vertical. Norma 8.2-IC de marcas viales. Sistema de señalización turística homologada en carreteras estatales (SISTHO)</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                            <p><i class="fas fa-bullseye icon text-blue-600"></i>La <strong>señalización persigue</strong> <u>aumentar la seguridad y comodidad</u> de la conducción, y <u>facilitar la orientación</u> de los conductores.</p>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-check-double icon text-purple-600"></i>Los <strong>principios básicos</strong> de la buena señalización son:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>claridad,</li>
+                                <li>sencillez,</li>
+                                <li>uniformidad</li>
+                                <li>y continuidad.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-sign icon"></i>Señalización vertical</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-gavel icon text-blue-600"></i>Se <strong>regula</strong> por:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>la <span class="law-pill"><strong>Norma 8.1-IC (2014)</strong></span>, que se complementa con:
+                                                <ul class="deeper-nested-list">
+                                                    <li><span class="doc-pill">Señales verticales de circulación (1992)</span>,</li>
+                                                    <li><span class="doc-pill">Señalización del Camino de Santiago (2008)</span>,</li>
+                                                    <li>y <span class="doc-pill">Manual del sistema de señalización turística homologada (2014)</span>.</li>
+                                                </ul>
+                                            </li>
+                                            <li>Para la <strong>ejecución</strong> el <span class="law-pill"><strong>PG-3</strong></span> recoge el <u>artículo 701</u> sobre señales y carteles verticales de circulación retrorreflectantes.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-cogs icon text-purple-600"></i>Las <strong>señales están compuestas</strong> por:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><u>leyendas y símbolos</u>,</li>
+                                            <li>la <u>superficie</u> sobre la que están inscritos</li>
+                                            <li>y los <u>elementos de sustentación</u> (postes, banderolas y pórticos).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-orange-600"></i>Pueden ser de <strong>contenido fijo o de código de circulación</strong>, los <span class="definition-pill"><strong>paneles complementarios</strong></span> que acotan su prescripción, y los <span class="definition-pill"><strong>carteles</strong></span>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                             <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><strong>Código de circulación</strong>:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li><i class="fas fa-exclamation-triangle icon"></i>advertencia de peligro,</li>
+                                                        <li><i class="fas fa-gavel icon"></i>reglamentación</li>
+                                                        <li><i class="fas fa-info icon"></i>y de indicación.</li>
+                                                    </ul>
+                                                </div>
+                                             </li>
+                                             <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><strong>Carteles</strong>:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li><i class="fas fa-map-signs icon"></i>dirección propia,</li>
+                                                        <li><i class="fas fa-sign-out-alt icon"></i>salida inmediata o pre-señalización de salida,</li>
+                                                        <li><i class="fas fa-route icon"></i>confirmación de itinerario con distancia a destinos</li>
+                                                        <li><i class="fas fa-map-marker-alt icon"></i>y localización.</li>
+                                                    </ul>
+                                                </div>
+                                             </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-eye icon text-indigo-600"></i>La <strong>visibilidad de la señalización</strong> debe permitir al conductor <u>percibirla</u>, <u>interpretarla</u>, <u>decidir</u> y <u>ejecutar la maniobra</u>. Se distingue:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>la <span class="definition-pill"><strong>visibilidad fisiológica</strong></span> (máxima distancia a la que se puede leer un mensaje, <span class="pill-blue">800</span> veces la altura de la letra),</li>
+                                            <li>y la <span class="definition-pill"><strong>visibilidad geométrica</strong></span> (máxima distancia libre de obstáculos de la visual entre el conductor y determinada señal).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-exclamation-triangle icon text-red-500"></i>Los <strong>carteles no deben sobrecargarse</strong> para permitir su lectura y comprensión por los conductores. El <strong>máximo número de líneas</strong> con nombres y cajetines de identificación de carreteras es:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><span class="pill-blue"><strong>4</strong></span> en <u>carteles de dirección propia</u> (recomienda no más de 3),</li>
+                                            <li>y en los <u>carteles de salida</u> <span class="pill-blue"><strong>4</strong></span> en <u>autovías y autopistas</u>, y <span class="pill-blue"><strong>3</strong></span> en <u>carreteras convencionales</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                 <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-lightbulb icon text-yellow-500"></i>Las señales deben ser <strong>retrorreflectantes</strong>, excepto los elementos de color <u>negro</u> y <u>azul o gris oscuro</u>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>Existen <strong>tres clases</strong> de retrorreflexión de menor a mayor calidad: <span class="definition-pill">RA1</span>, <span class="definition-pill">RA2</span> y <span class="definition-pill">RA3</span>.</li>
+                                            <li>En la <span class="law-pill">norma 8.1-IC</span> se fija la <strong>clase mínima</strong> en función del <u>tipo de señal</u> y del <u>tipo de vía</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                 <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-map-marker-alt icon text-teal-600"></i><strong>Colocación de señales</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>Las <strong>señales de peligro</strong> se colocan entre <span class="pill-blue">150</span> y <span class="pill-blue">250 m</span> antes de él.</li>
+                                            <li>las de <strong>reglamentación</strong> en la sección donde comienza su aplicación.</li>
+                                            <li>Las señales se <strong>distanciarán</strong> entre sí <span class="pill-blue">50 m</span> para que el conductor pueda percibirlas, decidir y actuar.</li>
+                                            <li>En <strong>autopistas y autovías</strong> las señales de advertencia y reglamentación se situarán en <strong>ambas márgenes</strong>, excepto las de <u>peligro por incorporación a izquierda o derecha</u>, y la de <u>sentido obligatorio</u>.</li>
+                                             <li>En <strong>carreteras convencionales</strong> se situarán en la <strong>margen derecha</strong> y además en la <strong>margen izquierda</strong> las señales de <u>prohibido adelantar</u>, y de <u>paso a nivel</u>.</li>
+                                             <li>Los <strong>carteles de salida inmediata</strong> se colocan al <u>comienzo del carril de deceleración</u>, los <strong>carteles de preseñalización</strong> <span class="pill-blue">500 m</span> y <span class="pill-blue">1.000 m</span> antes en <u>enlaces</u>, o <span class="pill-blue">200 m</span> en <u>intersecciones</u>.</li>
+                                             <li>Los <strong>carteles de confirmación</strong> tras un enlace a <span class="pill-blue">500 m</span>, o a <span class="pill-blue">200 m</span> de la intersección.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-book icon text-green-600"></i>La <span class="law-pill"><strong>norma 8.1-IC</strong></span> contempla las <strong>situaciones de señalización</strong> que se dan en cada tipo de carretera:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><strong>Autopistas y autovías</strong>: inicio y final, destinos a señalizar tanto de dirección propia como de salida, localizaciones atravesadas por la carretera, y confirmación de itinerario. En los carteles de orientación prevalece el fondo <span class="color-blue-pill">azul</span>, excepto en los carteles de salida inmediata a carreteras convencionales o servicios, que son <span class="color-white-pill">blancos</span>.</li>
+                                            <li><strong>Carreteras convencionales</strong>: Además de los previstos para el caso anterior, se prevén situaciones propias de estas carreteras, como la señalización de intersecciones. En los carteles de orientación prevalece el fondo <span class="color-white-pill">blanco</span>, excepto en los carteles de salida hacia autopistas o autovías, tanto salida inmediata como preaviso, que son con fondo <span class="color-blue-pill">azul</span>.</li>
+                                            <li>Se dedican <strong>apartados específicos</strong> a la señalización de <u>intersecciones</u>, <u>glorietas</u>, <u>circunvalaciones</u> y <u>túneles</u>.</li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p>Existe un <strong>apartado dedicado</strong> a la señalización de <strong>situaciones específicas</strong> como:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li><u>velocidad máxima</u>,</li>
+                                                        <li><u>adelantamiento</u>,</li>
+                                                        <li><u>pasos a nivel</u>,</li>
+                                                        <li><u>restricciones de paso</u>,</li>
+                                                        <li><u>pasos de peatones</u>,</li>
+                                                        <li><u>sentido obligatorio</u>,</li>
+                                                        <li><u>carriles reservados</u>.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li>Por último, destaca el apartado dedicado a la <strong>señalización y balizamiento en curvas</strong>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-road-circle-check icon"></i>Señalización horizontal</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-gavel icon text-blue-600"></i>Las <strong>marcas viales</strong> están reguladas por la <span class="law-pill"><strong>Norma 8.2-IC (1987)</strong></span>, que se complementa con:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>la <span class="doc-pill">Nota de Servicio sobre los criterios de la señalización horizontal (2007)</span></li>
+                                            <li>y la <span class="doc-pill">Guía para el proyecto y ejecución de señalización horizontal (2012)</span>.</li>
+                                            <li>El <span class="law-pill"><strong>PG-3</strong></span> recoge el <u>artículo 700 marcas viales</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-info-circle icon text-purple-600"></i>La <strong>señalización horizontal</strong> debe ser <strong>coherente</strong> con la <u>vertical</u>, con sus <u>dimensiones en función de la vía y velocidad máxima permitida</u>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-tasks icon"></i>Se contemplan:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-ellipsis-h icon"></i><strong>marcas longitudinales discontinuas</strong> (delimitan carriles),</li>
+                                            <li><i class="fas fa-window-minimize icon"></i><strong>marcas longitudinales continuas</strong> (ningún vehículo debe atravesarlas ni circular a su izquierda cuando separan sentidos),</li>
+                                            <li><i class="fas fa-bars icon"></i><strong>marcas longitudinales continuas adosadas a discontinuas</strong> (solo se debe tener en cuenta la línea más próxima al lado por el que se circula),</li>
+                                            <li><i class="fas fa-grip-lines-vertical icon"></i><strong>marcas transversales</strong> (continuas ante un STOP o semáforo, o discontinuas en ceda el paso),</li>
+                                            <li><i class="fas fa-arrow-right icon"></i><strong>flechas</strong> (dirección, salida, fin de carril o retorno),</li>
+                                            <li><i class="fas fa-font icon"></i><strong>inscripciones en el pavimento</strong> (para prescripción),</li>
+                                            <li><i class="fas fa-plus icon"></i><strong>otras marcas</strong> (cebreados, delimitación de estacionamiento, paso a nivel).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-check-double icon text-orange-600"></i>Las <strong>características exigibles</strong> a una marca vial son:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-moon icon"></i><strong>visibilidad nocturna</strong> (retrorreflectantes con microesferas de vidrio),</li>
+                                            <li><i class="fas fa-sun icon"></i><strong>visibilidad diurna</strong>,</li>
+                                            <li><i class="fas fa-hand-paper icon"></i><strong>resistencia al deslizamiento</strong>,</li>
+                                            <li><i class="fas fa-shield-alt icon"></i><strong>resistencia al deterioro</strong> (erosión mecánica por el tráfico y acción de la intemperie por la radiación ultravioleta del sol).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-paint-roller icon text-indigo-600"></i>Los <strong>materiales utilizados</strong> son: <u>pinturas</u>, <u>termoplásticos de aplicación en caliente</u>, <u>plásticos de aplicación en frío</u> y <u>marcas prefabricadas</u>, a los que hay que añadir las <u>microesferas de vidrio</u>.</p></li>
+                                 <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-palette icon text-teal-600"></i>Las <strong>marcas viales</strong> serán, en general, de color <span class="color-white-pill">blanco</span> y reflectantes (pueden exceptuarse en vías iluminadas o urbanas).</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>En <strong>zonas urbanas</strong> son <span class="color-yellow-pill">amarillas</span> las marcas relacionadas con la <u>prohibición de parada</u>, <u>estacionamiento</u>, o <u>no bloqueo de intersección</u>.</li>
+                                            <li>Se usan de color <span class="color-blue-pill">azul</span> o <span class="color-green-pill">verde</span> en <u>zonas de estacionamiento</u>.</li>
+                                            <li>Las de colores en general <strong>no serán reflectantes</strong>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-hard-hat icon"></i>Señalización de obras</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-gavel icon text-blue-600"></i>Se encuentra regulada en la <span class="law-pill"><strong>Norma 8.3-IC (1987)</strong></span> y se complementa con los manuales de <span class="doc-pill">Señalización de obras fijas</span> y <span class="doc-pill">Señalización móvil de obras (1997)</span>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-purple-600"></i>Esta norma es de <strong>aplicación</strong> cuando en la <u>plataforma o proximidades de una vía se realizan obras</u>, y tiene como <strong>objetivo</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>conseguir <strong>mayor seguridad</strong> para los <u>usuarios de la carretera</u> y <u>trabajadores de las obras</u>,</li>
+                                            <li>así como <strong>limitar el deterioro</strong> del <u>nivel de servicio</u> de la vía afectada.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-cone"></i></div>
+                <h2>2. Balizamiento</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-blue-600"></i><strong>Regulado</strong> en:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>la <span class="law-pill"><strong>OC 309/90</strong></span> sobre hitos de arista</li>
+                                <li>y <span class="law-pill"><strong>OC 6/2023</strong></span> sobre elementos de balizamiento retrorreflectantes.</li>
+                                <li>Además, el <span class="law-pill"><strong>PG-3</strong></span> recoge el <u>artículo 702</u> sobre captafaros retrorreflectantes y el <u>703</u> sobre elementos de balizamiento retrorreflectantes.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-bullseye icon text-purple-600"></i>El <strong>balizamiento</strong> sirve de <strong>refuerzo</strong> de la <u>señalización vertical y horizontal</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-list-ol icon text-orange-600"></i>Sus <strong>elementos más habituales</strong> son:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-lightbulb icon"></i><strong>Captafaros reflectantes</strong> (en <u>arcenes del tronco</u>, <u>intersecciones</u>, <u>enlaces</u>, <u>curvas r<250 m</u> y <u>sobre barreras</u>),</li>
+                                <li><i class="fas fa-road-barrier icon"></i><strong>Hitos de arista</strong> (con <u>captafaros reflectantes</u>),</li>
+                                <li><i class="fas fa-directions icon"></i><strong>Balizas flexibles</strong> e <strong>hitos de vértice</strong> en <u>divergencias y bifurcaciones</u>,</li>
+                                <li><i class="fas fa-volume-up icon"></i><strong>Marcas viales sonoras</strong> en los <u>bordes de calzada</u>,</li>
+                                <li><i class="fas fa-arrow-circle-right icon"></i><strong>Paneles direccionales</strong> en tramos de <u>fuerte curvatura</u>,</li>
+                                <li><i class="fas fa-wind icon"></i><strong>Mangas catavientos</strong> y <strong>pantallas antideslumbrantes</strong>,</li>
+                                <li><i class="fas fa-lightbulb icon"></i>y <strong>balizamiento con elementos luminosos</strong> (habitual en <u>obras</u>).</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-car-crash"></i></div>
+                <h2>3. Orden Circular 35/2014 sobre criterios de aplicación de sistemas de contención de vehículos</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-gavel icon text-blue-600"></i>La normativa se encuentra establecida en la <span class="law-pill"><strong>Orden Circular 35/2014</strong></span> de Recomendaciones sobre criterios de aplicación de sistemas de contención de vehículos.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                 <li>El <span class="law-pill"><strong>PG-3</strong></span> recoge el <u>artículo 704</u> sobre barreras de seguridad.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-purple-600"></i>Los <span class="definition-pill"><strong>sistemas de contención</strong></span> son dispositivos para <strong>proporcionar un cierto nivel de contención</strong> de un <u>vehículo fuera de control</u>, de manera que se <strong>limiten los daños</strong> para:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>sus <u>ocupantes</u>,</li>
+                                <li>para el <u>resto de los usuarios</u> de la carretera</li>
+                                <li>y <u>otras personas u objetos</u> situados en las proximidades.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-sitemap icon text-orange-600"></i>Los sistemas de contención de vehículos se <strong>clasifican</strong> en:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><span class="definition-pill"><strong>barreras de seguridad</strong></span> (empleadas en <u>márgenes y medianas</u>),</li>
+                                <li><span class="definition-pill"><strong>pretiles</strong></span> (en <u>bordes de tableros y muros</u>),</li>
+                                <li><span class="definition-pill"><strong>amortiguadores de impacto</strong></span> (diseñados para un <u>choque frontal</u>),</li>
+                                <li>y <span class="definition-pill"><strong>lechos de frenado</strong></span> (en <u>pendientes prolongadas</u> para detener vehículos sin frenos).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-certificate icon text-indigo-600"></i>Salvo por <u>reposición y mantenimiento</u> de los sistemas de contención existentes, actualmente solo se pueden instalar en la <span class="definition-pill">RCE</span> sistemas con <strong>marcado CE</strong>, que han de acreditar la <strong>superación de ensayos</strong> con <u>choque de vehículos a escala real</u>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-search icon"></i>Análisis de márgenes en proyectos</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-blue-600"></i>En los proyectos de <strong>nuevas carreteras</strong> o <strong>acondicionamientos</strong> de las existentes se debe realizar un <strong>análisis de los márgenes</strong> de la carretera para <strong>identificar las situaciones de riesgo</strong> por existencia en las proximidades de:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-lightbulb icon"></i><u>Farolas</u>, <u>carteles</u>, <u>pórticos</u> y <u>banderolas</u>, <u>postes SOS</u>, <u>pantallas acústicas</u> y <u>árboles</u> de más de <span class="pill-blue">15 cm</span> de diámetro.</li>
+                                            <li><i class="fas fa-road icon"></i>Otras <u>carreteras</u> o <u>calzadas paralelas</u>, así como otras <u>infraestructuras</u>.</li>
+                                            <li><i class="fas fa-cube icon"></i><u>Muros</u>, <u>cimentaciones</u>, <u>arquetas</u>, que sobresalgan más de <span class="pill-blue">7 cm</span> del terreno.</li>
+                                            <li><i class="fas fa-archway icon"></i><u>Elementos estructurales</u> de pasos superiores (pilas, estribos).</li>
+                                            <li><i class="fas fa-compress-arrows-alt icon"></i><u>Accesos a puentes, túneles</u> y <u>estrechamientos</u> de la plataforma.</li>
+                                            <li><i class="fas fa-wind icon"></i><u>Cunetas no suficientemente tendidas</u> (taludes H:V iguales o superiores a <span class="pill-blue">6:1</span> y aristas suavizadas).</li>
+                                            <li><i class="fas fa-mountain icon"></i><u>Desmontes</u> con taludes inferiores a <span class="pill-blue">3:1</span> si las aristas no se han suavizado, o <span class="pill-blue">2:1</span> si las aristas se han suavizado.</li>
+                                            <li><i class="fas fa-layer-group icon"></i><u>Terraplenes</u> con altura superior a <span class="pill-blue">3 m</span>, o aquellos con altura inferior, pero con taludes <span class="pill-blue"><5:1</span> si las aristas no se han suavizado o <span class="pill-blue">3:1</span> si las aristas se han suavizado.</li>
+                                            <li><i class="fas fa-arrow-down icon"></i><u>Posibilidad de caídas a distinto nivel</u> (estructuras, muros).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-shield-alt icon"></i>Filosofía de diseño</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                             <ul>
+                                 <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Los sistemas de contención son capaces de <strong>absorber parte de la energía</strong> del vehículo, <u>disminuyendo la severidad del impacto</u>, y de <strong>reconducir la trayectoria</strong> del vehículo fuera de control.</p></li>
+                                 <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-exchange-alt icon text-purple-600"></i>Constituye un <span class="definition-pill"><strong>accidente sustitutorio</strong></span> del que tendría lugar en caso de no existir aquél de:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><u>consecuencias más predecibles y menos graves</u>,</li>
+                                            <li>pero <strong>no está exento de riesgos</strong> para los ocupantes del vehículo.</li>
+                                        </ul>
+                                    </div>
+                                 </li>
+                                 <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-tasks icon text-orange-600"></i>Por ello, en los proyectos se debe considerar en primer lugar un <strong>diseño de las márgenes</strong> de la carretera que <strong>evite la disposición de tales elementos</strong>, intentando tomar medidas con el <strong>orden de prioridad</strong> siguiente:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><i class="fas fa-expand-arrows-alt icon"></i><strong>ampliar la sección transversal</strong> en terrenos llanos con bajo coste de expropiación,</li>
+                                            <li><i class="fas fa-trash-alt icon"></i><strong>eliminar el obstáculo</strong>,</li>
+                                            <li><i class="fas fa-check-circle icon"></i><strong>diseñar el obstáculo o desnivel</strong> de manera que sea <u>franqueable por el vehículo con seguridad</u> (tender taludes, medianas más anchas y llanas, arquetas que no sobresalgan del terreno),</li>
+                                            <li><i class="fas fa-arrows-alt-h icon"></i><strong>alejar el obstáculo</strong> del borde de una calzada,</li>
+                                            <li><i class="fas fa-plug icon"></i>y <strong>disponer fusibles estructurales</strong> (en farolas y postes), siempre que la caída del elemento no pueda provocar daños a terceros.</li>
+                                        </ul>
+                                    </div>
+                                 </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-cogs icon"></i>Elección del sistema de contención</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-blue-600"></i>Para la elección del sistema de contención en primer lugar se debe <strong>valorar el riesgo del accidente</strong> (<u>muy grave</u>, <u>grave</u> y <u>normal</u>), eligiendo después el <strong>nivel de contención</strong> en función de:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>el <u>riesgo del accidente</u>,</li>
+                                            <li>de la <u>IMD total y de pesados</u>,</li>
+                                            <li>y de si el sistema es una <u>barrera o un pretil</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-list-ol icon text-purple-600"></i>Los <strong>niveles de contención</strong> se clasifican:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><strong>Clase de contención normal</strong> (niveles <span class="definition-pill">N1</span> y <span class="definition-pill">N2</span>, ensayo con vehículos ligeros de <span class="pill-blue">1,5 t</span> a <span class="pill-blue">80 km/h</span> y <span class="pill-blue">110 km/h</span> respectivamente),</li>
+                                            <li><strong>Clase de contención alta</strong> (niveles <span class="definition-pill">H1</span> vehículo pesado de <span class="pill-blue">10 t</span> a <span class="pill-blue">70 km/h</span>, <span class="definition-pill">H2</span> autobús de <span class="pill-blue">13 t</span> a <span class="pill-blue">70 km/h</span> y <span class="definition-pill">H3</span> pesado de <span class="pill-blue">16 t</span> a <span class="pill-blue">80 km/h</span>),</li>
+                                            <li>y <strong>clase de contención muy alta</strong> (niveles <span class="definition-pill">H4a</span> pesado no articulado de <span class="pill-blue">30 t</span> a <span class="pill-blue">65 km/h</span> y <span class="definition-pill">H4b</span> pesado articulado de <span class="pill-blue">38 t</span> a <span class="pill-blue">65 km/h</span>).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-car icon text-orange-600"></i>Además, excepto en el nivel <span class="definition-pill">N1</span>, se <strong>ensayan también</strong> con el impacto vehículo ligero de <span class="pill-blue">0,9 t</span> a <span class="pill-blue">100 km/h</span> para <strong>comprobar la seguridad de sus ocupantes</strong>, ya que cuanto mayor es el nivel de contención más severo es el impacto en los vehículos ligeros.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-check-double icon text-indigo-600"></i>Además, debe comprobarse que:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>la <strong>deflexión dinámica</strong> es menor o igual que la <u>distancia al desnivel</u></li>
+                                            <li>y la <strong>anchura de trabajo</strong> es menor que la <u>distancia al obstáculo</u>.</li>
+                                            <li>Si no, se puede <strong>cambiar a un sistema</strong> con el mismo nivel de contención, pero con <u>menor desplazamiento trasversal</u>, o <strong>actuar sobre el diseño</strong> de la sección transversal para <u>alejar obstáculos y desniveles</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-tachometer-alt icon text-teal-600"></i>Los sistemas se clasifican por medio de un <span class="definition-pill"><strong>índice de severidad de impacto</strong></span> que miden las <u>deceleraciones que sufren los ocupantes</u> de los vehículos, pueden ser <strong>A</strong> (menos severo), <strong>B</strong> y <strong>C</strong> (más severo).</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>En la <span class="law-pill">OC 35/2014</span> solo se admite el uso de <strong>sistemas A y B</strong>, salvo autorización expresa de la <span class="actor-pill">Dirección General de Carreteras</span>.</li>
+                                            <li>Obviamente, a igualdad de contención y desplazamiento transversal se elegirán preferiblemente los <strong>sistemas con índice A</strong> frente a los B.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-ruler icon text-green-600"></i>En la <span class="law-pill">OC 35/2014</span> se especifica <strong>cómo deben disponerse</strong> los sistemas de contención de vehículos en todas las situaciones (<u>anticipaciones</u>, <u>transiciones</u>, <u>prolongaciones</u>, <u>distancias a borde de calzada</u>, <u>obstáculos y desniveles</u>, <u>extremos</u>, etc.).</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
