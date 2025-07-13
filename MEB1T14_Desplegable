@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T14. PG-3 y Reglamento UE 305/2011</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .doc-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .doc-pill { background-color: #dcfce7; color: #166534; border: 1px solid #4ade80; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-book-open"></i> MEB1T14. PG-3 y el Reglamento UE 305/2011 de productos de la construcción <i class="fas fa-gavel"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-file-alt"></i></div>
+                <h2>1. Pliego de prescripciones técnicas generales para obras de carreteras y puentes (PG-3)</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>El <span class="law-pill"><strong>pliego de prescripciones técnicas generales para obras de carreteras y puentes</strong></span> de la <span class="actor-pill">Dirección General de Carreteras del MITMS</span>, conocido como <span class="law-pill"><strong>PG-3</strong></span>, constituye un <strong>conjunto de instrucciones</strong> para el <u>desarrollo de las obras de carreteras y puentes</u>, y contiene las <strong>condiciones técnicas</strong> referentes a los <u>materiales</u> y a las <u>unidades de obra</u>.</p></li>
+                    <li><p><i class="fas fa-check-circle icon text-green-600"></i>Las prescripciones del <span class="law-pill">PG-3</span> son de <strong>aplicación</strong> a las <u>obras de carreteras y puentes de cualquier clase</u> adscritas a la <span class="actor-pill">DGC del MITMS</span> en todo lo que no sean explícitamente modificadas por el <span class="doc-pill">pliego de prescripciones técnicas particulares del proyecto</span>, donde se indicará preceptivamente que será de aplicación el <span class="law-pill">PG-3</span>.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-sitemap icon text-purple-600"></i>El <span class="law-pill"><strong>PG-3</strong></span> está <strong>estructurado en 8 partes</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-info icon"></i>introducción y generalidades;</li>
+                                <li><i class="fas fa-cubes icon"></i>materiales básicos;</li>
+                                <li><i class="fas fa-mountain icon"></i>explanaciones;</li>
+                                <li><i class="fas fa-water icon"></i>drenaje;</li>
+                                <li><i class="fas fa-road icon"></i>firmes;</li>
+                                <li><i class="fas fa-bridge icon"></i>puentes y otras estructuras;</li>
+                                <li><i class="fas fa-traffic-light icon"></i>elementos de señalización, balizamiento y sistemas de contención de vehículos;</li>
+                                <li><i class="fas fa-ellipsis-h icon"></i>y Varios.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-list-ul icon"></i>Estructura de los artículos del PG-3</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>La estructura de todos los artículos del <span class="law-pill">PG-3</span> es similar y sigue el siguiente contenido:</p></li>
+                                <li><p><i class="fas fa-comment-alt icon"></i><strong>Definición</strong>. Cada uno de los artículos comienza con una <u>definición de la unidad de obra</u> a la que corresponde el artículo.</p></li>
+                                <li><p><i class="fas fa-cubes icon"></i><strong>Materiales</strong>. Cuando proceda, <u>descripción de los materiales constituyentes</u> y de las <u>características que se les exigen</u>.</p></li>
+                                <li><p><i class="fas fa-tags icon"></i><strong>Tipos</strong>. En algunos casos, una vez establecidos los materiales a emplear, se deben determinar los <u>diferentes tipos de unidad de obra</u> que se pueden emplear.</p></li>
+                                <li><p><i class="fas fa-tools icon"></i><strong>Equipo necesario para la ejecución de las obras</strong>. Establece las <u>condiciones de los equipos y técnicas</u> que será preciso emplear, en el caso más general desde su <u>fabricación</u>, <u>transporte</u>, <u>colocación en obra</u> y <u>acabado</u>.</p></li>
+                                <li><p><i class="fas fa-cogs icon"></i><strong>Ejecución de las obras</strong>. Fija <u>condiciones para la correcta ejecución</u> de las unidades de obra.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-vial icon"></i><strong>Tramo de prueba</strong>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>Una de las características más singulares de la construcción es que <strong>cada obra es un prototipo</strong>, lo que implica que las <u>condiciones no son las mismas</u> de una obra a otra (materiales a emplear, plantas de producción y su distancia hasta la obra, maquinaria utilizada, condiciones ambientales), por lo que las <u>fórmulas y procedimientos</u> que funcionaron en un lugar puedan <strong>no tener el resultado esperado</strong> en otro, debiendo ajustarse.</li>
+                                            <li>Por ello en algunas unidades de obra importantes se exige la realización de un <strong>tramo de prueba</strong>. Es decir, antes de comenzar la puesta en obra definitiva de la unidad, se debe realizar una <strong>prueba a escala real</strong> para <u>validar los medios propuestos</u> por el contratista y los <u>procedimientos de construcción</u>, con el objetivo de <strong>ajustarlos a tiempo</strong>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-check-double icon"></i><strong>Especificaciones de la unidad terminada</strong>. Se fijan unas determinadas <strong>especificaciones representativas</strong> de la correcta ejecución de la unidad, <u>medibles mediante ensayos u otras comprobaciones</u>, con el objetivo de <strong>controlar</strong> que la unidad de obra terminada cumple unos <u>requisitos mínimos</u>.</p></li>
+                                <li><p><i class="fas fa-ban icon"></i><strong>Limitaciones de la ejecución</strong>. Determinadas condiciones, fundamentalmente <u>ambientales</u>, pues habitualmente <u>no pueden ser controladas en obra</u>, exigen que la unidad de obra <strong>no se ejecute</strong>, imponiéndose <u>restricciones</u> en este sentido.</p></li>
+                                <li><p><i class="fas fa-clipboard-check icon"></i><strong>Control de calidad</strong>. Se fija el <strong>número mínimo de ensayos de autocontrol</strong> del contratista para <u>asegurar la calidad</u> de la unidad obra, estableciéndose <u>frecuencias de control</u>, <u>tamaño de lotes</u>, etc.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-balance-scale icon"></i><strong>Criterios de aceptación o rechazo</strong>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>La <strong>gravedad de no alcanzar</strong> las características exigidas en el Pliego es <strong>variable</strong>, por lo que conviene establecer ciertas <strong>tolerancias</strong> a la hora de fijar la aceptación o rechazo de una unidad de obra ejecutada.</li>
+                                            <li>Además de ello, en todo proceso de fabricación y puesta en obra existen <strong>desviaciones aleatorias inevitables</strong>.</li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p>Tradicionalmente, la <strong>estrategia</strong> para cumplir con los mínimos exigibles es:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li><u>mejorar las características medias</u> de la unidad de obra para alejarlas del mínimo de rechazo (empleo de mejores materiales, aumento de dosificaciones)</li>
+                                                        <li>o <u>reducir la desviación típica</u> de las características de la unidad (normalmente con el mayor control de calidad de los procesos y métodos de ejecución).</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li>Sin embargo, <strong>ambas estrategias tienen un coste</strong>, y siempre habrá circunstancias por las que un lote no cumpla las características mínimas.</li>
+                                             <li>También deben tenerse en cuenta las <strong>importantes repercusiones económicas</strong> de rechazar un determinado lote ejecutado.</li>
+                                             <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p>Cuando no se alcancen determinados valores, será preciso <strong>rechazar la unidad</strong>, siendo necesaria su <u>demolición y reposición</u>, salvo en casos en que se puedan adoptar alguna de estas <strong>dos estrategias</strong>:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>Que la falta se <strong>reponga o repare</strong> con medidas posteriores, en el caso de que sea posible.</li>
+                                                        <li>Que el contratista vea <strong>mermados sus ingresos económicos</strong>, de manera que el incumplimiento de las especificaciones no le sea rentable, viéndose impelido a mejorar en la ejecución de la unidad.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-euro-sign icon"></i><strong>Medición y abono</strong>.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>Es fundamental <strong>fijar las condiciones</strong> de medición y abono de la unidad, que deben ser lo suficientemente <u>claras y precisas</u> como para <strong>evitar conflictos</strong> posteriores entre contratista y Administración sobre la interpretación del contrato de obras.</li>
+                                            <li>En muchos artículos del <span class="law-pill">PG-3</span> se fija <strong>inequívocamente el procedimiento</strong> de medición y abono de la unidad.</li>
+                                            <li>En algunos casos, establece <strong>alternativas de medición y abono</strong>, siendo el <span class="doc-pill">Pliego de Prescripciones Técnicas Particulares</span> de cada proyecto el que fije la modalidad.</li>
+                                            <li>Como <strong>novedad</strong>, en algunas unidades también se ha introducido la posibilidad de <strong>abonar bonificaciones</strong> si el contratista obtiene determinadas <u>mejoras</u> respecto a las características mínimas exigida en el pliego, siempre que se recoja en el <u>presupuesto del proyecto</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-certificate icon"></i><strong>Especificaciones técnicas y distintivos de calidad</strong>. En este sentido, se puede <strong>reconocer el cumplimiento</strong> de determinadas especificaciones del Pliego si el fabricante dispone de una <u>marca, sello o distintivo de calidad</u> que esté <strong>homologado</strong> por la <span class="actor-pill">Dirección General de Carreteras</span>.</p></li>
+                                <li><p><i class="fas fa-link icon"></i><strong>Relación de normas</strong>. Por último, se establece una <strong>relación de normas de referencia</strong> en el artículo en cuestión.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-globe-europe"></i></div>
+                <h2>2. El Reglamento UE 305/2011 de productos de construcción. El marcado CE</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>El <strong>origen</strong> del <span class="law-pill"><strong>Reglamento UE 305/2011</strong></span> de productos de construcción está en las <strong>numerosas barreras técnicas</strong> que <u>dificultaban la existencia de un verdadero mercado interior</u> de productos de construcción en la <span class="actor-pill">Unión Europea</span>, ya que cada <span class="actor-pill">Estado</span> contaba con sus <strong>propias disposiciones</strong> para regular este tipo de productos.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-lightbulb icon text-purple-600"></i>El <strong>procedimiento</strong> para <strong>facilitar la comercialización</strong> de productos se basa en el establecimiento de <span class="definition-pill"><strong>especificaciones técnicas armonizadas</strong></span> a nivel europeo, para <u>evaluar determinadas prestaciones esenciales</u> de los productos de construcción, cuyo cumplimiento supone la obtención del <span class="definition-pill"><strong>marcado CE</strong></span>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-certificate icon"></i>Obtención del marcado CE</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-tasks icon text-blue-600"></i>Existen <strong>dos casos</strong> en que podemos encontrar productos con <span class="definition-pill">marcado CE</span>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-check-circle icon text-green-500"></i><strong>Productos incluidos en <span class="law-pill">normas armonizadas (normas EN)</span></strong>:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>para estos productos es <strong>obligatorio</strong> el <span class="definition-pill">marcado CE</span> y la emisión de la <span class="doc-pill">declaración de prestaciones</span>, pues de otra forma <u>no se podrán comercializar</u>.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><i class="fas fa-plus-circle icon text-orange-500"></i><strong>Productos no incluidos en normas armonizadas</strong>:</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>el <span class="actor-pill">fabricante</span> que lo desee puede acudir a un <span class="actor-pill">organismo de evaluación técnica (OET)</span> notificado por algún <span class="actor-pill">Estado Miembro</span>, y solicitar la emisión de una <span class="doc-pill">evaluación técnica europea (ETE)</span> para su producto.</li>
+                                                        <li>Para ello el <span class="actor-pill">OET</span> debe indagar sobre la existencia de algún <span class="doc-pill">documento de evaluación europeo (DEE)</span> que cubra la evaluación.</li>
+                                                        <li>Si <strong>existe</strong>, se puede tramitar la <span class="doc-pill">ETE</span>, pero si <strong>no</strong>, es necesaria la <u>elaboración de un <span class="doc-pill">DEE</span></u> antes de poder evaluar el producto y poder emitir una <span class="doc-pill">ETE</span>.</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-clipboard-check icon text-purple-600"></i>Según el <strong>sistema de evaluación</strong> que se implante corresponderá evaluar dichas tareas al <span class="actor-pill">organismo notificado</span> y/o al propio <span class="actor-pill">fabricante</span>, lo que dará lugar a diferentes <strong>tipos de <span class="definition-pill">marcado CE</span></strong> (<span class="pill-blue">4, 3, 3+, 2+, 1, y 1+</span>).</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>La <strong>exigencia aumenta</strong> desde el <span class="pill-blue">4</span> hasta el <span class="pill-blue">1+</span>.</li>
+                                            <li>Así, para un producto evaluado con <strong>sistema <span class="pill-blue">1+</span></strong>, es el <span class="actor-pill">organismo notificado</span> el que debe <u>determinar el producto tipo</u>, <u>inspeccionar la fábrica</u>, <u>controlar la producción</u>, así como <u>realizar ensayos de seguimiento</u> de la producción antes de comercializar el producto.</li>
+                                            <li>Al <span class="actor-pill">fabricante</span> le corresponderá <u>controlar la producción</u> y <u>ensayar muestras</u> tomadas de acuerdo a un <span class="plan-pill">plan de ensayos</span>.</li>
+                                            <li>En el <strong>sistema de evaluación <span class="pill-blue">2+</span></strong>, en cambio, corresponde al propio <span class="actor-pill">fabricante</span> <u>determinar el producto tipo</u>, además de lo que hacía con el sistema <span class="pill-blue">1+</span>. El <span class="actor-pill">organismo notificado</span> se limita a <u>inspeccionar la fábrica</u> y <u>controlar la producción</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-exclamation-circle icon text-red-500"></i>Debe recalcarse que el <span class="definition-pill"><strong>marcado CE</strong></span> <strong>no lo emite</strong> la <span class="actor-pill">Administración</span> ni los <span class="actor-pill">organismos notificados</span>. El <span class="definition-pill">marcado CE</span> lo pone, <strong>bajo su responsabilidad, el <span class="actor-pill">fabricante</span></strong> cuando ha realizado las tareas que implica el sistema de evaluación asignado al producto.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-file-signature icon"></i>Declaración de prestaciones</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>La <span class="doc-pill"><strong>declaración de prestaciones</strong></span> de las características esenciales del producto, será <strong>emitida por el <span class="actor-pill">fabricante</span></strong> cuando el producto se introduce en el mercado y está <u>cubierto por una norma armonizada</u> o el <span class="actor-pill">fabricante</span> ha decidido voluntariamente realizar una <u>evaluación técnica europea</u>.</p></li>
+                                <li><p><i class="fas fa-share-square icon text-purple-600"></i>Una <strong>copia</strong> de la declaración se <strong>entregará</strong> por el <span class="actor-pill">fabricante</span>, <span class="actor-pill">distribuidor</span> o <span class="actor-pill">comercializador</span> al <span class="actor-pill">receptor del producto</span>, en la <u>lengua que exija cada Estado</u>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-stamp icon"></i>Colocación del marcado CE</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>El <span class="definition-pill"><strong>marcado CE</strong></span> se colocará de manera <strong>visible e indeleble</strong> en el <u>producto</u>, en alguna <u>etiqueta adherida</u> al mismo, o cuando no sea posible lo anterior en el <u>envase o albarán</u> que lo acompañe.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-list-ul icon text-purple-600"></i><strong>Aparecerá</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>el <strong>logotipo CE</strong>,</li>
+                                            <li>las <strong>dos últimas cifras del año</strong> de su primera colocación,</li>
+                                            <li>y varios aspectos de la <span class="doc-pill">Declaración de Prestaciones</span> (<u>identificación del fabricante</u>, del <u>producto</u>, <u>norma/s armonizada/s</u>, <u>uso previsto</u>, <u>características esenciales</u> y <u>niveles o clases de prestaciones</u>, etc.).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-globe-europe"></i></div>
+                <h2>3. Los Eurocódigos</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Los <span class="law-pill"><strong>Eurocódigos estructurales</strong></span> son un <strong>conjunto de normas europeas</strong>, encargadas por la <span class="actor-pill">Comisión Europea</span> al <span class="actor-pill">Comité Europeo de Normalización (CEN)</span> que proporcionan una serie de <strong>métodos comunes</strong> para <u>calcular la resistencia mecánica</u> de los elementos que desempeñan una función estructural en una obra de construcción.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-bullseye icon text-purple-600"></i>El <strong>propósito</strong> de los <span class="law-pill">Eurocódigos</span> es el de ser usados como <strong>documentos de referencia</strong> para:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-check-circle icon"></i>ofrecer <strong>presunción de conformidad</strong> de los <u>edificios y obras de ingeniería civil</u> en relación con la <u>resistencia mecánica y estabilidad</u>, <u>seguridad de uso</u> y <u>durabilidad</u>;</li>
+                                <li><i class="fas fa-file-signature icon"></i>y servir de <strong>base para las especificaciones</strong> de los <u>contratos de obras y servicios de ingeniería</u>, de acuerdo con las <span class="law-pill">Directivas Europeas de contratación pública</span>, y para la elaboración de las <span class="doc-pill">especificaciones técnicas armonizadas</span> o <span class="doc-pill">documentos de evaluación</span> para los productos de construcción.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tasks icon text-orange-600"></i>En la actualidad los <span class="law-pill"><strong>Eurocódigos</strong></span> cubren los siguientes <strong>ámbitos</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>bases de cálculo</u> de estructuras,</li>
+                                <li><u>acciones</u> en estructuras,</li>
+                                <li><u>proyecto de estructuras</u> de hormigón, de acero, mixtas de acero y hormigón, de madera, de fábrica, de aleación de aluminio,</li>
+                                <li><u>proyecto geotécnico</u>,</li>
+                                <li>y <u>proyecto para la resistencia al sismo</u> de estructuras.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-balance-scale icon text-indigo-600"></i>El <strong>nivel de seguridad</strong> en los edificios y en obras de ingeniería civil es <strong>competencia de cada uno de los Estados</strong>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>En <span class="actor-pill">España</span>, las normas relativas al cálculo y proyecto de estructuras son de <strong>obligado cumplimiento</strong> en todo el ámbito nacional, pues son aprobadas por <span class="law-pill">Real Decreto del Consejo de Ministros</span>, y tienen un <strong>carácter reglamentario superior</strong> al de los eurocódigos, que <u>no son de aplicación obligatoria</u>.</li>
+                                <li>No obstante, <span class="actor-pill">España</span> está haciendo un esfuerzo para que el <strong>formato de seguridad</strong> recogido en la legislación española sobre diseño de estructuras sea <strong>idéntico al definido por los <span class="law-pill">Eurocódigos</span></strong>.</li>
+                                <li>Normas como la <span class="law-pill">IAP-11 de acciones de puentes de carretera</span> y el <span class="law-pill">Código Estructural</span> ya adoptan los <u>procedimientos de cálculo</u> contenidos en los <span class="law-pill">Eurocódigos</span>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-road icon text-teal-600"></i>La <span class="actor-pill"><strong>Dirección General de Carreteras del MITMS</strong></span> ha aprobado en <span class="pill-blue">marzo de 2019</span> la <span class="law-pill"><strong>Orden Circular 1/2019</strong></span> sobre <u>aplicación de los eurocódigos a los proyectos de carreteras</u>, en la que ha dispuesto que:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>los <strong>proyectos de puentes y estructuras asimilables</strong>, así como de <strong>terraplenes, desmontes y demás obras geotécnicas</strong>, dentro de la red de carreteras del Estado, deben <strong>cumplir las especificaciones</strong> contenidas en los <span class="law-pill">Eurocódigos Estructurales</span>.</li>
+                                <li>Además, ha desarrollado una serie de <strong>guías que facilitan la aplicación</strong> de los <span class="law-pill">Eurocódigos</span> a los proyectos de carreteras.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
