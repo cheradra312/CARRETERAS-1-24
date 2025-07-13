@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEB1T11. Túneles en carreteras (I)</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Estilos CSS personalizados -->
+    <style>
+        /* Fuentes y fondo base */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Estructura principal de las tarjetas */
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 2px solid #e0f2fe;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-header .icon-bg {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        /* Reset de listas */
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-top: 1rem; }
+
+        /* Estilos para las "píldoras" de colores */
+        .pill, .law-pill, .directive-pill, .actor-pill, .plan-pill, .definition-pill, .pill-blue, .doc-pill, .formula-pill {
+            display: inline;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin: 0 0.2rem;
+            white-space: normal;
+        }
+        .pill-blue { background-color: #dbeafe; color: #1e4d91; border: 1px solid #93c5fd; }
+        .law-pill { background-color: #f3e8ff; color: #581c87; border: 1px solid #c084fc; }
+        .actor-pill { background-color: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+        .plan-pill { background-color: #cffafe; color: #164e63; border: 1px solid #67e8f9; }
+        .definition-pill { background-color: #cffafe; color: #155e75; border: 1px solid #22d3ee; }
+        .doc-pill { background-color: #dcfce7; color: #166534; border: 1px solid #4ade80; }
+        .formula-pill { background-color: #ffedd5; color: #9a3412; border: 1px solid #fb923c; }
+        
+        /* Iconos dentro del texto */
+        .icon {
+            margin-right: 0.5rem;
+            width: 1.25em;
+            text-align: center;
+        }
+
+        /* --- Estilos para las listas anidadas y viñetas --- */
+        .nested-list, .deeper-nested-list, .even-deeper-nested-list {
+            padding-left: 1.75rem;
+            margin-top: 0.75rem;
+            border-left: 3px dotted #cbd5e1;
+        }
+        .nested-list > li, .deeper-nested-list > li, .even-deeper-nested-list > li {
+            position: relative;
+        }
+        .nested-list > li::before {
+            content: '🔹';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.25rem;
+            color: #3b82f6;
+        }
+        .deeper-nested-list > li::before {
+             content: '▪️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        .even-deeper-nested-list > li::before {
+             content: '▫️';
+             position: absolute;
+             left: -1.5rem;
+             top: 0.25rem;
+        }
+        /* Regla para ocultar la viñeta CSS si un icono es el PRIMER elemento */
+        .nested-list > li:has(> i.icon:first-child)::before,
+        .deeper-nested-list > li:has(> i.icon:first-child)::before,
+        .even-deeper-nested-list > li:has(> i.icon:first-child)::before {
+            content: none;
+        }
+
+        /* --- Estilos para la funcionalidad desplegable --- */
+        .collapsible-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 0.25rem 0;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-trigger:hover {
+            background-color: #f9fafb;
+        }
+        .collapsible-trigger > p, .collapsible-trigger > h3, .collapsible-trigger > span {
+            margin: 0;
+            text-align: left;
+        }
+        .collapsible-trigger > h3, .collapsible-trigger > span {
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+        .collapsible-icon {
+            transition: transform 0.3s ease;
+            margin-right: 0.75rem;
+            width: 1em;
+            color: #3b82f6;
+        }
+        .collapsible-content {
+            padding-left: 1.75rem;
+        }
+        .collapsible-trigger.open .collapsible-icon {
+            transform: rotate(90deg);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-archway"></i> MEB1T11. Túneles en carreteras (I) <i class="fas fa-road"></i></h1>
+        </header>
+
+        <!-- Card 1 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-hard-hat"></i></div>
+                <h2>1. Métodos constructivos. Maquinaria y medios auxiliares</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-bomb icon"></i>Excavación mediante voladuras</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Indicada en <strong>rocas duras</strong>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-cogs icon text-purple-600"></i>Proceso:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>se <strong>perforan los taladros</strong> en el frente de avance utilizando <span class="definition-pill"><strong>jumbos</strong></span> dotados de <span class="pill-blue">2 o 3</span> brazos con <u>martillos hidráulicos de perforación</u>, el <u>arrastre del detritus</u> y la <u>refrigeración</u> se consiguen con agua.</li>
+                                            <li>Después se <strong>cargan los taladros</strong> con <u>explosivo y detonador</u>.</li>
+                                            <li>Tras la voladura se <strong>ventilan los gases</strong>, se <strong>retira el escombro</strong> y <strong>sanean los fragmentos de roca</strong> que puedan desprenderse.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                 <li><p><i class="fas fa-truck-monster icon text-orange-600"></i>Es habitual el empleo de <span class="definition-pill"><strong>palas cargadoras</strong></span> que llevan el escombro directamente al exterior o cargan <span class="definition-pill"><strong>dumpers</strong></span> si la distancia es <span class="pill-blue">>500 m</span> o con secciones <span class="pill-blue">>70 m²</span>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-tools icon"></i>Excavación mecánica</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>Indicada en <strong>rocas medias o blandas</strong>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-industry icon text-purple-600"></i>Se puede distinguir la siguiente <strong>maquinaria</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><span class="definition-pill"><strong>Rozadora</strong></span>, provista de un <u>brazo móvil</u> con un <u>cabezal dotado de herramientas de corte</u>, que gracias a la <u>rotación y el empuje</u> mediante cilindros hidráulicos desprende el material barriendo el frente de excavación.</li>
+                                            <li><span class="definition-pill"><strong>Martillo hidráulico</strong></span>, colocado sobre un <u>brazo articulado</u>, que <strong>rompe la roca por impacto</strong>. Indicado en <u>rocas blandas o fisuradas</u> en la <strong>fase de destroza</strong>, no en avance, pues se necesitan al menos <u>2 caras libres</u> para un buen rendimiento.</li>
+                                            <li>
+                                                <div class="collapsible-trigger">
+                                                    <i class="fas fa-chevron-right collapsible-icon"></i>
+                                                    <p><span class="definition-pill"><strong>Tuneladoras</strong></span>, su <strong>cabeza gira</strong> al tiempo que <strong>empuja contra el terreno</strong> gracias a unos <u>cilindros hidráulicos</u>.</p>
+                                                </div>
+                                                <div class="collapsible-content hidden">
+                                                    <ul class="deeper-nested-list">
+                                                        <li>Son <strong>poco frecuentes</strong> en carreteras, ya que el <u>coste de instalación y amortización</u> se compensa sólo en <strong>túneles largos</strong>.</li>
+                                                        <li>Se distinguen <span class="definition-pill"><strong>topos</strong></span> (rocas duras y medias), <span class="definition-pill"><strong>escudos</strong></span> (rocas blandas y suelos) y <span class="definition-pill"><strong>dobles escudos</strong></span> (características mixtas).</li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-expand-arrows-alt icon"></i>Grandes secciones de excavación</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-exclamation-triangle icon text-red-500"></i>Conllevan <strong>riesgos de inestabilidad</strong>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-info-circle icon text-blue-600"></i>Cuando la sección de un túnel es <strong>mayor de <span class="pill-blue">40-50 m²</span></strong> es habitual <strong>excavar por fases</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><span class="definition-pill"><strong>Avance</strong></span> (se excava y sostiene la parte de la <u>bóveda</u> del túnel)</li>
+                                            <li>y <span class="definition-pill"><strong>destroza</strong></span> (del <u>resto de la sección</u>).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-plus-circle icon text-purple-600"></i>En <strong>terrenos de mala calidad</strong> puede haber una <strong>tercera fase</strong> de excavación de una <span class="definition-pill"><strong>contrabóveda</strong></span>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-shield-alt"></i></div>
+                <h2>2. Sostenimiento</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>Existen diversos métodos para la construcción de un túnel, a partir de los años 60 ha tenido gran difusión el <span class="definition-pill"><strong>nuevo método austriaco (NMA)</strong></span>, que se basa en que la <strong>propia roca se autosostenga</strong>, formando un <u>anillo de descarga</u>.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Para ello conviene <strong>mantener inalterada la roca</strong> con técnicas de <u>excavación mecánica</u> o, en su defecto, de <u>voladura controlada</u> (precorte).</li>
+                                <li>El <strong>sostenimiento</strong> debe <strong>dejar deformarse al terreno</strong> hasta alcanzar su <u>equilibrio</u>, siendo su misión <strong>evitar que la roca pierda sus propiedades</strong>.</li>
+                                <li>El <span class="definition-pill">NMA</span> se aplica en <strong>macizos rocosos competentes</strong>, estando <strong>contraindicado</strong> en <u>suelos</u>, <u>rocas blandas</u> o <u>macizos rocosos muy fracturados</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-tools icon text-purple-600"></i>Los <strong>elementos más empleados</strong> como sostenimiento son:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-fill-drip icon"></i><strong>Hormigón proyectado (gunita)</strong>: permite <u>sellar la superficie</u>, <u>cerrando juntas</u> y <u>evitando la alteración de la roca</u>, formando un <strong>anillo capaz de resistir cargas</strong>. Puede ser en <u>masa</u> para sellar la roca con espesores <span class="pill-blue"><5 cm</span>, o <u>armado</u> con una mayor capacidad resistente, empleándose <u>mallas electrosoldadas de acero</u> y mayor espesor. Se gunita con <strong>brazos robotizados</strong> para mayor <u>comodidad y seguridad</u> de los trabajadores al alejarlos del frente de roca.</li>
+                                <li><i class="fas fa-anchor icon"></i><strong>Bulones</strong>: su función es <strong>coser las juntas de la roca</strong>, <u>impidiendo que bloques inestables puedan deslizar</u> a favor de las fracturas, <strong>confinar la roca</strong> evitando la formación de <u>zonas decomprimidas</u>. Hay bulones <strong>activos</strong> (pretensados) y <strong>pasivos</strong> que son más frecuentes, más fáciles de colocar y dejan deformarse a la roca. También hay bulones de <u>anclaje mecánico</u>, bulones que se adhieren mediante <u>resina epoxi o lechada de cemento</u>, o bulones tipo <span class="definition-pill"><strong>Swellex</strong></span> que son huecos y se adhieren por <u>rozamiento</u> al aumentar su diámetro cuando se bombea agua a alta presión.</li>
+                                <li><i class="fas fa-archway icon"></i><strong>Cerchas metálicas</strong>: trabajan como un <strong>arco</strong>, colaborando con la gunita, con la <strong>ventaja</strong> de aportar <u>resistencia inmediata</u> y <u>ayudar a definir la geometría</u> del túnel; entre cerchas, para solidarizarlas, se colocan barras de acero (<span class="definition-pill"><strong>tresillones</strong></span>).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-exclamation-triangle icon text-red-500"></i>Para <strong>atravesar zonas de peor calidad</strong> (fallas, abundante agua, etc.) se recurre a <strong>tratamientos especiales</strong> como:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><i class="fas fa-umbrella icon"></i><strong>Paraguas de bulones</strong> de redondo de acero de <span class="pill-blue">32 mm</span> (<span class="definition-pill">paraguas ligero</span>) o <span class="definition-pill">micropilotes</span> (tubos huecos de acero inyectados con lechada de cemento) colocados en el frente, sobre clave de la bóveda del túnel.</li>
+                                <li><i class="fas fa-cogs icon"></i><strong>Estabilización del frente</strong> con <u>bulonado</u> (de fibra de vidrio, fácil de romper posteriormente) o <u>sellado con gunita</u>.</li>
+                                <li><i class="fas fa-road icon"></i>Ejecución de <strong>contrabóveda</strong> en la solera de túnel.</li>
+                                <li><i class="fas fa-shoe-prints icon"></i><strong>Patas de elefante</strong>, prolongación recta de las cerchas colocadas en la fase de avance que permite excavar la destroza sin descalzar el sostenimiento.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-wave-square icon text-indigo-600"></i>La <span class="definition-pill"><strong>auscultación en túneles</strong></span> es <strong>importante</strong>, especialmente en los excavados con el <span class="definition-pill">NMA</span>, siendo precisos <strong>datos diarios</strong> para poder <u>detectar la tendencia a la estabilización</u> del túnel y <u>tomar decisiones</u> sobre el sostenimiento a aplicar.</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>Con la <strong>medición de convergencias</strong> se detectan los <u>desplazamientos del contorno del túnel</u>, siendo la <strong>instrumentación más utilizada</strong> por su <u>rapidez y economía</u>.</li>
+                                <li>Los <strong>extensómetros e inclinómetros</strong> miden <u>movimientos en el interior del macizo</u>, y por su coste sólo se emplean en <u>puntos problemáticos</u>.</li>
+                                <li>Con <strong>edificación sobre el túnel</strong> se controlan los <u>asientos</u> por <strong>métodos topográficos</strong>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-layer-group"></i></div>
+                <h2>3. Revestimiento</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-info-circle icon text-blue-600"></i>En la mayoría de los túneles excavados en <u>macizos rocosos</u> con el <span class="definition-pill"><strong>NMA</strong></span> el <strong>sostenimiento garantiza la estabilidad</strong> del túnel, por lo que la disposición de un <strong>revestimiento</strong> obedece a <strong>otros motivos</strong>:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><u>impermeabilización</u>,</li>
+                                <li><u>mejora de la ventilación</u>,</li>
+                                <li><u>ahorros en iluminación</u></li>
+                                <li>y <u>estética</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-cogs icon text-purple-600"></i>La <strong>tendencia actual</strong> es a <strong>instalar siempre revestimiento</strong>, que puede ser:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>sin función estructural</strong> con <u>paneles prefabricados</u> resistentes al fuego (<u>acero</u>, <u>aluminio</u>) y de <u>colores claros</u>, colocándose únicamente en los <u>hastiales del túnel</u>.</li>
+                                <li><strong>con función estructural</strong> suele estar formado por un <u>anillo de hormigón en masa</u>, de unos <span class="pill-blue">30 cm</span>, construido sobre un <u>encofrado deslizante</u>, y se suele acompañar de un <u>geotextil drenante</u> y una <u>lámina de impermeabilización</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-check-circle icon text-green-600"></i>Se logra así un <strong>revestimiento excelente</strong>, pero <strong>caro</strong>, que puede estar aconsejado en <u>terrenos donde se esperan cargas diferidas</u>, <u>mucha afluencia de agua</u>, o por <u>razones de mantenimiento</u> en <strong>túneles largos</strong> o con <strong>mucho tráfico</strong>.</p></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-tools"></i></div>
+                <h2>4. Equipamiento e instalaciones en los túneles</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-lightbulb icon"></i>Iluminación</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-eye icon text-blue-600"></i>Debe prever la <strong>adaptación</strong> durante el día de la <strong>visión del conductor</strong> a la <u>luminosidad interior del túnel</u>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-sun icon text-purple-600"></i>La <strong>luminosidad de la zona de umbral</strong> suele ser un <span class="pill-blue"><strong>3-10%</strong></span> de la zona de acceso, que se va <strong>reduciendo</strong> hasta un <u>mínimo aceptable por seguridad</u>, función de:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li>las <u>características de reflexión</u> del firme y hastiales,</li>
+                                            <li>y de la <u>intensidad y velocidad del tráfico</u> (de <span class="pill-blue">0,5</span> a <span class="pill-blue">10 cd/m²</span>).</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><p><i class="fas fa-lightbulb icon text-orange-600"></i><strong>Lámparas más usadas</strong>: <u>fluorescentes</u>, <u>vapor de sodio</u>, y se están realizando pruebas con <span class="definition-pill"><strong>LED</strong></span>, montadas en <u>luminarias herméticas</u> y <u>resistentes a los gases</u>.</p></li>
+                                <li><p><i class="fas fa-toggle-on icon text-indigo-600"></i>La iluminación se dispone en <strong>varias líneas</strong> que se <strong>accionan independientemente</strong> en función de la iluminación del exterior captada por un <span class="definition-pill"><strong>luxómetro</strong></span>.</p></li>
+                                <li><p><i class="fas fa-first-aid icon text-red-500"></i><span class="definition-pill"><strong>Alumbrado de emergencia</strong></span>: lámparas en la <strong>parte baja</strong> para <u>no quedar ocultas por el humo</u> de incendio y <u>guiar hacia las salidas de emergencia</u>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-wind icon"></i>Ventilación</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-info-circle icon text-blue-600"></i>La necesidad de ventilación en un túnel obedece a la <strong>evacuación</strong> de los <u>gases tóxicos</u> (<span class="definition-pill">CO</span>, <span class="definition-pill">NOx</span>) y <u>humos nocivos</u> para las personas que <strong>dificultan la visibilidad</strong> en <u>condiciones normales de explotación</u> y en <u>caso de incendio</u>.</p></li>
+                                <li><p><i class="fas fa-fan icon text-purple-600"></i>La ventilación puede ser <strong>longitudinal</strong>, <strong>semitransversal</strong> (con falso techo) y <strong>transversal</strong> (con falso techo dividido, para túneles largos, el más potente y versátil).</p></li>
+                                <li><p><i class="fas fa-cogs icon text-orange-600"></i>Es habitual instalar <span class="definition-pill"><strong>detectores CO</strong></span> y <span class="definition-pill"><strong>opacímetros</strong></span> para <u>accionamiento automático</u> de la ventilación.</p></li>
+                                <li><p><i class="fas fa-fire-detector icon text-red-500"></i>Los túneles también se equipan con <strong>sistemas de detección de incendios</strong>, como <u>cables sensores</u> o <u>sistemas de detección automática por análisis de imágenes de <span class="definition-pill">CCTV</span></u>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-fire-extinguisher icon text-red-500"></i>En cuanto a <strong>medidas de extinción de incendios</strong>, los túneles se dotan de:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><strong>puestos de emergencia</strong> colocados a intervalos de <span class="pill-blue">100-150m</span> que disponen de <span class="pill-blue">2</span> <u>extintores</u> y un <u>poste de SOS</u>,</li>
+                                            <li>o <strong>hidrantes</strong> alimentados por una <u>red de agua a presión</u>,</li>
+                                            <li>o una <strong>columna seca</strong> para su uso por los bomberos.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-traffic-light icon"></i>Instalaciones de gestión del tráfico</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-chart-bar icon text-blue-600"></i><strong>Aforos de tráfico</strong>, de <u>intensidad y velocidad</u>, para <u>prevenir la congestión</u>;</p></li>
+                                <li><p><i class="fas fa-ruler-vertical icon text-purple-600"></i>dispositivos de <strong>control de gálibo</strong>;</p></li>
+                                <li><p><i class="fas fa-video icon text-orange-600"></i><span class="definition-pill"><strong>CCTV</strong></span> que pueden operar con <u>sistemas de detección automática de incidentes</u> y permiten la <u>supervisión continua</u>;</p></li>
+                                <li><p><i class="fas fa-sign icon text-indigo-600"></i><strong>señalización interior fija</strong> para <u>galerías de escape</u>, <u>apartaderos</u> y <u>puestos de emergencia</u>;</p></li>
+                                <li><p><i class="fas fa-desktop icon text-teal-600"></i><strong>paneles luminosos de mensaje variable</strong>;</p></li>
+                                <li><p><i class="fas fa-lightbulb icon text-green-600"></i><strong>balizas reflectantes en hastiales</strong> para <u>guiado de vehículos</u>.</p></li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-road-sign icon"></i>En cuanto a <strong>señalización exterior</strong>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="nested-list">
+                                            <li><u>carteles del nombre, longitud, velocidad máxima e instalaciones de seguridad</u>;</li>
+                                            <li><u>señales de encendido obligatorio del alumbrado</u> o de <u>prohibición de adelantar</u>;</li>
+                                            <li>y <u>semáforos</u> para restringir el acceso al túnel en caso necesario.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <h3 class="font-bold"><i class="fas fa-broadcast-tower icon"></i>Otros equipos</h3>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul>
+                                <li><p><i class="fas fa-satellite-dish icon text-blue-600"></i>de <strong>radiocomunicación</strong> que permiten la comunicación entre el <u>centro de control</u> y el <u>personal del túnel</u> o <u>bomberos</u>.</p></li>
+                                <li><p><i class="fas fa-bullhorn icon text-purple-600"></i>En túneles largos también existen <strong>sistemas de radio</strong> para <u>informar a los usuarios con mensajes de emergencia</u>, complementados por <strong>megafonía</strong>.</p></li>
+                                <li><p><i class="fas fa-plug icon text-orange-600"></i>Los túneles interurbanos normalmente cuentan con una <strong>alimentación de alta tensión</strong> (se suele exigir la conexión con <u>2 redes independientes</u>), <strong>transformadores</strong> y la <strong>instalación de baja tensión</strong>.</p></li>
+                                <li><p><i class="fas fa-car-battery icon text-indigo-600"></i>También es habitual <strong>grupos electrógenos</strong> que cubran la <u>iluminación de emergencia</u>, los <u>equipos informáticos</u> y la <u>ventilación en modo degradado</u>, con <span class="definition-pill"><strong>sistemas de alimentación ininterrumpida (SAI)</strong></span>, para cubrir el suministro entre la caída de la red eléctrica y la entrada en funcionamiento de los grupos electrógenos.</p></li>
+                                <li><p><i class="fas fa-headset icon text-teal-600"></i>Si bien la mayor parte de las instalaciones funcionan actualmente de <strong>manera automática</strong>, ante incidencias es preciso tomar decisiones con la <strong>intervención humana</strong>, por lo que en túneles de cierta longitud se exige la instalación de un <strong>centro de control</strong> con <u>personal las 24 horas del día</u>.</p></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-gavel"></i></div>
+                <h2>5. Real Decreto 635/2006 sobre requisitos mínimos de seguridad en los túneles de carreteras del Estado</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver detalles</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <ul>
+                    <li><p><i class="fas fa-info-circle icon text-blue-600"></i>El <span class="law-pill"><strong>Real Decreto 635/2006</strong></span>, que es <strong>transposición</strong> de la <span class="law-pill"><strong>Directiva 2004/54</strong></span> sobre requisitos mínimos de seguridad para túneles de la red transeuropea de carreteras.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-bullseye icon text-purple-600"></i>Tiene por <strong>objeto</strong> garantizar un <strong>nivel suficiente de seguridad</strong> a los usuarios en los túneles de la red de carreteras del Estado mediante el establecimiento de los <strong>requisitos mínimos</strong> que habrán de cumplir dichas infraestructuras, con la <strong>finalidad</strong> de:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li><strong>prevenir situaciones críticas</strong> que puedan poner en peligro la <u>vida humana</u>, el <u>medio ambiente</u> y las <u>propias infraestructuras</u>,</li>
+                                <li>así como <strong>proteger a los usuarios</strong> en caso de que se produzcan algunas de las citadas situaciones.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-road icon text-orange-600"></i>Es <strong>aplicable a todos los túneles</strong> de la red de carreteras del Estado, tanto si están:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>en <u>servicio</u></li>
+                                <li>como si se encuentran en fase de <u>construcción</u> o de <u>proyecto</u>.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li><p><i class="fas fa-globe-europe icon text-indigo-600"></i>En el caso de <strong>túneles transfronterizos</strong>, sin perjuicio del cumplimiento de lo establecido en la <span class="law-pill">Directiva 2004/54</span> y en el <span class="law-pill">Real Decreto 635/2006</span>, las <u>instalaciones</u> y el <u>régimen de explotación</u> se ajustarán a lo que decida la <span class="actor-pill"><strong>Comisión técnica mixta internacional</strong></span> que al efecto se designe.</p></li>
+                    <li>
+                        <div class="collapsible-trigger">
+                            <i class="fas fa-chevron-right collapsible-icon"></i>
+                            <p><i class="fas fa-users-cog icon text-teal-600"></i>El RD establece <strong>4 figuras</strong> que intervienen en la seguridad de un túnel:</p>
+                        </div>
+                        <div class="collapsible-content hidden">
+                            <ul class="nested-list">
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-user-tie icon"></i><span class="actor-pill"><strong>Autoridad Administrativa</strong></span> (<span class="actor-pill">Secretaría de Estado de Transportes y Movilidad Sostenible</span>), responsable de:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>el <u>cumplimiento de los requisitos de seguridad</u> establecidos en la normativa,</li>
+                                            <li><u>autoriza la puesta en servicio</u> o el <u>cierre inmediato</u> en caso de emergencia,</li>
+                                            <li>realiza <u>inspecciones periódicas</u> al menos cada <span class="pill-blue">5 años</span>,</li>
+                                            <li>y <u>pone en práctica las medidas de reducción del riesgo</u> necesarias.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-user-cog icon"></i><span class="actor-pill"><strong>Gestor del túnel</strong></span> (<span class="actor-pill">Dirección General de Carreteras</span>): responsable de:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>las <u>operaciones necesarias para el funcionamiento</u> del túnel y sus instalaciones,</li>
+                                            <li>de <u>elaborar y actualizar el manual de explotación</u></li>
+                                            <li>o de <u>realizar informes con incidentes significativos</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-user-shield icon"></i><span class="actor-pill"><strong>Responsable de Seguridad</strong></span>: figura designada por la <span class="actor-pill">DGC</span> para <u>coordinar todas las medidas e intervinientes</u> en la seguridad de un túnel.</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>existiendo en las fases de <u>proyecto</u>, <u>construcción</u> y <u>explotación</u>, pudiendo ser diferente para cada una de ellas.</li>
+                                            <li>Podrá tener una <u>relación funcional o contractual</u> con el gestor del túnel, pero <strong>no recibirá instrucciones</strong> de aquél en relación con el ejercicio de sus funciones.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="collapsible-trigger">
+                                        <i class="fas fa-chevron-right collapsible-icon"></i>
+                                        <p><i class="fas fa-search icon"></i><span class="actor-pill"><strong>Organismo de Inspección</strong></span>:</p>
+                                    </div>
+                                    <div class="collapsible-content hidden">
+                                        <ul class="deeper-nested-list">
+                                            <li>entidad <u>funcionalmente independiente</u> del gestor del túnel</li>
+                                            <li>en la que la <span class="actor-pill">Autoridad Administrativa</span> puede <u>delegar las inspecciones periódicas</u>.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Script para la funcionalidad desplegable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Selecciona todos los elementos que servirán como disparadores
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            // Itera sobre cada disparador para añadirle un detector de clics
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function (event) {
+                    // Evita que el clic en un desplegable anidado afecte a su contenedor padre
+                    event.stopPropagation();
+                    
+                    // Encuentra el elemento de contenido que sigue inmediatamente al disparador
+                    const content = this.nextElementSibling;
+                    
+                    // Alterna la clase 'open' en el disparador (para rotar el icono)
+                    this.classList.toggle('open');
+                    
+                    // Verifica que el siguiente elemento sea un contenido desplegable y alterna la clase 'hidden'
+                    if (content && content.classList.contains('collapsible-content')) {
+                        content.classList.toggle('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
