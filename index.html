@@ -290,7 +290,7 @@
            </div>
        </div>
 
-		<audio id="topic-audio" src=""></audios>
+		<audio id="topic-audio" src=""></audio>
 	</div>
 
 	<!-- Firebase SDKs -->
@@ -315,6 +315,8 @@
             const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
             let pdfToOpen = null;
             let originalButton = null;
+            // NEW: State for PDF viewer click cycle
+            let pdfViewMode = 'closed'; // Can be 'closed', 'general', 'summary'
 
 			async function initializeAndAuthFirebase() {
 				try {
@@ -392,6 +394,23 @@
 
 			await initializeAndAuthFirebase();
             handleSession();
+
+            // NEW: Array of summary PDF filenames
+            const summaryPdfFiles = [
+                "RESUMEN TEMA 1 CARR (12-09-2022).pdf", "RESUMEN TEMA 2 CARR (05-09-2022).pdf",
+                "RESUMEN TEMA 3 CARR (12-09-2022).pdf", "RESUMEN TEMA 4 CARR (05-09-2022).pdf",
+                "RESUMEN TEMA 5 CARR (14-09-2022).pdf", "RESUMEN TEMA 6 CARR (14-09-2022).pdf",
+                "RESUMEN TEMA 7 CARR (05-09-2022).pdf", "RESUMEN TEMA 8 CARR (14-09-2022).pdf",
+                "RESUMEN TEMA 9 CARR (05-09-2022).pdf", "RESUMEN TEMA 10 CARR (12-09-2022).pdf",
+                "RESUMEN TEMA 11 CARR (05-09-2022).pdf", "RESUMEN TEMA 12 CARR (05-09-2022).pdf",
+                "RESUMEN TEMA 13 CARR (05-09-2022).pdf", "RESUMEN TEMA 14 CARR (12-09-2022).pdf",
+                "RESUMEN TEMA 15 CARR (05-09-2022).pdf", "RESUMEN TEMA 16 CARR (05-09-2022).pdf",
+                "RESUMEN TEMA 17 CARR (05-09-2022).pdf", "RESUMEN TEMA 18 CARR (12-09-2022).pdf",
+                "RESUMEN TEMA 19 CARR (12-09-2022).pdf", "RESUMEN TEMA 20 CARR (12-09-2022).pdf",
+                "RESUMEN TEMA 21 CARR (05-09-2022).pdf", "RESUMEN TEMA 22 CARR (05-09-2022).pdf",
+                "RESUMEN TEMA 23 CARR (12-09-2022).pdf", "RESUMEN TEMA 24 CARR (05-09-2022).pdf"
+            ];
+
 			const topics = [
                 
                 {
@@ -797,18 +816,20 @@
                     }
                 } catch (error) {
                     console.error('Error loading or searching PDF:', error);
-                    alert('No se pudo cargar el PDF. Revisa la URL y asegúrate de que sea un enlace directo (raw) al archivo.');
+                    loadingTextEl.textContent = 'Error al cargar PDF.';
+                    // alert('No se pudo cargar el PDF. Revisa la URL y asegúrate de que sea un enlace directo (raw) al archivo.');
                 } finally {
-                    loadingOverlay.style.display = 'none';
+                    setTimeout(() => { loadingOverlay.style.display = 'none'; }, 500);
                 }
             }
 
 			function showMapView(button){
                 originalButton = button;
-                const topic = topics[button.dataset.index];
+                const topicIndex = button.dataset.index;
+                const topic = topics[topicIndex];
 				const chaptersToLoad = userCustomChapters[topic.file.replace(/_Desplegable\.html$/i, '')] || (topic.chapters ? JSON.parse(JSON.stringify(topic.chapters)) : []);
 
-				currentTopic = { ...topic, chapters: chaptersToLoad };
+				currentTopic = { ...topic, chapters: chaptersToLoad, index: parseInt(topicIndex) };
 
                 const rect = button.getBoundingClientRect();
                 const color = colorPalette[topic.color];
@@ -1206,6 +1227,7 @@
                  [lectorPanel, editorPanel, pdfViewerWrapper, oralPdfViewerWrapper].forEach(p => {
                     if (p === pdfViewerWrapper && p.style.display === 'block') {
                         pdfDoc = null;
+                        pdfViewMode = 'closed'; // MODIFIED: Reset state when PDF viewer is closed
                     }
                     if (p === oralPdfViewerWrapper && p.style.display === 'block') {
                         oralPdfDoc = null;
@@ -1237,12 +1259,34 @@
                 }
             }
 
+            // MODIFIED: New logic for the PDF button
             togglePdfButton.addEventListener('click', () => {
-                if (pdfViewerWrapper.style.display === 'block') {
-                    resetLayout();
-                } else {
-                    pdfToOpen = 'topic';
-                    sideSelectModal.classList.remove('hidden');
+                switch (pdfViewMode) {
+                    case 'closed':
+                        // First click: open general PDF
+                        pdfToOpen = 'topic';
+                        sideSelectModal.classList.remove('hidden');
+                        pdfViewMode = 'general';
+                        break;
+                    case 'general':
+                        // Second click: open summary PDF
+                        if (currentTopic && typeof currentTopic.index !== 'undefined' && summaryPdfFiles[currentTopic.index]) {
+                            const summaryPdfName = summaryPdfFiles[currentTopic.index];
+                            const summaryPdfUrl = `https://raw.githubusercontent.com/cheradra312/CARRETERAS-1-24/main/temas.es/${encodeURIComponent(summaryPdfName)}`;
+
+                            // The viewer is already open, just load the new PDF
+                            const topicId = currentTopic.file.replace(/_Desplegable\.html$/i, '');
+                            loadPdfAndFind(summaryPdfUrl, topicId, pdfCanvas, pageNumEl, pageCountEl, prevPageBtn, nextPageBtn, pdfLoadingOverlay, loadingText);
+                            pdfViewMode = 'summary';
+                        } else {
+                            alert('No se encontró el PDF de resumen para este tema.');
+                        }
+                        break;
+                    case 'summary':
+                        // Third click: close viewer
+                        resetLayout();
+                        pdfViewMode = 'closed';
+                        break;
                 }
             });
 
