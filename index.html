@@ -31,7 +31,7 @@
 		.topic-number { border-radius: 9999px; font-weight: 700; font-size: 1.125rem; width: 2.75rem; height: 2.75rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s ease-in-out; }
 		.topic-title { font-weight: 600; flex-grow: 1; }
 		.topic-icon { font-size: 1.25rem; width: 2rem; text-align: center; transition: color 0.2s ease-in-out; }
-		#top-control-bar, #editor-panel, #lector-panel { opacity: 0; transition: opacity 0.3s ease-in-out; }
+		#top-control-bar, #editor-panel, #lector-panel, #tools-panel { opacity: 0; transition: opacity 0.3s ease-in-out; }
 		input[type="range"]::-webkit-slider-runnable-track { background: #e5e7eb; height: 0.25rem; border-radius: 1rem; }
 		input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; margin-top: -6px; background-color: #3b82f6; height: 1rem; width: 1rem; border-radius: 50%; }
 		input[type="range"] { -webkit-appearance: none; appearance: none; background: transparent; cursor: pointer; }
@@ -130,6 +130,10 @@
                     <button id="toggle-lector-button" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 flex items-center gap-2">
                         <i class="fas fa-book-open"></i><span class="hidden sm:inline">Lector</span>
                     </button>
+                    <!-- BOTÓN DE HERRAMIENTAS AÑADIDO -->
+                    <button id="toggle-tools-button" class="bg-amber-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-amber-600 flex items-center gap-2">
+                        <i class="fas fa-tools"></i><span class="hidden sm:inline">Herramientas</span>
+                    </button>
                     <div class="relative inline-block">
                         <button id="toggle-video-button" class="bg-red-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-red-600 flex items-center gap-2">
                            <i class="fas fa-video"></i><span class="hidden sm:inline">Ver Vídeo</span>
@@ -168,6 +172,10 @@
 			<div id="main-viewer-area" class="flex flex-col lg:flex-row gap-4">
                 <div id="lector-panel" class="side-panel bg-white p-4 rounded-lg shadow-lg border border-gray-200 hidden" style="flex-basis: 33.33%;">
                     <iframe id="lector-frame" class="w-full h-full border-0" style="min-height: 75vh;"></iframe>
+                </div>
+                <!-- PANEL DE HERRAMIENTAS AÑADIDO -->
+                <div id="tools-panel" class="side-panel bg-white p-4 rounded-lg shadow-lg border border-gray-200 hidden" style="flex-basis: 33.33%;">
+                    <iframe id="tools-frame" class="w-full h-full border-0" style="min-height: 75vh;"></iframe>
                 </div>
 				<div id="editor-panel" class="side-panel bg-white p-4 rounded-lg shadow-lg border border-gray-200 hidden" style="flex-basis: 33.33%;">
 					<div class="flex justify-between items-center border-b pb-2 mb-2">
@@ -696,6 +704,8 @@
             const toggleVideoButton = document.getElementById('toggle-video-button'), videoDropdown = document.getElementById('video-dropdown'), changeSessionButton = document.getElementById('change-session-button'), sessionModalOverlay = document.getElementById('session-modal-overlay'), sessionIdInput = document.getElementById('session-id-input'), startSessionButton = document.getElementById('start-session-button');
             const toggleOralButton = document.getElementById('toggle-oral-button'), oralPdfViewerContainer = document.getElementById('oral-pdf-viewer-container'), flashcardsFrame = document.getElementById('flashcards-frame'), playSelectionButton = document.getElementById('play-selection-button'), playX3Button = document.getElementById('play-x3-button'), deleteConfirmModal = document.getElementById('delete-confirm-modal'), confirmDeleteBtn = document.getElementById('confirm-delete-btn'), cancelDeleteBtn = document.getElementById('cancel-delete-btn');
             const toggleLectorButton = document.getElementById('toggle-lector-button'), lectorPanel = document.getElementById('lector-panel'), lectorFrame = document.getElementById('lector-frame'), resizer = document.getElementById('resizer');
+            // CONSTANTES PARA HERRAMIENTAS AÑADIDAS
+            const toggleToolsButton = document.getElementById('toggle-tools-button'), toolsPanel = document.getElementById('tools-panel'), toolsFrame = document.getElementById('tools-frame');
             const pdfViewerWrapper = document.getElementById('pdf-viewer-wrapper');
             const oralPdfViewerWrapper = document.getElementById('oral-pdf-viewer-wrapper');
             const flashcardsWrapper = document.getElementById('flashcards-wrapper');
@@ -1026,9 +1036,41 @@
                 if (lectorPanel.style.display === 'block') {
                     resetLayout();
                 } else {
-                    resetLayout(lectorPanel);
+                    resetLayout(lectorPanel, 'left');
                     if(!lectorFrame.src) {
                         lectorFrame.src = "https://cheradra312.github.io/REPRODUCTOR/";
+                    }
+                }
+            });
+            
+            // EVENT LISTENER PARA EL BOTÓN DE HERRAMIENTAS
+            toggleToolsButton.addEventListener('click', () => {
+                if (toolsPanel.style.display === 'block') {
+                    resetLayout();
+                } else {
+                    resetLayout(toolsPanel, 'left'); // Abrir a la izquierda
+                    if(!toolsFrame.src) {
+                        toolsFrame.src = "./Herramientas/herr.html";
+                    }
+                    
+                    const herrTopics = [
+                        "MEB1T1. La legislación de Carreteras", "MEB1T2. La planificación estratégica", "MEB1T3. Estudios de carreteras (I)",
+                        "MEB1T4. Estudios de carreteras (II)", "MEB1T5. Trazado de carreteras", "MEB1T6. Drenaje superficial y subterráneo",
+                        "MEB1T7. Movimiento de tierras", "MEB1T8. Firmes (I)", "MEB1T9. Firmes (II)", "MEB1T10. Obras de paso",
+                        "MEB1T11. Túneles en carreteras (I)", "MEB1T12. Túneles en carreteras (II)", "MEB1T13. Señalización y sistemas de contención",
+                        "MEB1T14. PG-3 y el Reglamento UE 305/2011", "MEB1T15. Proyectos de trazado y de construcción", "MEB1T16. Construcción de carreteras (I)",
+                        "MEB1T17. Construcción de carreteras (II)", "MEB1T18. La gestión de la RCE", "MEB1T19. Conservación de carreteras (I)",
+                        "MEB1T20. Conservación de carreteras (II)", "MEB1T21. Explotación de carreteras (I)", "MEB1T22. Explotación de carreteras (II)",
+                        "MEB1T23. Innovación aplicada a la movilidad", "MEB1T24. Seguridad vial"
+                    ];
+                    const topicToSend = herrTopics[currentTopic.index];
+
+                    toolsFrame.onload = () => {
+                        toolsFrame.contentWindow.postMessage({ topic: topicToSend }, '*');
+                    };
+                    
+                    if (toolsFrame.contentWindow) {
+                         toolsFrame.contentWindow.postMessage({ topic: topicToSend }, '*');
                     }
                 }
             });
@@ -1224,7 +1266,8 @@
 
 
             function resetLayout(panelToShow = null, side = 'left') {
-                 [lectorPanel, editorPanel, pdfViewerWrapper, oralPdfViewerWrapper].forEach(p => {
+                 // MODIFICADO: Añadido toolsPanel a la lista
+                 [lectorPanel, editorPanel, pdfViewerWrapper, oralPdfViewerWrapper, toolsPanel].forEach(p => {
                     if (p === pdfViewerWrapper && p.style.display === 'block') {
                         pdfDoc = null;
                         pdfViewMode = 'closed'; // MODIFIED: Reset state when PDF viewer is closed
@@ -1483,3 +1526,4 @@
 	</script>
 </body>
 </html>
+
