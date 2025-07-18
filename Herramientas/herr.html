@@ -178,6 +178,7 @@
             const topicSelect = document.getElementById('topic-select');
             const resultsGrid = document.getElementById('results-grid');
             const loadingSpinner = document.getElementById('loading-spinner');
+            let isLoading = false; // Flag to prevent concurrent executions
 
             const topics = [
                 "MEB1T1. La legislación de Carreteras", "MEB1T2. La planificación estratégica", "MEB1T3. Estudios de carreteras (I)",
@@ -218,6 +219,12 @@
 
             // Función para mostrar el contenido del tema seleccionado
             const displayTopicContent = async () => {
+                if (isLoading) {
+                    console.log("Carga en progreso, omitiendo llamada duplicada.");
+                    return;
+                }
+                isLoading = true;
+
                 const selectedTopic = topicSelect.value;
                 
                 resultsGrid.innerHTML = '';
@@ -225,57 +232,60 @@
 
                 const parser = new DOMParser();
                 
-                await Promise.all(sourceFiles.map(async (fileInfo) => {
-                    try {
-                        const response = await fetch('./' + fileInfo.path);
-                        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                        
-                        const htmlText = await response.text();
-                        const doc = parser.parseFromString(htmlText, 'text/html');
+                try {
+                    await Promise.all(sourceFiles.map(async (fileInfo) => {
+                        try {
+                            const response = await fetch('./' + fileInfo.path);
+                            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                            
+                            const htmlText = await response.text();
+                            const doc = parser.parseFromString(htmlText, 'text/html');
 
-                        const topicHeaders = Array.from(doc.querySelectorAll('h2'));
-                        const topicHeader = topicHeaders.find(h => h.textContent.trim() === selectedTopic);
-                        
-                        let contentHTML = '<p class="text-gray-500 text-center p-4">No se encontró contenido para este tema en este archivo.</p>';
+                            const topicHeaders = Array.from(doc.querySelectorAll('h2'));
+                            const topicHeader = topicHeaders.find(h => h.textContent.trim() === selectedTopic);
+                            
+                            let contentHTML = '<p class="text-gray-500 text-center p-4">No se encontró contenido para este tema en este archivo.</p>';
 
-                        if (topicHeader) {
-                            let currentNode = topicHeader.nextElementSibling;
-                            const contentBlock = document.createElement('div');
-                            while (currentNode && currentNode.tagName !== 'H2') {
-                                contentBlock.appendChild(currentNode.cloneNode(true));
-                                currentNode = currentNode.nextElementSibling;
+                            if (topicHeader) {
+                                let currentNode = topicHeader.nextElementSibling;
+                                const contentBlock = document.createElement('div');
+                                while (currentNode && currentNode.tagName !== 'H2') {
+                                    contentBlock.appendChild(currentNode.cloneNode(true));
+                                    currentNode = currentNode.nextElementSibling;
+                                }
+                                if (contentBlock.hasChildNodes()) {
+                                    contentHTML = contentBlock.innerHTML;
+                                }
                             }
-                            if (contentBlock.hasChildNodes()) {
-                                contentHTML = contentBlock.innerHTML;
-                            }
+                            
+                            const palette = colorPalette[fileInfo.color];
+                            const windowDiv = document.createElement('div');
+                            windowDiv.className = 'flex flex-col bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden';
+                            windowDiv.innerHTML = `
+                                <a href="./${fileInfo.path}" target="_blank" class="topic-button ${palette.button} p-4">
+                                    <span class="topic-number ${palette.number}">
+                                        <i class="fas ${fileInfo.icon}"></i>
+                                    </span>
+                                    <span class="topic-title">${fileInfo.name}</span>
+                                </a>
+                                <div class="content-window p-4 overflow-y-auto h-96 border-t border-gray-200">
+                                    ${contentHTML}
+                                </div>
+                            `;
+                            resultsGrid.appendChild(windowDiv);
+
+                        } catch (error) {
+                            console.error(`Error procesando el archivo ${fileInfo.path}:`, error);
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'flex flex-col bg-white rounded-xl shadow-lg border border-red-300 p-4';
+                            errorDiv.innerHTML = `<h3 class="font-bold text-red-600">${fileInfo.name}</h3><p>Error al cargar el contenido.</p>`;
+                            resultsGrid.appendChild(errorDiv);
                         }
-                        
-                        const palette = colorPalette[fileInfo.color];
-                        const windowDiv = document.createElement('div');
-                        windowDiv.className = 'flex flex-col bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden';
-                        windowDiv.innerHTML = `
-                            <a href="./${fileInfo.path}" target="_blank" class="topic-button ${palette.button} p-4">
-                                <span class="topic-number ${palette.number}">
-                                    <i class="fas ${fileInfo.icon}"></i>
-                                </span>
-                                <span class="topic-title">${fileInfo.name}</span>
-                            </a>
-                            <div class="content-window p-4 overflow-y-auto h-96 border-t border-gray-200">
-                                ${contentHTML}
-                            </div>
-                        `;
-                        resultsGrid.appendChild(windowDiv);
-
-                    } catch (error) {
-                        console.error(`Error procesando el archivo ${fileInfo.path}:`, error);
-                        const errorDiv = document.createElement('div');
-                        errorDiv.className = 'flex flex-col bg-white rounded-xl shadow-lg border border-red-300 p-4';
-                        errorDiv.innerHTML = `<h3 class="font-bold text-red-600">${fileInfo.name}</h3><p>Error al cargar el contenido.</p>`;
-                        resultsGrid.appendChild(errorDiv);
-                    }
-                }));
-
-                loadingSpinner.style.display = 'none';
+                    }));
+                } finally {
+                    loadingSpinner.style.display = 'none';
+                    isLoading = false; // Release the lock
+                }
             };
 
             window.addEventListener('message', (event) => {
@@ -294,8 +304,10 @@
 
             topicSelect.addEventListener('change', displayTopicContent);
 
-            displayTopicContent();
+            // Se elimina la llamada inicial para que la carga la controle la página principal (index.html)
+            // displayTopicContent();
         });
     </script>
 </body>
 </html>
+
