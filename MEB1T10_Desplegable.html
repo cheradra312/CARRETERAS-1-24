@@ -8,6 +8,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Carga de Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Estilos CSS personalizados -->
     <style>
         /* Fuentes y fondo base */
@@ -142,6 +145,18 @@
         .hidden {
             display: none;
         }
+        
+        /* Estilos específicos para las píldoras de la nueva tabla */
+        .pill-inspection {
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .pill-blue-inspection { background-color: #dbeafe; color: #1e40af; }
+        .pill-green-inspection { background-color: #dcfce7; color: #166534; }
+        .pill-red-inspection { background-color: #fee2e2; color: #991b1b; }
     </style>
 </head>
 <body class="text-gray-800 p-4 sm:p-6 md:p-8">
@@ -382,6 +397,67 @@
                     </li>
                     <li><p><i class="fas fa-cogs icon text-orange-600"></i>En la <span class="definition-pill">RCE</span> la <strong>información de las inspecciones</strong>, junto con el <strong>inventario</strong>, se integran en un <span class="definition-pill"><strong>sistema de gestión de obras de paso</strong></span> que permite <u>conocer su estado</u>, <u>definir alternativas de reparación</u>, y <u>elaborar un programa de actuación</u>.</p></li>
                 </ul>
+            </div>
+             <!-- Tabla Comparativa Trigger -->
+            <div class="collapsible-trigger mt-4 border-t border-gray-200 pt-4">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span><i class="fas fa-table icon text-indigo-600"></i>Ver tabla comparativa</span>
+            </div>
+            <div class="collapsible-content hidden">
+                 <div class="overflow-x-auto bg-white rounded-lg shadow-lg mt-4">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-800 text-white">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Tipo de Inspección</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Objetivo Principal</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Personal</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Periodicidad</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Acción Derivada Típica</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 align-top font-medium">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-eye text-blue-600"></i>
+                                        <span>Básica</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 align-top text-sm">Detectar deterioros de forma temprana y prevenir su agravamiento. Localizar daños graves que requieran intervención urgente.</td>
+                                <td class="px-4 py-4 align-top text-sm">Encargados de mantenimiento.</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="pill-inspection pill-blue-inspection">~ 15 meses</span></td>
+                                <td class="px-4 py-4 align-top text-sm">Actuaciones de <strong>mantenimiento ordinario</strong>.</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 align-top font-medium">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-binoculars text-green-600"></i>
+                                        <span>Principal</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 align-top text-sm">Evaluar con detalle el estado de deterioro de todos los elementos de la estructura.</td>
+                                <td class="px-4 py-4 align-top text-sm">Personal especializado.</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="pill-inspection pill-green-inspection">~ 5 años</span></td>
+                                <td class="px-4 py-4 align-top text-sm">Propuesta de <strong>mantenimiento extraordinario</strong> (reparación, refuerzo, etc.).</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 align-top font-medium">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-exclamation-triangle text-red-600"></i>
+                                        <span>Especial</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 align-top text-sm">Determinar el nivel de seguridad de la estructura y definir alternativas de intervención tras un daño o situación excepcional.</td>
+                                <td class="px-4 py-4 align-top text-sm">Técnicos especializados con medios especiales.</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="pill-inspection pill-red-inspection">No periódica</span></td>
+                                <td class="px-4 py-4 align-top text-sm">Obtención de datos para redactar <strong>proyectos de rehabilitación</strong>.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <footer class="text-center text-sm text-gray-500 p-4">
+                        <p>Tabla generada a partir de la documentación sobre conservación e inspección de obras de paso.</p>
+                    </footer>
+                </div>
             </div>
         </div>
 
