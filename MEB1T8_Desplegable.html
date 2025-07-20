@@ -8,7 +8,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Carga de Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- Estilos CSS personalizados -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Estilos CSS personalizados (Restaurados al original) -->
     <style>
         /* Fuentes y fondo base */
         body {
@@ -467,6 +470,88 @@
                     </li>
                 </ul>
             </div>
+            <!-- Tabla Comparativa Trigger -->
+            <div class="collapsible-trigger mt-4 border-t border-gray-200 pt-4">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span><i class="fas fa-table icon text-indigo-600"></i>Ver tabla comparativa</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <div class="overflow-x-auto bg-white rounded-lg shadow-lg mt-4">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-800 text-white">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Tipo de Mezcla</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Denominación</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Características Principales</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Uso / Capa</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Espesor Típico</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Tamaño Nominal Árido</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 align-top font-medium"><i class="fas fa-snowflake text-blue-500 mr-2"></i>Microaglomerado en Frío</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="definition-pill">MICROF</span> + tamaño + sup/inf + emulsión</td>
+                                <td class="px-4 py-4 align-top text-sm">Fabricadas con emulsiones, extendido en frío. Mejoran textura y resistencia al deslizamiento.</td>
+                                <td class="px-4 py-4 align-top text-sm">Superficie</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="pill-blue">≤ 3 cm</span> total<br>(~1.5 cm/capa)</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="pill-blue">11, 8, 5 mm</span></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 align-top font-medium"><i class="fas fa-temperature-high text-red-500 mr-2"></i>Hormigón Bituminoso (AC)</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="definition-pill">AC</span> + tamaño + surf/bin/base + ligante + D/S</td>
+                                <td class="px-4 py-4 align-top text-sm">Mezcla en caliente/semicaliente. Granulometría densa (D) o semidensa (S).</td>
+                                <td class="px-4 py-4 align-top text-sm">Rodadura, Intermedia, Base</td>
+                                <td class="px-4 py-4 align-top text-sm">-</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="pill-blue">16, 22, 32 mm</span></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 align-top font-medium"><i class="fas fa-water text-cyan-500 mr-2"></i>Drenante (PA)</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="definition-pill">PA</span> + tamaño + ligante</td>
+                                <td class="px-4 py-4 align-top text-sm">Contenido muy alto de huecos interconectados para evacuar agua.</td>
+                                <td class="px-4 py-4 align-top text-sm">Rodadura</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="pill-blue">4 cm</span></td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="pill-blue">11 mm</span></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 align-top font-medium"><i class="fas fa-chart-pie text-orange-500 mr-2"></i>Discontinua (BBTM)</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="definition-pill">BBTM</span> + tamaño + clase (A/B) + ligante</td>
+                                <td class="px-4 py-4 align-top text-sm">Discontinuidad granulométrica acusada. Buena macrotextura.</td>
+                                <td class="px-4 py-4 align-top text-sm">Rodadura</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="pill-blue">2 - 3 cm</span></td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="pill-blue">8, 11 mm</span></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 align-top font-medium"><i class="fas fa-layer-group text-purple-500 mr-2"></i>Ultrafina</td>
+                                <td class="px-4 py-4 align-top text-sm">-</td>
+                                <td class="px-4 py-4 align-top text-sm">Capas muy delgadas donde la adherencia es esencial.</td>
+                                <td class="px-4 py-4 align-top text-sm">Rodadura</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="pill-blue">1 - 2 cm</span></td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="pill-blue">5, 8, 11 mm</span></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 align-top font-medium"><i class="fas fa-cubes text-yellow-500 mr-2"></i>Tipo SMA</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="definition-pill">SMA</span> + tamaño + surf/bin + ligante</td>
+                                <td class="px-4 py-4 align-top text-sm">Baja proporción de finos, discontinuidad granulométrica y alto contenido en betún. Esqueleto granular resistente.</td>
+                                <td class="px-4 py-4 align-top text-sm">Rodadura, Intermedia</td>
+                                <td class="px-4 py-4 align-top text-sm">-</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="pill-blue">8, 11, 16 mm</span></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 align-top font-medium"><i class="fas fa-cogs text-gray-600 mr-2"></i>Alto Módulo (MAM)</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="definition-pill">MAM</span> + tamaño + bin/base + ligante</td>
+                                <td class="px-4 py-4 align-top text-sm">Módulo de rigidez muy elevado (<span class="law-pill">E ≥ 11.000 MPa</span>). Permite reducir espesores de firme.</td>
+                                <td class="px-4 py-4 align-top text-sm">Intermedia, Base</td>
+                                <td class="px-4 py-4 align-top text-sm">Para reducir espesores ≥ 20cm</td>
+                                <td class="px-4 py-4 align-top text-sm"><span class="pill-blue">22 mm</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <footer class="text-center text-sm text-gray-500 p-4">
+                        <p>Tabla generada según <span class="law-pill">PG-3</span> y <span class="law-pill">norma 6.1-IC</span>.</p>
+                    </footer>
+                </div>
+            </div>
         </div>
 
         <!-- Card 5 -->
@@ -545,6 +630,51 @@
                         </div>
                     </li>
                 </ul>
+            </div>
+            <!-- Tabla Comparativa Trigger -->
+            <div class="collapsible-trigger mt-4 border-t border-gray-200 pt-4">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span><i class="fas fa-table icon text-indigo-600"></i>Ver tabla comparativa</span>
+            </div>
+            <div class="collapsible-content hidden">
+                 <div class="overflow-x-auto bg-white rounded-lg shadow-lg mt-4">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-800 text-white">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Tipo de Pavimento de Hormigón</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Juntas</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Armadura</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Características / Uso</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 align-top font-medium"><i class="fas fa-cube text-gray-500 mr-2"></i>Hormigón en Masa</td>
+                                <td class="px-4 py-4 align-top text-sm">Transversales de contracción y longitudinales. Con o sin pasadores.</td>
+                                <td class="px-4 py-4 align-top text-sm">No tiene (excepto barras de unión en juntas).</td>
+                                <td class="px-4 py-4 align-top text-sm">El más común. Adaptable y económico.</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 align-top font-medium"><i class="fas fa-link text-blue-500 mr-2"></i>Hormigón Armado con Juntas</td>
+                                <td class="px-4 py-4 align-top text-sm">Juntas más espaciadas (<span class="pill-blue">10-20 m</span>).</td>
+                                <td class="px-4 py-4 align-top text-sm">Cuantía para coser fisuras.</td>
+                                <td class="px-4 py-4 align-top text-sm">En desuso. Mayor coste que no compensa la calidad.</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 align-top font-medium"><i class="fas fa-infinity text-purple-500 mr-2"></i>Hormigón Armado Continuo</td>
+                                <td class="px-4 py-4 align-top text-sm">Sin juntas transversales.</td>
+                                <td class="px-4 py-4 align-top text-sm">Cuantía elevada (<span class="pill-blue">~0.6-0.7%</span>).</td>
+                                <td class="px-4 py-4 align-top text-sm">Excelente comportamiento y comodidad. Fisuración controlada e imperceptible.</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 align-top font-medium"><i class="fas fa-industry text-orange-500 mr-2"></i>Hormigón con Fibras de Acero</td>
+                                <td class="px-4 py-4 align-top text-sm">Juntas más espaciadas que en hormigón en masa.</td>
+                                <td class="px-4 py-4 align-top text-sm">Fibras de acero dispersas (<span class="pill-blue">~40 kg/m³</span>).</td>
+                                <td class="px-4 py-4 align-top text-sm">Reduce espesor. Alta resistencia. Para refuerzos, puentes, pavimentos industriales.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
