@@ -8,12 +8,17 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Carga de Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Fuentes de Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Estilos CSS personalizados -->
     <style>
         /* Fuentes y fondo base */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f0f4f8;
+            color: #374151;
         }
         /* Estructura principal de las tarjetas */
         .card {
@@ -81,7 +86,7 @@
             position: relative;
         }
         .nested-list > li::before {
-            content: '🔹';
+            content: '�';
             position: absolute;
             left: -1.75rem;
             top: 0.25rem;
@@ -127,12 +132,17 @@
         }
         .collapsible-content {
             padding-left: 1.75rem;
+            margin-top: 1rem;
         }
         .collapsible-trigger.open .collapsible-icon {
             transform: rotate(90deg);
         }
         .hidden {
             display: none;
+        }
+        /* Estilos para la tabla insertada */
+        .table-container tbody tr {
+            transition: background-color 0.2s ease-in-out;
         }
     </style>
 </head>
@@ -141,6 +151,249 @@
         <header class="mb-10 text-center">
             <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2"><i class="fas fa-hard-hat"></i> MEB1T16. Construcción de carreteras (I) <i class="fas fa-road"></i></h1>
         </header>
+
+        <!-- Card 0: Tabla de Funciones (NUEVO) -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-bg"><i class="fas fa-table-list"></i></div>
+                <h2>0. Tabla de Funciones de Agentes en Obra</h2>
+            </div>
+            <div class="collapsible-trigger">
+                <i class="fas fa-chevron-right collapsible-icon"></i>
+                <span>Ver/Ocultar Tabla de Funciones</span>
+            </div>
+            <div class="collapsible-content hidden">
+                <div class="overflow-x-auto bg-white rounded-lg shadow-lg table-container">
+                    <table class="min-w-full">
+                        <thead class="bg-gray-800 text-white">
+                            <tr>
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider w-1/4">Documento / Área</th>
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider w-1/4">Agente Interviniente</th>
+                                <th scope="col" class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider w-1/2">Funciones Principales</th>
+                            </tr>
+                        </thead>
+                        <!-- Grouping by tbody for better semantic structure and styling -->
+
+                        <!-- Dirección de Obras -->
+                        <tbody class="divide-y divide-slate-200">
+                            <tr class="bg-slate-100 hover:bg-slate-200">
+                                <td class="px-6 py-4 align-middle font-semibold row-span-2" rowspan="2">Dirección de Obras</td>
+                                <td class="px-6 py-4 align-middle">
+                                    <div class="flex items-center gap-3">
+                                        <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-sky-100 text-sky-700 rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd" /></svg>
+                                        </span>
+                                        <span class="font-medium text-gray-900">Director de Obra</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 align-middle">
+                                    <ul class="list-disc list-inside space-y-1 text-sm">
+                                        <li>Exigir el cumplimiento de las condiciones contractuales.</li>
+                                        <li>Garantizar la ejecución según el proyecto y programa de trabajos.</li>
+                                        <li>Definir condiciones técnicas no especificadas en pliegos.</li>
+                                        <li>Resolver cuestiones técnicas sin modificar el contrato.</li>
+                                        <li>Estudiar y tramitar propuestas de modificación del contrato.</li>
+                                        <li>Gestionar permisos y autorizaciones necesarias.</li>
+                                        <li>Asumir dirección inmediata en casos de urgencia.</li>
+                                        <li>Acreditar las obras realizadas.</li>
+                                        <li>Participar en la recepción y redactar la liquidación.</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="bg-slate-100 hover:bg-slate-200">
+                                <td class="px-6 py-4 align-middle">
+                                     <div class="flex items-center gap-3">
+                                        <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-orange-100 text-orange-700 rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" /></svg>
+                                        </span>
+                                        <span class="font-medium text-gray-900">Contratista</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 align-middle text-sm">Prestar colaboración al Director para el normal cumplimiento de sus funciones.</td>
+                            </tr>
+                        </tbody>
+
+                        <!-- Plan de Obra -->
+                        <tbody class="divide-y divide-stone-200">
+                            <tr class="bg-stone-100 hover:bg-stone-200">
+                                <td class="px-6 py-4 align-middle font-semibold">Plan de Obra</td>
+                                <td class="px-6 py-4 align-middle">
+                                     <div class="flex items-center gap-3">
+                                        <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-orange-100 text-orange-700 rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" /></svg>
+                                        </span>
+                                        <span class="font-medium text-gray-900">Contratista</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 align-middle">
+                                    <ul class="list-disc list-inside space-y-1 text-sm">
+                                        <li>Desarrollar el plan de obra detallado.</li>
+                                        <li>Analizar las unidades de obra para asignar los medios adecuados.</li>
+                                        <li>Establecer periodos de tiempo de realización de cada unidad.</li>
+                                        <li>Programar y secuenciar las actividades (Pert, Gantt).</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <!-- Aseguramiento de la Calidad -->
+                        <tbody class="divide-y divide-blue-200">
+                            <tr class="bg-blue-100 hover:bg-blue-200">
+                                <td class="px-6 py-4 align-middle font-semibold row-span-3" rowspan="3">Aseguramiento de la Calidad</td>
+                                <td class="px-6 py-4 align-middle">
+                                     <div class="flex items-center gap-3">
+                                        <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-sky-100 text-sky-700 rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd" /></svg>
+                                        </span>
+                                        <span class="font-medium text-gray-900">Director de Obra</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 align-middle">
+                                    <ul class="list-disc list-inside space-y-1 text-sm">
+                                        <li>Definir la calidad exigida.</li>
+                                        <li>Obligar a que la obra se ajuste a la calidad del proyecto.</li>
+                                        <li>Organizar el control exterior y coordinar actuaciones.</li>
+                                        <li>Redactar un esquema director de la calidad.</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="bg-blue-100 hover:bg-blue-200">
+                                <td class="px-6 py-4 align-middle">
+                                     <div class="flex items-center gap-3">
+                                        <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-orange-100 text-orange-700 rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" /></svg>
+                                        </span>
+                                        <span class="font-medium text-gray-900">Contratista</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 align-middle">
+                                     <ul class="list-disc list-inside space-y-1 text-sm">
+                                        <li>Redactar y aplicar un Plan de Aseguramiento de la Calidad (PAC).</li>
+                                        <li>Implantar un sistema de calidad en la obra.</li>
+                                        <li>Establecer los métodos de ejecución y su verificación.</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                             <tr class="bg-blue-100 hover:bg-blue-200">
+                                <td class="px-6 py-4 align-middle">
+                                    <div class="flex items-center gap-3">
+                                        <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-indigo-100 text-indigo-700 rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-1 1v1.618A5.002 5.002 0 004.162 8.828 1 1 0 106 9.659A3 3 0 1111.172 9a1 1 0 102 0A5.002 5.002 0 009 2zM4 11a1 1 0 100 2h12a1 1 0 100-2H4z" clip-rule="evenodd" /></svg>
+                                        </span>
+                                        <span class="font-medium text-gray-900">Asistencia Técnica</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 align-middle text-sm">Redactar un plan de supervisión para seguir el PAC del contratista.</td>
+                            </tr>
+                        </tbody>
+
+                        <!-- Plan de Seguridad y Salud -->
+                        <tbody class="divide-y divide-amber-200">
+                            <tr class="bg-amber-100 hover:bg-amber-200">
+                                <td class="px-6 py-4 align-middle font-semibold row-span-3" rowspan="3">Plan de Seguridad y Salud</td>
+                                <td class="px-6 py-4 align-middle">
+                                     <div class="flex items-center gap-3">
+                                        <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-sky-100 text-sky-700 rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd" /></svg>
+                                        </span>
+                                        <span class="font-medium text-gray-900">Director de Obra</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 align-middle text-sm">Ser el responsable último de la seguridad y salud en la obra.</td>
+                            </tr>
+                            <tr class="bg-amber-100 hover:bg-amber-200">
+                                <td class="px-6 py-4 align-middle">
+                                     <div class="flex items-center gap-3">
+                                        <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-orange-100 text-orange-700 rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" /></svg>
+                                        </span>
+                                        <span class="font-medium text-gray-900">Contratista</span>
+                                    </div>
+                                </td>
+                                 <td class="px-6 py-4 align-middle">
+                                    <ul class="list-disc list-inside space-y-1 text-sm">
+                                        <li>Redactar el Plan de Seguridad y Salud.</li>
+                                        <li>Aplicar los principios de acción preventiva.</li>
+                                        <li>Hacer cumplir el plan a todo el personal.</li>
+                                        <li>Atender las indicaciones de la Dirección Facultativa.</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="bg-amber-100 hover:bg-amber-200">
+                                <td class="px-6 py-4 align-middle">
+                                    <div class="flex items-center gap-3">
+                                        <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-yellow-100 text-yellow-700 rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd" /></svg>
+                                        </span>
+                                        <span class="font-medium text-gray-900">Coordinador de S&S</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 align-middle">
+                                    <ul class="list-disc list-inside space-y-1 text-sm">
+                                        <li>Supervisar el plan de seguridad y salud.</li>
+                                        <li>Integrar la actividad preventiva de las empresas.</li>
+                                        <li>Visitar la obra y asegurar el cumplimiento del plan.</li>
+                                        <li>Custodiar y gestionar el libro de incidencias.</li>
+                                        <li>Comunicar anotaciones a las partes y a la inspección de trabajo.</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <!-- Plan de Vigilancia Medioambiental -->
+                        <tbody class="divide-y divide-green-200">
+                            <tr class="bg-green-100 hover:bg-green-200">
+                                <td class="px-6 py-4 align-middle font-semibold row-span-3" rowspan="3">Plan de Vigilancia Medioambiental</td>
+                                <td class="px-6 py-4 align-middle">
+                                     <div class="flex items-center gap-3">
+                                        <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-sky-100 text-sky-700 rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd" /></svg>
+                                        </span>
+                                        <span class="font-medium text-gray-900">Director de Obra</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 align-middle">
+                                    <ul class="list-disc list-inside space-y-1 text-sm">
+                                        <li>Responsable último del cumplimiento de la Declaración de Impacto Ambiental (DIA).</li>
+                                        <li>Realizar el seguimiento del cumplimiento de la DIA.</li>
+                                        <li>Remitir la información solicitada al órgano ambiental.</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="bg-green-100 hover:bg-green-200">
+                                <td class="px-6 py-4 align-middle">
+                                     <div class="flex items-center gap-3">
+                                        <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-orange-100 text-orange-700 rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" /></svg>
+                                        </span>
+                                        <span class="font-medium text-gray-900">Contratista</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 align-middle">
+                                    <ul class="list-disc list-inside space-y-1 text-sm">
+                                        <li>Ejecutar las medidas de prevención, corrección y compensación.</li>
+                                        <li>Documentar la gestión medioambiental de la obra.</li>
+                                        <li>Obtener los permisos medioambientales necesarios (ej. préstamos).</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="bg-green-100 hover:bg-green-200">
+                                <td class="px-6 py-4 align-middle">
+                                    <div class="flex items-center gap-3">
+                                        <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-teal-100 text-teal-700 rounded-full">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 4.707a1 1 0 00-1.414 0L12 8.586 8.707 5.293a1 1 0 00-1.414 1.414L10.586 10l-3.293 3.293a1 1 0 101.414 1.414L12 11.414l3.293 3.293a1 1 0 001.414-1.414L13.414 10l3.879-3.879a1 1 0 000-1.414z" /></svg>
+                                        </span>
+                                        <span class="font-medium text-gray-900">Coordinador Ambiental</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 align-middle text-sm">Seguir el Plan de Vigilancia Ambiental (PVA) integrado en la Dirección Facultativa.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </footer>
+            </div>
+        </div>
 
         <!-- Card 1 -->
         <div class="card">
@@ -626,3 +879,4 @@
     </script>
 </body>
 </html>
+�
